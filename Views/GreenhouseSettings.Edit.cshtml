@@ -1,5 +1,10 @@
 ﻿@model Etch.OrchardCore.Greenhouse.ViewModels.GreenhouseSettingsViewModel
 
+<div class="form-group">
+    <label asp-for="ApiHostname">@T["API Hostname"]</label>
+    <input asp-for="ApiHostname" class="form-control" />
+    <span class="hint">@T["It's recommended to not edit this value. Leave blank to use default."]</span>
+</div>
 
 <div class="form-group">
     <label asp-for="ApiKey">@T["API Key"]</label>

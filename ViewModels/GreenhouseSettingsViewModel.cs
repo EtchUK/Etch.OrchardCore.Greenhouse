@@ -2,6 +2,7 @@
 {
     public class GreenhouseSettingsViewModel
     {
+        public string ApiHostname { get; set; }
         public string ApiKey { get; set; }
     }
 }

@@ -42,6 +42,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
 
             return Initialize<GreenhouseSettingsViewModel>("GreenhouseSettings_Edit", model =>
             {
+                model.ApiHostname = section.ApiHostname;
                 model.ApiKey = section.ApiKey;
             }).Location("Content:3").OnGroup(Constants.GroupId);
         }
@@ -61,6 +62,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
 
                 if (await context.Updater.TryUpdateModelAsync(model, Prefix))
                 {
+                    section.ApiHostname = string.IsNullOrWhiteSpace(model.ApiHostname) ? Constants.Defaults.ApiHostname : model.ApiHostname.TrimEnd('/');
                     section.ApiKey = model.ApiKey;
                 }
             }
