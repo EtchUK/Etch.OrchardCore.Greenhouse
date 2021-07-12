@@ -8,7 +8,7 @@ namespace Etch.OrchardCore.Greenhouse.Indexes
     public class GreenhousePostingPartIndex : MapIndex
     {
         public long GreenhouseId { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 
     public class GreenhousePostingPartIndexProvider : IndexProvider<ContentItem>

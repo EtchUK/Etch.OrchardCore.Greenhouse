@@ -1,4 +1,5 @@
 ﻿using Etch.OrchardCore.Greenhouse.Services;
+using Etch.OrchardCore.Greenhouse.Services.Options;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using OrchardCore.Workflows.Abstractions.Models;
@@ -60,7 +61,13 @@ namespace Etch.OrchardCore.Greenhouse.Workflows.Activities
         {
             try
             {
-                await _greenhousePostingService.SyncAsync((await _greenhouseApiService.GetJobPostingsAsync(await _greenhousePostingService.GetLatestUpdatedAtAsync())).ToList());
+                var options = new GreenhouseSyncOptions
+                {
+                    Author = string.IsNullOrWhiteSpace(Author.Expression) ? Constants.Defaults.Author : Author.Expression,
+                    ContentType = string.IsNullOrWhiteSpace(ContentType.Expression) ? Constants.Defaults.ContentType : ContentType.Expression
+                };
+
+                await _greenhousePostingService.SyncAsync((await _greenhouseApiService.GetJobPostingsAsync(await _greenhousePostingService.GetLatestUpdatedAtAsync())).ToList(), options);
 
                 return Outcomes(OutcomeDone);
             }
@@ -69,6 +76,22 @@ namespace Etch.OrchardCore.Greenhouse.Workflows.Activities
                 _logger.LogError(e.Message, e);
                 return Outcomes(OutcomeFailed);
             }
+        }
+
+        #endregion
+
+        #region Workflow Parameters
+
+        public WorkflowExpression<string> Author
+        {
+            get => GetProperty(() => new WorkflowExpression<string>());
+            set => SetProperty(value);
+        }
+
+        public WorkflowExpression<string> ContentType
+        {
+            get => GetProperty(() => new WorkflowExpression<string>());
+            set => SetProperty(value);
         }
 
         #endregion

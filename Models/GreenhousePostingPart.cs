@@ -12,10 +12,15 @@ namespace Etch.OrchardCore.Greenhouse.Models
         public string Data { get; set; }
         public long GreenhouseId { get; set; }
 
-        public DateTime UpdateAt
+        public DateTime? UpdateAt
         {
             get
             {
+                if (string.IsNullOrEmpty(Data))
+                {
+                    return null;
+                }
+
                 if (_data == null)
                 {
                     _data = JsonConvert.DeserializeObject<GreenhouseJobPostingDto>(Data);
