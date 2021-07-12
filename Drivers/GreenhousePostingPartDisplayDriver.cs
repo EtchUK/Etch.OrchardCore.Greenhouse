@@ -19,6 +19,8 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
                     var posting = JsonConvert.DeserializeObject<GreenhouseJobPostingDto>(part.Data);
                     model.Data = JsonConvert.SerializeObject(posting, Formatting.Indented);
                 }
+
+                model.IgnoreSync = part.IgnoreSync;
             }).Location("Parts:0#Greenhouse");
         }
 
@@ -43,6 +45,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
             }
 
             part.Data = model.Data;
+            part.IgnoreSync = model.IgnoreSync;
 
             return Edit(part);
         }

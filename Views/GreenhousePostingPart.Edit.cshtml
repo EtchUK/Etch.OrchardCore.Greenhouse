@@ -35,6 +35,16 @@
 </style>
 
 <div class="form-group">
+    <div class="custom-control custom-checkbox">
+        <input asp-for="IgnoreSync" type="checkbox" class="custom-control-input content-preview-select" checked="@Model.IgnoreSync" />
+        <label class="custom-control-label" asp-for="IgnoreSync">
+            @T["Ignore during sync"]
+            <span class="hint dashed">@T["Use when changes have been made that should not be overwritten when syncing."]</span>
+        </label>
+    </div>
+</div>
+
+<div class="form-group">
     <label asp-for="Data">Data</label>
     <pre id="@id">@Model.Data</pre>
     <input asp-for="Data" type="hidden" class="editor-@id" />

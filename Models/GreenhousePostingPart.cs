@@ -11,6 +11,7 @@ namespace Etch.OrchardCore.Greenhouse.Models
 
         public string Data { get; set; }
         public long GreenhouseId { get; set; }
+        public bool IgnoreSync { get; set; }
 
         public DateTime? UpdateAt
         {

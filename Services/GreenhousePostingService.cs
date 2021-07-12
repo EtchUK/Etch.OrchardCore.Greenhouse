@@ -96,6 +96,11 @@ namespace Etch.OrchardCore.Greenhouse.Services
         {
             var contentItem = await GetByGreenhouseIdAsync(posting.Id);
 
+            if (contentItem != null && (contentItem.As<GreenhousePostingPart>()?.IgnoreSync ?? false))
+            {
+                return;
+            }
+
             if (contentItem == null)
             {
                 await CreateAsync(posting, options);
