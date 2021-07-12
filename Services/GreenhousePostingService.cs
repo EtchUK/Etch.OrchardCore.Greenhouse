@@ -92,11 +92,16 @@ namespace Etch.OrchardCore.Greenhouse.Services
             }
         }
 
+        private async Task RemoveAsync(ContentItem contentItem)
+        {
+            await _contentManager.RemoveAsync(contentItem);
+        }
+
         private async Task SyncAsync(GreenhouseJobPostingDto posting, GreenhouseSyncOptions options)
         {
             var contentItem = await GetByGreenhouseIdAsync(posting.Id);
 
-            if (contentItem != null && (contentItem.As<GreenhousePostingPart>()?.IgnoreSync ?? false))
+            if ((contentItem != null && (contentItem.As<GreenhousePostingPart>()?.IgnoreSync ?? false)) || (contentItem == null && !posting.Active))
             {
                 return;
             }
@@ -104,6 +109,12 @@ namespace Etch.OrchardCore.Greenhouse.Services
             if (contentItem == null)
             {
                 await CreateAsync(posting, options);
+                return;
+            }
+
+            if (!posting.Active)
+            {
+                await RemoveAsync(contentItem);
                 return;
             }
 
@@ -124,11 +135,6 @@ namespace Etch.OrchardCore.Greenhouse.Services
             ContentExtensions.Apply(contentItem, contentItem);
 
             await _contentManager.UpdateAsync(contentItem);
-
-            if (posting.Live)
-            {
-                await _contentManager.PublishAsync(contentItem);
-            }
         }
 
         #endregion
