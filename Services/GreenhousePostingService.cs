@@ -134,6 +134,12 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
             ContentExtensions.Apply(contentItem, contentItem);
 
+            if (!posting.Live)
+            {
+                await _contentManager.UnpublishAsync(contentItem);
+                return;
+            }
+
             await _contentManager.UpdateAsync(contentItem);
         }
 
