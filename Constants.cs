@@ -8,5 +8,10 @@
         {
             public const string ApiHostname = "https://harvest.greenhouse.io/v1";
         }
+
+        public static class Definitions
+        {
+            public const string ContentType = "GreenhousePosting";
+        }
     }
 }

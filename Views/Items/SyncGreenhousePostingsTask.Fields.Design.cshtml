@@ -1,0 +1,8 @@
+﻿@model ActivityViewModel<Etch.OrchardCore.Greenhouse.Workflows.Activities.SyncGreenhousePostingsTask>
+
+@using OrchardCore.Workflows.Helpers
+@using OrchardCore.Workflows.ViewModels
+
+<header>
+    <h4><span class="fa fa-sync"></span> @Model.Activity.GetTitleOrDefault(() => T["Sync Greenhouse Postings"])</h4>
+</header>
