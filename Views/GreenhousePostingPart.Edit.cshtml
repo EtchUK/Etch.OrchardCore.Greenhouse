@@ -1,1 +1,41 @@
-﻿<p>Greenhouse posting...</p>
+﻿@model Etch.OrchardCore.Greenhouse.ViewModels.GreenhousePostingPartEditViewModel
+
+@{
+    var id = Guid.NewGuid();
+}
+
+<script asp-src="~/Etch.OrchardCore.Greenhouse/Scripts/ace/ace.js" asp-name="ace" at="Foot" asp-append-version="true"></script>
+
+<script at="Foot">
+    (function () {
+        var editor = window.ace.edit('@id'),
+            $input = document.querySelector('.editor-@id');
+        editor.setTheme('ace/theme/crimson_editor');
+        editor.session.setMode('ace/mode/javascript');
+        editor.setOptions({
+            autoScrollEditorIntoView: true,
+            maxLines: 80,
+            showPrintMargin: false
+        });
+        editor.renderer.setScrollMargin(10, 10, 10, 10);
+        editor.session.on('change', function () {
+            $input.value = editor.session.getValue();
+            $(document).trigger('contentpreview:render');
+        });
+    })();
+</script>
+
+<style>
+    .ace_editor {
+        border: 1px solid lightgray;
+        margin: auto;
+        height: 200px;
+        width: 100%;
+    }
+</style>
+
+<div class="form-group">
+    <label asp-for="Data">Data</label>
+    <pre id="@id">@Model.Data</pre>
+    <input asp-for="Data" type="hidden" class="editor-@id" />
+</div>

@@ -2,5 +2,6 @@
 {
     public class GreenhousePostingPartEditViewModel
     {
+        public string Data { get; set; }
     }
 }
