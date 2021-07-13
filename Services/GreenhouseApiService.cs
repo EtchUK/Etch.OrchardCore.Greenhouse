@@ -28,7 +28,15 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
         #region Implementation
 
-        public async Task<IEnumerable<GreenhouseJobPostingDto>> GetJobPostingsAsync(DateTime? updatedAfter)
+        public async Task<GreenhouseJob> GetJobAsync(long id)
+        {
+            var settings = (await _siteService.GetSiteSettingsAsync()).As<GreenhouseSettings>();
+            var requestUrl = $"{settings.ApiHostname}/jobs/{id}";
+
+            return await requestUrl.WithBasicAuth(settings.ApiKey, string.Empty).GetAsync().ReceiveJson<GreenhouseJob>();
+        }
+
+        public async Task<IEnumerable<GreenhouseJobPosting>> GetJobPostingsAsync(DateTime? updatedAfter)
         {
             var settings = (await _siteService.GetSiteSettingsAsync()).As<GreenhouseSettings>();
             var requestUrl = $"{settings.ApiHostname}/job_posts";
@@ -38,7 +46,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
                 requestUrl += $"?updated_after={updatedAfter.Value.ToString("o")}";
             }
 
-            return await requestUrl.WithBasicAuth(settings.ApiKey, string.Empty).GetAsync().ReceiveJson<IList<GreenhouseJobPostingDto>>();
+            return await requestUrl.WithBasicAuth(settings.ApiKey, string.Empty).GetAsync().ReceiveJson<IList<GreenhouseJobPosting>>();
         }
 
         #endregion

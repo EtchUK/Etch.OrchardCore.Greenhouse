@@ -7,27 +7,28 @@ namespace Etch.OrchardCore.Greenhouse.Models
 {
     public class GreenhousePostingPart : ContentPart
     {
-        private GreenhouseJobPostingDto _data { get; set; }
+        private GreenhouseJobPosting _postingData { get; set; }
 
-        public string Data { get; set; }
+        public string JobData { get; set; }
         public long GreenhouseId { get; set; }
         public bool IgnoreSync { get; set; }
+        public string PostingData { get; set; }
 
         public DateTime? UpdateAt
         {
             get
             {
-                if (string.IsNullOrEmpty(Data))
+                if (string.IsNullOrEmpty(PostingData))
                 {
                     return null;
                 }
 
-                if (_data == null)
+                if (_postingData == null)
                 {
-                    _data = JsonConvert.DeserializeObject<GreenhouseJobPostingDto>(Data);
+                    _postingData = JsonConvert.DeserializeObject<GreenhouseJobPosting>(PostingData);
                 }
 
-                return _data.UpdatedAt;
+                return _postingData.UpdatedAt;
             }
         }
     }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Etch.OrchardCore.Greenhouse.Services.Dtos
 {
-    public class GreenhouseJobPostingDto
+    public class GreenhouseJobPosting
     {
         [JsonProperty("active")]
         public bool Active { get; set; }

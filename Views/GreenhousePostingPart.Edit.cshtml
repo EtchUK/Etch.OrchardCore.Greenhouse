@@ -1,15 +1,16 @@
 ﻿@model Etch.OrchardCore.Greenhouse.ViewModels.GreenhousePostingPartEditViewModel
 
 @{
-    var id = Guid.NewGuid();
+    var jobId = Guid.NewGuid();
+    var postingId = Guid.NewGuid();
 }
 
 <script asp-src="~/Etch.OrchardCore.Greenhouse/Scripts/ace/ace.js" asp-name="ace" at="Foot" asp-append-version="true"></script>
 
 <script at="Foot">
     (function () {
-        var editor = window.ace.edit('@id'),
-            $input = document.querySelector('.editor-@id');
+        var editor = window.ace.edit('@jobId'),
+            $input = document.querySelector('.editor-@jobId');
         editor.setTheme('ace/theme/crimson_editor');
         editor.session.setMode('ace/mode/javascript');
         editor.setOptions({
@@ -20,6 +21,21 @@
         editor.renderer.setScrollMargin(10, 10, 10, 10);
         editor.session.on('change', function () {
             $input.value = editor.session.getValue();
+            $(document).trigger('contentpreview:render');
+        });
+
+        var postEditor = window.ace.edit('@postingId'),
+            $postInput = document.querySelector('.editor-@postingId');
+        postEditor.setTheme('ace/theme/crimson_editor');
+        postEditor.session.setMode('ace/mode/javascript');
+        postEditor.setOptions({
+            autoScrollEditorIntoView: true,
+            maxLines: 80,
+            showPrintMargin: false
+        });
+        postEditor.renderer.setScrollMargin(10, 10, 10, 10);
+        postEditor.session.on('change', function () {
+            $postInput.value = postEditor.session.getValue();
             $(document).trigger('contentpreview:render');
         });
     })();
@@ -45,7 +61,13 @@
 </div>
 
 <div class="form-group">
-    <label asp-for="Data">Data</label>
-    <pre id="@id">@Model.Data</pre>
-    <input asp-for="Data" type="hidden" class="editor-@id" />
+    <label asp-for="PostingData">Posting Data</label>
+    <pre id="@postingId">@Model.PostingData</pre>
+    <input asp-for="PostingData" type="hidden" class="editor-@postingId" />
+</div>
+
+<div class="form-group">
+    <label asp-for="JobData">Job Data</label>
+    <pre id="@jobId">@Model.JobData</pre>
+    <input asp-for="JobData" type="hidden" class="editor-@jobId" />
 </div>

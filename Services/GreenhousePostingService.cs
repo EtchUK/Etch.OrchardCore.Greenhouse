@@ -2,9 +2,11 @@
 using Etch.OrchardCore.Greenhouse.Models;
 using Etch.OrchardCore.Greenhouse.Services.Dtos;
 using Etch.OrchardCore.Greenhouse.Services.Options;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OrchardCore.Autoroute.Models;
 using OrchardCore.ContentManagement;
+using OrchardCore.ContentManagement.Records;
 using OrchardCore.Liquid;
 using System;
 using System.Collections.Generic;
@@ -18,6 +20,8 @@ namespace Etch.OrchardCore.Greenhouse.Services
         #region Dependencies
 
         private readonly IContentManager _contentManager;
+        private readonly IGreenhouseApiService _greenhouseApiService;
+        private readonly ILogger<GreenhousePostingService> _logger;
         private readonly ISession _session;
         private readonly ISlugService _slugService;
 
@@ -25,9 +29,11 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
         #region Constructor
 
-        public GreenhousePostingService(IContentManager contentManager, ISession session, ISlugService slugService)
+        public GreenhousePostingService(IContentManager contentManager, IGreenhouseApiService greenhouseApiService, ILogger<GreenhousePostingService> logger, ISession session, ISlugService slugService)
         {
             _contentManager = contentManager;
+            _greenhouseApiService = greenhouseApiService;
+            _logger = logger;
             _session = session;
             _slugService = slugService;
         }
@@ -38,27 +44,38 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
         public async Task<ContentItem> GetByGreenhouseIdAsync(long greenhouseId)
         {
-            return await _session.Query<ContentItem, GreenhousePostingPartIndex>()
+            return await _session.Query<ContentItem>()
+                .With<ContentItemIndex>()
+                    .Where(x => x.Latest)
                 .With<GreenhousePostingPartIndex>()
-                .Where(x => x.GreenhouseId == greenhouseId)
+                    .Where(x => x.GreenhouseId == greenhouseId)
                 .FirstOrDefaultAsync();
         }
 
         public async Task<DateTime?> GetLatestUpdatedAtAsync()
         {
-            var contentItem = await _session.Query<ContentItem, GreenhousePostingPartIndex>()
+            var contentItem = await _session.Query<ContentItem>()
+                .With<ContentItemIndex>()
+                    .Where(x => x.Latest)
                 .With<GreenhousePostingPartIndex>()
-                .OrderByDescending(x => x.UpdatedAt)
+                    .OrderByDescending(x => x.UpdatedAt)
                 .FirstOrDefaultAsync();
 
             return contentItem != null ? contentItem.As<GreenhousePostingPart>().UpdateAt : (DateTime?)null;
         }
 
-        public async Task SyncAsync(IList<GreenhouseJobPostingDto> postings, GreenhouseSyncOptions options)
+        public async Task SyncAsync(IList<GreenhouseJobPosting> postings, GreenhouseSyncOptions options)
         {
             foreach (var posting in postings)
             {
-                await SyncAsync(posting, options);
+                try
+                {
+                    await SyncAsync(posting, options);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Failed to sync posting: {posting.Id}");
+                }
             }
         }
 
@@ -66,14 +83,15 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
         #region Helpers
 
-        private async Task CreateAsync(GreenhouseJobPostingDto posting, GreenhouseSyncOptions options)
+        private async Task CreateAsync(GreenhouseJobPosting posting, GreenhouseJob job, GreenhouseSyncOptions options)
         {
             var contentItem = await _contentManager.NewAsync(options.ContentType);
             contentItem.DisplayText = posting.Title;
 
             var greenhousePostingPart = contentItem.As<GreenhousePostingPart>();
             greenhousePostingPart.GreenhouseId = posting.Id;
-            greenhousePostingPart.Data = JsonConvert.SerializeObject(posting);
+            greenhousePostingPart.JobData = JsonConvert.SerializeObject(job);
+            greenhousePostingPart.PostingData = JsonConvert.SerializeObject(posting);
             contentItem.Apply(nameof(GreenhousePostingPart), greenhousePostingPart);
 
             var autoroutePart = contentItem.As<AutoroutePart>();
@@ -97,7 +115,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
             await _contentManager.RemoveAsync(contentItem);
         }
 
-        private async Task SyncAsync(GreenhouseJobPostingDto posting, GreenhouseSyncOptions options)
+        private async Task SyncAsync(GreenhouseJobPosting posting, GreenhouseSyncOptions options)
         {
             var contentItem = await GetByGreenhouseIdAsync(posting.Id);
 
@@ -106,9 +124,11 @@ namespace Etch.OrchardCore.Greenhouse.Services
                 return;
             }
 
+            var job = await _greenhouseApiService.GetJobAsync(posting.JobId);
+
             if (contentItem == null)
             {
-                await CreateAsync(posting, options);
+                await CreateAsync(posting, job, options);
                 return;
             }
 
@@ -118,27 +138,28 @@ namespace Etch.OrchardCore.Greenhouse.Services
                 return;
             }
 
-            await UpdateAsync(contentItem, posting, options);
+            await UpdateAsync(contentItem, posting, job, options);
         }
 
-        private async Task UpdateAsync(ContentItem contentItem, GreenhouseJobPostingDto posting, GreenhouseSyncOptions options)
+        private async Task UpdateAsync(ContentItem contentItem, GreenhouseJobPosting posting, GreenhouseJob job, GreenhouseSyncOptions options)
         {
-            contentItem.DisplayText = posting.Title;
-
-            var greenhousePostingPart = contentItem.As<GreenhousePostingPart>();
-            greenhousePostingPart.GreenhouseId = posting.Id;
-            greenhousePostingPart.Data = JsonConvert.SerializeObject(posting);
-            contentItem.Apply(nameof(GreenhousePostingPart), greenhousePostingPart);
-
-            contentItem.Author = options.Author;
-
-            ContentExtensions.Apply(contentItem, contentItem);
-
             if (!posting.Live)
             {
                 await _contentManager.UnpublishAsync(contentItem);
                 return;
             }
+
+            contentItem.DisplayText = posting.Title;
+
+            var greenhousePostingPart = contentItem.As<GreenhousePostingPart>();
+            greenhousePostingPart.GreenhouseId = posting.Id;
+            greenhousePostingPart.JobData = JsonConvert.SerializeObject(job);
+            greenhousePostingPart.PostingData = JsonConvert.SerializeObject(posting);
+            contentItem.Apply(nameof(GreenhousePostingPart), greenhousePostingPart);
+
+            contentItem.Author = options.Author;
+
+            ContentExtensions.Apply(contentItem, contentItem);
 
             await _contentManager.UpdateAsync(contentItem);
         }

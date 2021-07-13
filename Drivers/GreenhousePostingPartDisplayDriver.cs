@@ -11,16 +11,37 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
 {
     public class GreenhousePostingPartDisplayDriver : ContentPartDisplayDriver<GreenhousePostingPart>
     {
+        public override IDisplayResult Display(GreenhousePostingPart part)
+        {
+            if (string.IsNullOrEmpty(part.PostingData))
+            {
+                return null;
+            }
+
+            return Initialize<GreenhousePostingPartViewModel>("GreenhousePostingPart", model =>
+            {
+                model.Job = JsonConvert.DeserializeObject<GreenhouseJob>(part.JobData);
+                model.Posting = JsonConvert.DeserializeObject<GreenhouseJobPosting>(part.PostingData);
+            }).Location("Detail", "Content:5");
+        }
+
         public override IDisplayResult Edit(GreenhousePostingPart part)
         {
             return Initialize<GreenhousePostingPartEditViewModel>("GreenhousePostingPart_Edit", model =>
             {
-                if (!string.IsNullOrEmpty(part.Data)) {
-                    var posting = JsonConvert.DeserializeObject<GreenhouseJobPostingDto>(part.Data);
-                    model.Data = JsonConvert.SerializeObject(posting, Formatting.Indented);
+                model.IgnoreSync = part.IgnoreSync;
+
+                if (!string.IsNullOrEmpty(part.JobData))
+                {
+                    var job = JsonConvert.DeserializeObject<GreenhouseJob>(part.JobData);
+                    model.JobData = JsonConvert.SerializeObject(job, Formatting.Indented);
                 }
 
-                model.IgnoreSync = part.IgnoreSync;
+                if (!string.IsNullOrEmpty(part.PostingData)) {
+                    var posting = JsonConvert.DeserializeObject<GreenhouseJobPosting>(part.PostingData);
+                    model.PostingData = JsonConvert.SerializeObject(posting, Formatting.Indented);
+                }
+
             }).Location("Parts:0#Greenhouse");
         }
 
@@ -33,19 +54,37 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
                 return Edit(part);
             }
 
-            try
+            if (!string.IsNullOrWhiteSpace(model.PostingData))
             {
-                var posting = JsonConvert.DeserializeObject<GreenhouseJobPostingDto>(model.Data);
-                model.Data = JsonConvert.SerializeObject(posting);
-            } 
-            catch
-            {
-                updater.ModelState.AddModelError(nameof(GreenhousePostingPart.Data), "Unable to parse data to Greenhouse job posting");
-                return Edit(part);
+                try
+                {
+                    var posting = JsonConvert.DeserializeObject<GreenhouseJobPosting>(model.PostingData);
+                    model.PostingData = JsonConvert.SerializeObject(posting);
+                }
+                catch
+                {
+                    updater.ModelState.AddModelError(nameof(GreenhousePostingPart.PostingData), "Unable to parse data to Greenhouse job posting.");
+                    return Edit(part);
+                }
             }
 
-            part.Data = model.Data;
+            if (!string.IsNullOrWhiteSpace(model.JobData))
+            {
+                try
+                {
+                    var job = JsonConvert.DeserializeObject<GreenhouseJobPosting>(model.JobData);
+                    model.JobData = JsonConvert.SerializeObject(job);
+                }
+                catch
+                {
+                    updater.ModelState.AddModelError(nameof(GreenhousePostingPart.JobData), "Unable to parse data to Greenhouse job.");
+                    return Edit(part);
+                }
+            }
+
             part.IgnoreSync = model.IgnoreSync;
+            part.JobData = model.JobData;
+            part.PostingData = model.PostingData;
 
             return Edit(part);
         }

@@ -7,6 +7,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
 {
     public interface IGreenhouseApiService
     {
-        Task<IEnumerable<GreenhouseJobPostingDto>> GetJobPostingsAsync(DateTime? updatedAfter);
+        Task<IEnumerable<GreenhouseJobPosting>> GetJobPostingsAsync(DateTime? updatedAfter);
+        Task<GreenhouseJob> GetJobAsync(long id);
     }
 }

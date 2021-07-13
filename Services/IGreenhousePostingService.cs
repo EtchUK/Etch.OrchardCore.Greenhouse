@@ -11,6 +11,6 @@ namespace Etch.OrchardCore.Greenhouse.Services
     {
         Task<ContentItem> GetByGreenhouseIdAsync(long greenhouseId);
         Task<DateTime?> GetLatestUpdatedAtAsync();
-        Task SyncAsync(IList<GreenhouseJobPostingDto> postings, GreenhouseSyncOptions options);
+        Task SyncAsync(IList<GreenhouseJobPosting> postings, GreenhouseSyncOptions options);
     }
 }

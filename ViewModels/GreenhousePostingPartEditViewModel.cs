@@ -2,7 +2,8 @@
 {
     public class GreenhousePostingPartEditViewModel
     {
-        public string Data { get; set; }
         public bool IgnoreSync { get; set; }
+        public string JobData { get; set; }
+        public string PostingData { get; set; }
     }
 }
