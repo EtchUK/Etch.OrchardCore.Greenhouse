@@ -1,0 +1,263 @@
+{
+  "name": "",
+  "issetuprecipe": false,
+  "steps": [
+    {
+      "name": "lucene-index",
+      "Indices": [
+        {
+          "GreenhousePostings": {
+            "AnalyzerName": "standardanalyzer",
+            "IndexLatest": false,
+            "IndexedContentTypes": [
+              "GreenhousePosting"
+            ],
+            "Culture": "any"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Queries",
+      "Queries": [
+        {
+          "Index": "GreenhousePostings",
+          "Template": "{\r\n    \"query\": {\r\n      \"bool\": {\r\n        \"must\" : [\r\n          { \"terms\" : { \"Content.ContentItem.ContentType\" : [\"GreenhousePosting\"] } },\r\n          { \"term\" : { \"Content.ContentItem.Published\" : \"true\" } },\r\n          { \"term\" : { \"Content.ContentItem.Latest\" : \"true\" } },\r\n          \r\n          {% if department != \"\" and department != null %}\r\n          \t{ \"term\" : { \"GreenhousePostingPart.Department\" : \"{{ department }}\" } },\r\n          {% endif %}\r\n          \r\n          {% if location != \"\" and location != null %}\r\n          \t{ \"term\" : { \"GreenhousePostingPart.Location\" : \"{{ location }}\" } },\r\n          {% endif %}\r\n        ]\r\n      }\r\n    },\r\n      \r\n\t{% if from != null %}\r\n      \"from\": {{ from }},\r\n    {% endif %}\r\n    \r\n    {% if size != null %}\r\n      \"size\": {{ size }},\r\n    {% endif %}\r\n}",
+          "ReturnContentItems": true,
+          "Name": "GreenhousePostingsSearch",
+          "Source": "Lucene",
+          "Schema": null
+        },
+        {
+          "Index": "GreenhousePostings",
+          "Template": "{\r\n    \"query\": {\r\n      \"bool\": {\r\n        \"must\" : [\r\n          { \"terms\" : { \"Content.ContentItem.ContentType\" : [\"GreenhousePosting\"] } },\r\n          { \"term\": { \"Content.ContentItem.Published\": \"true\" } }\r\n        ]\r\n      }\r\n    },\r\n  \t\"size\": 1000\r\n}",
+          "ReturnContentItems": false,
+          "Name": "AllGreenhousePostings",
+          "Source": "Lucene",
+          "Schema": null
+        }
+      ]
+    },
+    {
+      "name": "ContentDefinition",
+      "ContentTypes": [
+        {
+          "Name": "GreenhousePostings",
+          "DisplayName": "Greenhouse Postings",
+          "Settings": {
+            "ContentTypeSettings": {
+              "Stereotype": "Widget"
+            },
+            "FullTextAspectSettings": {},
+            "Category": "Content",
+            "Description": "Display Greenhouse postings.",
+            "Icon": "user-md"
+          },
+          "ContentTypePartDefinitionRecords": [
+            {
+              "PartName": "GreenhousePostings",
+              "Name": "GreenhousePostings",
+              "Settings": {
+                "ContentTypePartSettings": {
+                  "Position": "1"
+                }
+              }
+            },
+            {
+              "PartName": "TitlePart",
+              "Name": "TitlePart",
+              "Settings": {
+                "ContentTypePartSettings": {
+                  "Position": "0"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "ContentParts": [
+        {
+          "Name": "GreenhousePostings",
+          "Settings": {},
+          "ContentPartFieldDefinitionRecords": [
+            {
+              "FieldName": "QueryField",
+              "Name": "Source",
+              "Settings": {
+                "ContentPartFieldSettings": {
+                  "DisplayName": "Source",
+                  "Position": "0"
+                }
+              }
+            },
+            {
+              "FieldName": "BooleanField",
+              "Name": "Paging",
+              "Settings": {
+                "ContentPartFieldSettings": {
+                  "DisplayName": "Paging",
+                  "Position": "2"
+                },
+                "BooleanFieldSettings": {
+                  "Hint": "Tick this box to enable pagination, such as when you have a high number of jobs and want to display them a few at a time."
+                },
+                "ContentIndexSettings": {}
+              }
+            },
+            {
+              "FieldName": "NumericField",
+              "Name": "PageSize",
+              "Settings": {
+                "ContentPartFieldSettings": {
+                  "DisplayName": "Page Size",
+                  "Position": "3"
+                },
+                "NumericFieldSettings": {
+                  "Hint": "Specify how many items to display per page. If paging is enabled, 12 will be shown per page by default unless otherwise specified.",
+                  "Minimum": 0.0,
+                  "DefaultValue": "12"
+                },
+                "ContentIndexSettings": {}
+              }
+            },
+            {
+              "FieldName": "TextField",
+              "Name": "NextPageLabel",
+              "Settings": {
+                "ContentPartFieldSettings": {
+                  "DisplayName": "Next Page Label",
+                  "Position": "4"
+                },
+                "TextFieldSettings": {
+                  "Hint": "By default, the label will be \"Next postings\", override this using this field if desired."
+                },
+                "ContentIndexSettings": {}
+              }
+            },
+            {
+              "FieldName": "TextField",
+              "Name": "PreviousPageLabel",
+              "Settings": {
+                "ContentPartFieldSettings": {
+                  "DisplayName": "Previous Page Label",
+                  "Position": "5"
+                },
+                "TextFieldSettings": {
+                  "Hint": "By default, the label will be \"Previous postings\", override this using this field if desired."
+                },
+                "ContentIndexSettings": {}
+              }
+            },
+            {
+              "FieldName": "TextField",
+              "Name": "Columns",
+              "Settings": {
+                "ContentPartFieldSettings": {
+                  "DisplayName": "Columns",
+                  "Editor": "PredefinedList",
+                  "Position": "1"
+                },
+                "TextFieldSettings": {
+                  "Hint": "Specify how many columns to display the items in on desktop devices"
+                },
+                "TextFieldPredefinedListEditorSettings": {
+                  "Options": [
+                    {
+                      "name": "Four",
+                      "value": "four"
+                    },
+                    {
+                      "name": "Three",
+                      "value": "three"
+                    },
+                    {
+                      "name": "Two",
+                      "value": "two"
+                    },
+                    {
+                      "name": "ONe",
+                      "value": "one"
+                    }
+                  ],
+                  "Editor": 1,
+                  "DefaultValue": "four"
+                },
+                "ContentIndexSettings": {}
+              }
+            },
+            {
+              "FieldName": "BooleanField",
+              "Name": "HideLocationFilter",
+              "Settings": {
+                "ContentPartFieldSettings": {
+                  "DisplayName": "Hide Location Filter",
+                  "Position": "6"
+                },
+                "BooleanFieldSettings": {
+                  "Hint": "You may wish to hide the location filter by ticking this box."
+                },
+                "ContentIndexSettings": {}
+              }
+            },
+            {
+              "FieldName": "TextField",
+              "Name": "LocationLabel",
+              "Settings": {
+                "ContentPartFieldSettings": {
+                  "DisplayName": "Location Label",
+                  "Position": "7"
+                },
+                "TextFieldSettings": {
+                  "Hint": "By default, the label for the location filter is \"Location\". Override it with this field if desired, e.g \"Studio\""
+                },
+                "ContentIndexSettings": {}
+              }
+            },
+            {
+              "FieldName": "TextField",
+              "Name": "SubmitLabel",
+              "Settings": {
+                "ContentPartFieldSettings": {
+                  "DisplayName": "Submit Label",
+                  "Position": "10"
+                },
+                "TextFieldSettings": {
+                  "Hint": "By default, the label for the submit button is \"Update\". Override this using this field if desired, e.g \"Search\"."
+                },
+                "ContentIndexSettings": {}
+              }
+            },
+            {
+              "FieldName": "TextField",
+              "Name": "DepartmentLabel",
+              "Settings": {
+                "ContentPartFieldSettings": {
+                  "DisplayName": "Department Label",
+                  "Position": "9"
+                },
+                "TextFieldSettings": {
+                  "Hint": "By default, the label for the department filter is \"Department\". Override it with this field if desired, e.g \"Team\""
+                },
+                "ContentIndexSettings": {}
+              }
+            },
+            {
+              "FieldName": "BooleanField",
+              "Name": "HideDepartmentFilter",
+              "Settings": {
+                "ContentPartFieldSettings": {
+                  "DisplayName": "Hide Department Filter",
+                  "Position": "8"
+                },
+                "BooleanFieldSettings": {
+                  "Hint": "If all your posting are in the same location, you may wish to hide the location filter by ticking this box."
+                },
+                "ContentIndexSettings": {}
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -72,7 +72,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
             {
                 try
                 {
-                    var job = JsonConvert.DeserializeObject<GreenhouseJobPosting>(model.JobData);
+                    var job = JsonConvert.DeserializeObject<GreenhouseJob>(model.JobData);
                     model.JobData = JsonConvert.SerializeObject(job);
                 }
                 catch

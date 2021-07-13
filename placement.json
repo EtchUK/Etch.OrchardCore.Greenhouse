@@ -1,0 +1,71 @@
+{
+  "BooleanField_Edit": [
+    {
+      "place": "Parts#Paging:1",
+      "differentiator": "GreenhousePostings-Paging",
+      "contentType": [
+        "GreenhousePostings"
+      ]
+    },
+    {
+      "place": "Parts#Filter:10",
+      "differentiator": "GreenhousePostings-HideDepartmentFilter",
+      "contentType": [
+        "GreenhousePostings"
+      ]
+    },
+    {
+      "place": "Parts#Filter:12",
+      "differentiator": "GreenhousePostings-HideLocationFilter",
+      "contentType": [
+        "GreenhousePostings"
+      ]
+    }
+  ],
+  "NumericField_Edit": [
+    {
+      "place": "Parts#Paging:2",
+      "differentiator": "GreenhousePostings-PageSize",
+      "contentType": [
+        "GreenhousePostings"
+      ]
+    }
+  ],
+  "TextField_Edit": [
+    {
+      "place": "Parts#Filter:11",
+      "differentiator": "GreenhousePostings-DepartmentLabel",
+      "contentType": [
+        "GreenhousePostings"
+      ]
+    },
+    {
+      "place": "Parts#Filter:13",
+      "differentiator": "GreenhousePostings-LocationLabel",
+      "contentType": [
+        "GreenhousePostings"
+      ]
+    },
+    {
+      "place": "Parts#Paging:4",
+      "differentiator": "GreenhousePostings-NextPageLabel",
+      "contentType": [
+        "GreenhousePostings"
+      ]
+    },
+    {
+      "place": "Parts#Paging:5",
+      "differentiator": "GreenhousePostings-PreviousPageLabel",
+      "contentType": [
+        "GreenhousePostings"
+      ]
+    },
+    {
+      "place": "Parts#Filter:20",
+      "differentiator": "GreenhousePostings-SubmitLabel",
+      "contentType": [
+        "GreenhousePostings"
+      ]
+    }
+  ]
+}
