@@ -143,12 +143,6 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
         private async Task UpdateAsync(ContentItem contentItem, GreenhouseJobPosting posting, GreenhouseJob job, GreenhouseSyncOptions options)
         {
-            if (!posting.Live)
-            {
-                await _contentManager.UnpublishAsync(contentItem);
-                return;
-            }
-
             contentItem.DisplayText = posting.Title;
 
             var greenhousePostingPart = contentItem.As<GreenhousePostingPart>();
@@ -161,7 +155,13 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
             ContentExtensions.Apply(contentItem, contentItem);
 
-            await _contentManager.UpdateAsync(contentItem);
+            if (!posting.Live)
+            {
+                await _contentManager.UnpublishAsync(contentItem);
+                return;
+            }
+
+            await _contentManager.PublishAsync(contentItem);
         }
 
         #endregion
