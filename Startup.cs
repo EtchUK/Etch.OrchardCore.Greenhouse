@@ -1,4 +1,5 @@
-﻿using Etch.OrchardCore.Greenhouse.Drivers;
+﻿using Etch.OrchardCore.Greenhouse.Display;
+using Etch.OrchardCore.Greenhouse.Drivers;
 using Etch.OrchardCore.Greenhouse.Filters;
 using Etch.OrchardCore.Greenhouse.Indexes;
 using Etch.OrchardCore.Greenhouse.Models;
@@ -29,6 +30,8 @@ namespace Etch.OrchardCore.Greenhouse
         {
             TemplateContext.GlobalMemberAccessStrategy.Register<GreenhousePostingPartViewModel>();
             TemplateContext.GlobalMemberAccessStrategy.Register<GreenhouseJobPosting>();
+            TemplateContext.GlobalMemberAccessStrategy.Register<GreenhouseQuestion>();
+            TemplateContext.GlobalMemberAccessStrategy.Register<GreenhouseQuestionValue>();
         }
 
         public override void ConfigureServices(IServiceCollection services)
@@ -51,6 +54,8 @@ namespace Etch.OrchardCore.Greenhouse
 
             services.AddLiquidFilter<DepartmentOptionsFilter>("greenhouse_department_options");
             services.AddLiquidFilter<LocationOptionsFilter>("greenhouse_location_options");
+
+            services.AddScoped<IGreenhouseQuestionShapeFactory, GreenhouseQuestionShapeFactory>();
         }
     }
 }

@@ -4,3 +4,15 @@
 	</div>
 </section>
 
+<section class="section">
+  <div class="constrain">
+    <form method="post">
+      {% for question in Model.Questions %}
+        {{ question | shape_render }}
+      {% endfor %}
+      
+      <button type="submit" class="btn btn--primary">{{ "Apply" | t }}</button>
+    </form>
+  </div>
+</section>
+

@@ -155,6 +155,8 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
             ContentExtensions.Apply(contentItem, contentItem);
 
+            await _contentManager.UpdateAsync(contentItem);
+
             if (!posting.Live)
             {
                 await _contentManager.UnpublishAsync(contentItem);

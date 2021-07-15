@@ -1,8 +1,10 @@
-﻿using Etch.OrchardCore.Greenhouse.Models;
+﻿using Etch.OrchardCore.Greenhouse.Display;
+using Etch.OrchardCore.Greenhouse.Models;
 using Etch.OrchardCore.Greenhouse.Services.Dtos;
 using Etch.OrchardCore.Greenhouse.ViewModels;
 using Newtonsoft.Json;
 using OrchardCore.ContentManagement.Display.ContentDisplay;
+using OrchardCore.ContentManagement.Display.Models;
 using OrchardCore.DisplayManagement.ModelBinding;
 using OrchardCore.DisplayManagement.Views;
 using System.Threading.Tasks;
@@ -11,17 +13,38 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
 {
     public class GreenhousePostingPartDisplayDriver : ContentPartDisplayDriver<GreenhousePostingPart>
     {
-        public override IDisplayResult Display(GreenhousePostingPart part)
+        #region Dependencies
+
+        private readonly IGreenhouseQuestionShapeFactory _greenhouseQuestionShapeFactory;
+
+        #endregion
+
+        #region Constructor
+
+        public GreenhousePostingPartDisplayDriver(IGreenhouseQuestionShapeFactory greenhouseQuestionShapeFactory)
+        {
+            _greenhouseQuestionShapeFactory = greenhouseQuestionShapeFactory;
+        }
+
+        #endregion
+
+        #region Overrides
+
+        public override async Task<IDisplayResult> DisplayAsync(GreenhousePostingPart part, BuildPartDisplayContext context)
         {
             if (string.IsNullOrEmpty(part.PostingData))
             {
                 return null;
             }
 
+            var posting = JsonConvert.DeserializeObject<GreenhouseJobPosting>(part.PostingData);
+            var questions = await _greenhouseQuestionShapeFactory.CreateAsync(posting);
+
             return Initialize<GreenhousePostingPartViewModel>("GreenhousePostingPart", model =>
             {
                 model.Job = JsonConvert.DeserializeObject<GreenhouseJob>(part.JobData);
-                model.Posting = JsonConvert.DeserializeObject<GreenhouseJobPosting>(part.PostingData);
+                model.Posting = posting;
+                model.Questions = questions;
             }).Location("Detail", "Content:5");
         }
 
@@ -37,7 +60,8 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
                     model.JobData = JsonConvert.SerializeObject(job, Formatting.Indented);
                 }
 
-                if (!string.IsNullOrEmpty(part.PostingData)) {
+                if (!string.IsNullOrEmpty(part.PostingData)) 
+                {
                     var posting = JsonConvert.DeserializeObject<GreenhouseJobPosting>(part.PostingData);
                     model.PostingData = JsonConvert.SerializeObject(posting, Formatting.Indented);
                 }
@@ -88,5 +112,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
 
             return Edit(part);
         }
+
+        #endregion
     }
 }
