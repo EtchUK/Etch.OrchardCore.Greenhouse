@@ -11,3 +11,15 @@
     <input asp-for="ApiKey" class="form-control" />
     <span class="hint">@T["API key used to authenticate with the Greenhouse API, <a href=\"https://support.greenhouse.io/hc/en-us/articles/360003470371-Generate-Greenhouse-Onboarding-API-key\">find out how to generate one</a>."]</span>
 </div>
+
+<div class="form-group">
+    <label asp-for="OnBehalfOfId">@T["Application Greenhouse User ID"]</label>
+    <input asp-for="OnBehalfOfId" type="number" class="form-control" />
+    <span class="hint">@T["Required for auditing purposes, a Greenhouse user ID is included with API requests that create new candidates."]</span>
+</div>
+
+<div class="form-group">
+    <label asp-for="DefaultSuccessUrl">@T["Default Application Success URL"]</label>
+    <input asp-for="DefaultSuccessUrl" class="form-control" />
+    <span class="hint">@T["URL applicant is redirected to after successfully applying for a posting."]</span>
+</div>

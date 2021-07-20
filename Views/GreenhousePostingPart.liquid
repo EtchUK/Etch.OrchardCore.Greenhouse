@@ -6,10 +6,12 @@
 
 <section class="section">
   <div class="constrain">
-    <form method="post">
+    <form method="post" action="{{ Request.PathBase }}/greenhouse/apply" enctype="multipart/form-data">
       {% for question in Model.Questions %}
         {{ question | shape_render }}
       {% endfor %}
+      
+      {% antiforgerytoken %}
       
       <button type="submit" class="btn btn--primary">{{ "Apply" | t }}</button>
     </form>

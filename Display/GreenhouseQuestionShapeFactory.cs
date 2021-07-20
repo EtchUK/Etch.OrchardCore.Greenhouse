@@ -1,5 +1,4 @@
 ﻿using Etch.OrchardCore.Greenhouse.Services.Dtos;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using OrchardCore.DisplayManagement;
 using System.Collections.Generic;
@@ -25,37 +24,37 @@ namespace Etch.OrchardCore.Greenhouse.Display
 
             foreach (var question in posting.Questions.Where(x => !x.Private))
             {
-                if (question.Type == "attachment")
+                if (question.Type == Constants.GreenhouseFieldTypes.Attachment)
                 {
                     shapes.Add(await _shapeFactory.New.GreenhouseQuestion__Attachment(question));
                     continue;
                 }
 
-                if (question.Type == "boolean")
+                if (question.Type == Constants.GreenhouseFieldTypes.Boolean)
                 {
                     shapes.Add(await _shapeFactory.New.GreenhouseQuestion__Boolean(question));
                     continue;
                 }
 
-                if (question.Type == "long_text")
+                if (question.Type == Constants.GreenhouseFieldTypes.LongText)
                 {
                     shapes.Add(await _shapeFactory.New.GreenhouseQuestion__LongText(question));
                     continue;
                 }
 
-                if (question.Type == "multi_select")
+                if (question.Type == Constants.GreenhouseFieldTypes.MultiSelect)
                 {
-                    shapes.Add(await _shapeFactory.New.GreenhouseQuestion_MultiSelect(question));
+                    shapes.Add(await _shapeFactory.New.GreenhouseQuestion__MultiSelect(question));
                     continue;
                 }
 
-                if (question.Type == "short_text")
+                if (question.Type == Constants.GreenhouseFieldTypes.ShortText)
                 {
                     shapes.Add(await _shapeFactory.New.GreenhouseQuestion__ShortText(question));
                     continue;
                 }
 
-                if (question.Type == "single_select")
+                if (question.Type == Constants.GreenhouseFieldTypes.SingleSelect)
                 {
                     shapes.Add(await _shapeFactory.New.GreenhouseQuestion__SingleSelect(question));
                     continue;

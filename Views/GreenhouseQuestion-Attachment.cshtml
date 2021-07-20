@@ -1,0 +1,37 @@
+﻿@{
+    var errors = new ModelErrorCollection();
+    var fieldValue = string.Empty;
+    var modelState = (TempData["ModelState"]?.ToString() ?? string.Empty).DeserializeModelState();
+
+    if (modelState.TryGetValue((string)Model.Name, out var fieldEntry))
+    {
+        errors = fieldEntry.Errors;
+        fieldValue = fieldEntry.AttemptedValue;
+    }
+}
+
+<div class="form-group">
+    <label for="@Model.Name">
+        @Model.Label @if (Model.Required)
+        {<span class="required">*</span>}
+    </label>
+
+    @if (!string.IsNullOrEmpty(Model.Description))
+    {
+        <span id="@Model.Name-hint" class="hint">
+            @Html.Raw(Model.Description)
+        </span>
+    }
+
+    <input type="file"
+           id="@Model.Name"
+           name="@Model.Name"
+           value="@fieldValue"
+           @if (!string.IsNullOrEmpty(Model.Description)) { <text> aria-describedby="@Model.Name-hint" </text> }
+           @if (Model.Required) { <text>required</text> } />
+
+    @foreach (var error in errors)
+    {
+        <div class="text--danger">@error.ErrorMessage</div>
+    }
+</div>

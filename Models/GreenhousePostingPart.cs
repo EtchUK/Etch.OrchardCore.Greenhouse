@@ -49,6 +49,11 @@ namespace Etch.OrchardCore.Greenhouse.Models
 
         #region Helper Methods
 
+        public GreenhouseJobPosting GetJobPostingData()
+        {
+            return JsonConvert.DeserializeObject<GreenhouseJobPosting>(PostingData);
+        }
+
         private void ParseJobData()
         {
             if (string.IsNullOrEmpty(JobData))
