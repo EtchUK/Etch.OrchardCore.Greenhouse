@@ -6,9 +6,13 @@
 
         public static class Defaults
         {
+            private static readonly string[] _allowedFileExtensions = new string[] { ".docx", ".doc", ".pdf" };
+
+            public static string[] AllowedFileExtensions { get => _allowedFileExtensions; }
             public const string ApiHostname = "https://harvest.greenhouse.io/v1";
             public const string Author = "Greenhouse";
             public const string ContentType = "GreenhousePosting";
+            public const long MaxFileSize = 2097152;
         }
 
         public static class GreenhouseFieldNames

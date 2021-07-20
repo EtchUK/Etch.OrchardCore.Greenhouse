@@ -1,9 +1,12 @@
 ﻿using Etch.OrchardCore.Greenhouse.Extensions;
 using Etch.OrchardCore.Greenhouse.ModelBinding;
+using Etch.OrchardCore.Greenhouse.Models;
 using Etch.OrchardCore.Greenhouse.Services.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json.Linq;
+using OrchardCore.Entities;
+using OrchardCore.Settings;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,14 +18,16 @@ namespace Etch.OrchardCore.Greenhouse.Services
         #region Dependencies
 
         private readonly IGreenhouseApiService _greenhouseApiSerice;
+        private readonly ISiteService _siteService;
 
         #endregion
 
         #region Constructor
 
-        public GreenhouseApplyService(IGreenhouseApiService greenhouseApiSerice)
+        public GreenhouseApplyService(IGreenhouseApiService greenhouseApiSerice, ISiteService siteService)
         {
             _greenhouseApiSerice = greenhouseApiSerice;
+            _siteService = siteService;
         }
 
         #endregion
@@ -39,11 +44,11 @@ namespace Etch.OrchardCore.Greenhouse.Services
             return createdCandidate;
         }
 
-        public GreenhouseCandidate Bind(ModelStateDictionary modelState, HttpRequest request, GreenhouseJobPosting posting)
+        public async Task<GreenhouseCandidate> BindAsync(ModelStateDictionary modelState, HttpRequest request, GreenhouseJobPosting posting)
         {
             var binders = new Dictionary<string, IGreenhouseCandidateModelBinder>
             {
-                { Constants.GreenhouseFieldTypes.Attachment, new AttachmentModelBinder() },
+                { Constants.GreenhouseFieldTypes.Attachment, new AttachmentModelBinder((await _siteService.GetSiteSettingsAsync()).As<GreenhouseSettings>()) },
                 { Constants.GreenhouseFieldTypes.Boolean, new SelectedValueModelBinder() },
                 { Constants.GreenhouseFieldTypes.LongText, new TextModelBinder() },
                 { Constants.GreenhouseFieldTypes.MultiSelect, new MultiSelectValueModelBinder() },
@@ -108,7 +113,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
     {
         Task<GreenhouseCandidateResponse> ApplyAsync(GreenhouseCandidate candidate);
 
-        GreenhouseCandidate Bind(ModelStateDictionary modelState, HttpRequest request, GreenhouseJobPosting posting);
+        Task<GreenhouseCandidate> BindAsync(ModelStateDictionary modelState, HttpRequest request, GreenhouseJobPosting posting);
 
     }
 }

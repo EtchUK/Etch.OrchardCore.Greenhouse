@@ -64,7 +64,7 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
 
             try
             {
-                candidate = _greenhouseApplyService.Bind(ModelState, Request, jobPosting);
+                candidate = await _greenhouseApplyService.BindAsync(ModelState, Request, jobPosting);
             } 
             catch (Exception ex)
             {
