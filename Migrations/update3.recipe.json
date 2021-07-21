@@ -86,7 +86,7 @@
               "Settings": {
                 "ContentPartFieldSettings": {
                   "DisplayName": "Source",
-                  "Position": "0"
+                  "Position": "1"
                 }
               }
             },
@@ -96,7 +96,7 @@
               "Settings": {
                 "ContentPartFieldSettings": {
                   "DisplayName": "Paging",
-                  "Position": "2"
+                  "Position": "4"
                 },
                 "BooleanFieldSettings": {
                   "Hint": "Tick this box to enable pagination, such as when you have a high number of jobs and want to display them a few at a time."
@@ -110,7 +110,7 @@
               "Settings": {
                 "ContentPartFieldSettings": {
                   "DisplayName": "Page Size",
-                  "Position": "3"
+                  "Position": "5"
                 },
                 "NumericFieldSettings": {
                   "Hint": "Specify how many items to display per page. If paging is enabled, 12 will be shown per page by default unless otherwise specified.",
@@ -126,7 +126,7 @@
               "Settings": {
                 "ContentPartFieldSettings": {
                   "DisplayName": "Next Page Label",
-                  "Position": "4"
+                  "Position": "6"
                 },
                 "TextFieldSettings": {
                   "Hint": "By default, the label will be \"Next postings\", override this using this field if desired."
@@ -140,7 +140,7 @@
               "Settings": {
                 "ContentPartFieldSettings": {
                   "DisplayName": "Previous Page Label",
-                  "Position": "5"
+                  "Position": "7"
                 },
                 "TextFieldSettings": {
                   "Hint": "By default, the label will be \"Previous postings\", override this using this field if desired."
@@ -155,7 +155,7 @@
                 "ContentPartFieldSettings": {
                   "DisplayName": "Columns",
                   "Editor": "PredefinedList",
-                  "Position": "1"
+                  "Position": "3"
                 },
                 "TextFieldSettings": {
                   "Hint": "Specify how many columns to display the items in on desktop devices"
@@ -175,7 +175,7 @@
                       "value": "two"
                     },
                     {
-                      "name": "ONe",
+                      "name": "One",
                       "value": "one"
                     }
                   ],
@@ -191,7 +191,7 @@
               "Settings": {
                 "ContentPartFieldSettings": {
                   "DisplayName": "Hide Location Filter",
-                  "Position": "6"
+                  "Position": "8"
                 },
                 "BooleanFieldSettings": {
                   "Hint": "You may wish to hide the location filter by ticking this box."
@@ -205,7 +205,7 @@
               "Settings": {
                 "ContentPartFieldSettings": {
                   "DisplayName": "Location Label",
-                  "Position": "7"
+                  "Position": "9"
                 },
                 "TextFieldSettings": {
                   "Hint": "By default, the label for the location filter is \"Location\". Override it with this field if desired, e.g \"Studio\""
@@ -219,7 +219,7 @@
               "Settings": {
                 "ContentPartFieldSettings": {
                   "DisplayName": "Submit Label",
-                  "Position": "10"
+                  "Position": "12"
                 },
                 "TextFieldSettings": {
                   "Hint": "By default, the label for the submit button is \"Update\". Override this using this field if desired, e.g \"Search\"."
@@ -233,7 +233,7 @@
               "Settings": {
                 "ContentPartFieldSettings": {
                   "DisplayName": "Department Label",
-                  "Position": "9"
+                  "Position": "11"
                 },
                 "TextFieldSettings": {
                   "Hint": "By default, the label for the department filter is \"Department\". Override it with this field if desired, e.g \"Team\""
@@ -247,10 +247,43 @@
               "Settings": {
                 "ContentPartFieldSettings": {
                   "DisplayName": "Hide Department Filter",
-                  "Position": "8"
+                  "Position": "10"
                 },
                 "BooleanFieldSettings": {
                   "Hint": "If all your posting are in the same location, you may wish to hide the location filter by ticking this box."
+                },
+                "ContentIndexSettings": {}
+              }
+            },
+            {
+              "FieldName": "ContentPickerField",
+              "Name": "PinnedPostings",
+              "Settings": {
+                "ContentPartFieldSettings": {
+                  "DisplayName": "Pinned Postings",
+                  "Position": "0"
+                },
+                "ContentPickerFieldSettings": {
+                  "Hint": "Postings that should be displayed first when no filter has been performed.",
+                  "Multiple": true,
+                  "DisplayedContentTypes": [
+                    "GreenhousePosting"
+                  ]
+                },
+                "ContentIndexSettings": {}
+              }
+            },
+            {
+              "FieldName": "BooleanField",
+              "Name": "HideResultsSummary",
+              "Settings": {
+                "ContentPartFieldSettings": {
+                  "DisplayName": "Hide Results Summary",
+                  "Position": "2"
+                },
+                "BooleanFieldSettings": {
+                  "Hint": "Whether the total number of postings that match the filter is shown.",
+                  "Label": "Hide Results Summary"
                 },
                 "ContentIndexSettings": {}
               }

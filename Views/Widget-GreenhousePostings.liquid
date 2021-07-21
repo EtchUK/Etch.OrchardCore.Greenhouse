@@ -1,13 +1,18 @@
-﻿{% assign pageSize = "12" %}
+﻿{% assign greenhousePostings = Model.ContentItem.Content.GreenhousePostings %}
 
-{% if Model.ContentItem.Content.GreenhousePostings.PageSize.Value != nil %}
-    {% assign pageSize = Model.ContentItem.Content.GreenhousePostings.PageSize.Value %}
+{% assign pageSize = "12" %}
+
+{% assign pinnedPostingIds = greenhousePostings.PinnedPostings.ContentItemIds %}
+{% assign pinnedPostings = pinnedPostingIds | content_item_id %}
+
+{% if greenhousePostings.PageSize.Value != nil %}
+    {% assign pageSize = greenhousePostings.PageSize.Value %}
 {% endif %}
 
 {% assign fetchCount = pageSize | plus: 1 %}
 
-{% assign query = Model.ContentItem.Content.GreenhousePostings.Source.Value %}
-{% assign paging = Model.ContentItem.Content.GreenhousePostings.Paging.Value %}
+{% assign query = greenhousePostings.Source.Value %}
+{% assign paging = greenhousePostings.Paging.Value %}
 
 {% assign allPostings = Queries.AllGreenhousePostings | query %}
 
@@ -17,8 +22,19 @@
 {% assign page = Request.Query["page"] | first | at_least: 1 %}
 {% assign fromValue = page | times: pageSize | minus: pageSize  | at_least: 0 %}
 
+{% assign showPinned = location == nil and department == nil and page == 1 %}
+
+{% if showPinned %}
+    {% assign pageSize = pageSize - pinnedPostings.size  %}
+{% else %}
+    {% assign fromValue = fromValue - pinnedPostings.size %}
+{% endif %}
+
 {% assign totalItems = Queries[query] | query: size: 10000, department: department, location: location %}
-{% assign items = Queries[query] | query: size: fetchCount, from: fromValue, department: department, location: location %}
+
+{% if pageSize > 0 %}
+    {% assign items = Queries[query] | query: size: fetchCount, from: fromValue, department: department, location: location, excludedIds: pinnedPostingIds %}
+{% endif %}
 
 {% assign pageUrl = Request.PathBase | append: Request.Path %}
 {% assign pageUrl = pageUrl | append: "?" %}
@@ -31,14 +47,15 @@
     {% assign pageUrl = pageUrl | append: "location=" + location + "&" %}
 {% endif %}
 
-{% assign hideDepartment = Model.ContentItem.Content.GreenhousePostings.HideDepartmentFilter.Value %}
-{% assign hideLocation = Model.ContentItem.Content.GreenhousePostings.HideLocationFilter.Value %}
+{% assign hideDepartment = greenhousePostings.HideDepartmentFilter.Value %}
+{% assign hideLocation = greenhousePostings.HideLocationFilter.Value %}
+{% assign hideResultsSummary = greenhousePostings.HideResultsSummary.Value %}
 
-{% assign departmentLabel = Model.ContentItem.Content.GreenhousePostings.DepartmentLabel.Text %}
-{% assign locationLabel = Model.ContentItem.Content.GreenhousePostings.LocationLabel.Text %}
-{% assign submitLabel = Model.ContentItem.Content.GreenhousePostings.SubmitLabel.Text %}
-{% assign nextPageLabel = Model.ContentItem.Content.GreenhousePostings.NextPageLabel.Text %}
-{% assign previousPageLabel = Model.ContentItem.Content.GreenhousePostings.PreviousPageLabel.Text %}
+{% assign departmentLabel = greenhousePostings.DepartmentLabel.Text %}
+{% assign locationLabel = greenhousePostings.LocationLabel.Text %}
+{% assign submitLabel = greenhousePostings.SubmitLabel.Text %}
+{% assign nextPageLabel = greenhousePostings.NextPageLabel.Text %}
+{% assign previousPageLabel = greenhousePostings.PreviousPageLabel.Text %}
 
 {% assign cssClasses = "content-feed js-analytics-list" %}
 
@@ -96,12 +113,22 @@
     </form>
     {% endif %}
 
-    <div class="content-feed__summary">
-        <h3>{{ totalItems | size }} {{ "results" | t}}</h3>
-    </div>
+    {% if hideResultsSummary == false %}
+        <div class="content-feed__summary">
+            <h3>{{ totalItems | size }} {{ "results" | t}}</h3>
+        </div>
+    {% endif %}
 
-    {% if items.size > 0 %}
-        <div class="content-feed__list content-feed__list--three-cols columns--three">
+    {% if items.size > 0 or pinnedPostings.size > 0 %}
+        <div class="content-feed__list content-feed__list--{{ greenhousePostings.Columns.Text }}-cols columns--{{ greenhousePostings.Columns.Text }}">
+            {% if showPinned %}
+                {% for item in pinnedPostings %}
+                    <div class="content-feed__item">
+                        {{ item | shape_build_display: "Summary" | shape_render }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
             {% for item in items %}
                 {% if forloop.last == false or items.size <= pageSize %}
                     <div class="content-feed__item">
