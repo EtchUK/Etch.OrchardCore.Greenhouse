@@ -17,23 +17,3 @@
     <input asp-for="OnBehalfOfId" type="number" class="form-control" />
     <span class="hint">@T["Required for auditing purposes, a Greenhouse user ID is included with API requests that create new candidates."]</span>
 </div>
-
-<div class="form-group">
-    <label asp-for="DefaultSuccessUrl">@T["Default Application Success URL"]</label>
-    <input asp-for="DefaultSuccessUrl" class="form-control" />
-    <span class="hint">@T["URL applicant is redirected to after successfully applying for a posting."]</span>
-</div>
-
-<h3>Attachments</h3>
-
-<div class="form-group">
-    <label asp-for="AllowedFileExtensions">@T["Allowed File Extensions"]</label>
-    <input asp-for="AllowedFileExtensions" class="form-control" />
-    <span class="hint">@T["Comma separated list of file extensions that are accepted with job application (e.g. .doc, .docx, .pdf)."]</span>
-</div>
-
-<div class="form-group">
-    <label asp-for="MaxFileSize">@T["Max File Size"]</label>
-    <input asp-for="MaxFileSize" class="form-control" />
-    <span class="hint">@T["Maximum file size (in bytes) for files that are attached to job application."]</span>
-</div>

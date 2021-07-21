@@ -44,11 +44,9 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
 
             return Initialize<GreenhouseSettingsViewModel>("GreenhouseSettings_Edit", model =>
             {
-                model.AllowedFileExtensions = string.Join(", ", section.AllowedFileExtensions ?? Array.Empty<string>());
                 model.ApiHostname = section.ApiHostname;
                 model.ApiKey = section.ApiKey;
-                model.DefaultSuccessUrl = section.DefaultSuccessUrl;
-                model.MaxFileSize = section.MaxFileSize;
+                model.OnBehalfOfId = section.OnBehalfOfId;
             }).Location("Content:3").OnGroup(Constants.GroupId);
         }
 
@@ -67,11 +65,9 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
 
                 if (await context.Updater.TryUpdateModelAsync(model, Prefix))
                 {
-                    section.AllowedFileExtensions = model.AllowedFileExtensions.Split(",", StringSplitOptions.RemoveEmptyEntries);
                     section.ApiHostname = string.IsNullOrWhiteSpace(model.ApiHostname) ? Constants.Defaults.ApiHostname : model.ApiHostname.TrimEnd('/');
                     section.ApiKey = model.ApiKey;
-                    section.DefaultSuccessUrl = model.DefaultSuccessUrl;
-                    section.MaxFileSize = model.MaxFileSize;
+                    section.OnBehalfOfId = model.OnBehalfOfId;
                 }
             }
 

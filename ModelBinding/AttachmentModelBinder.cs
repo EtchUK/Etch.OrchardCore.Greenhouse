@@ -13,13 +13,13 @@ namespace Etch.OrchardCore.Greenhouse.ModelBinding
     {
         #region Dependencies
 
-        private readonly GreenhouseSettings _settings;
+        private readonly GreenhousePostingFormPartSettings _settings;
 
         #endregion
 
         #region Constructor
 
-        public AttachmentModelBinder(GreenhouseSettings settings)
+        public AttachmentModelBinder(GreenhousePostingFormPartSettings settings)
         {
             _settings = settings;
         }

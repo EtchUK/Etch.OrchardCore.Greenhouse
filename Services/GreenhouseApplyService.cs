@@ -18,16 +18,14 @@ namespace Etch.OrchardCore.Greenhouse.Services
         #region Dependencies
 
         private readonly IGreenhouseApiService _greenhouseApiSerice;
-        private readonly ISiteService _siteService;
 
         #endregion
 
         #region Constructor
 
-        public GreenhouseApplyService(IGreenhouseApiService greenhouseApiSerice, ISiteService siteService)
+        public GreenhouseApplyService(IGreenhouseApiService greenhouseApiSerice)
         {
             _greenhouseApiSerice = greenhouseApiSerice;
-            _siteService = siteService;
         }
 
         #endregion
@@ -44,11 +42,11 @@ namespace Etch.OrchardCore.Greenhouse.Services
             return createdCandidate;
         }
 
-        public async Task<GreenhouseCandidate> BindAsync(ModelStateDictionary modelState, HttpRequest request, GreenhouseJobPosting posting)
+        public async Task<GreenhouseCandidate> BindAsync(ModelStateDictionary modelState, HttpRequest request, GreenhouseJobPosting posting, GreenhousePostingFormPartSettings settings)
         {
             var binders = new Dictionary<string, IGreenhouseCandidateModelBinder>
             {
-                { Constants.GreenhouseFieldTypes.Attachment, new AttachmentModelBinder((await _siteService.GetSiteSettingsAsync()).As<GreenhouseSettings>()) },
+                { Constants.GreenhouseFieldTypes.Attachment, new AttachmentModelBinder(settings) },
                 { Constants.GreenhouseFieldTypes.Boolean, new SelectedValueModelBinder() },
                 { Constants.GreenhouseFieldTypes.LongText, new TextModelBinder() },
                 { Constants.GreenhouseFieldTypes.MultiSelect, new MultiSelectValueModelBinder() },
@@ -113,7 +111,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
     {
         Task<GreenhouseCandidateResponse> ApplyAsync(GreenhouseCandidate candidate);
 
-        Task<GreenhouseCandidate> BindAsync(ModelStateDictionary modelState, HttpRequest request, GreenhouseJobPosting posting);
+        Task<GreenhouseCandidate> BindAsync(ModelStateDictionary modelState, HttpRequest request, GreenhouseJobPosting posting, GreenhousePostingFormPartSettings settings);
 
     }
 }

@@ -12,6 +12,7 @@ using Fluid;
 using Microsoft.Extensions.DependencyInjection;
 using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Display.ContentDisplay;
+using OrchardCore.ContentTypes.Editors;
 using OrchardCore.Data.Migration;
 using OrchardCore.DisplayManagement.Handlers;
 using OrchardCore.Indexing;
@@ -30,6 +31,7 @@ namespace Etch.OrchardCore.Greenhouse
         {
             TemplateContext.GlobalMemberAccessStrategy.Register<GreenhouseJobPosting>();
             TemplateContext.GlobalMemberAccessStrategy.Register<GreenhouseQuestion>();
+            TemplateContext.GlobalMemberAccessStrategy.Register<GreenhousePostingFormPartSettings>();
             TemplateContext.GlobalMemberAccessStrategy.Register<GreenhousePostingFormPartViewModel>();
             TemplateContext.GlobalMemberAccessStrategy.Register<GreenhousePostingPartViewModel>();
             TemplateContext.GlobalMemberAccessStrategy.Register<GreenhouseQuestionValue>();
@@ -47,6 +49,8 @@ namespace Etch.OrchardCore.Greenhouse
 
             services.AddContentPart<GreenhousePostingFormPart>()
                 .UseDisplayDriver<GreenhousePostingFormPartDisplayDriver>();
+
+            services.AddScoped<IContentTypePartDefinitionDisplayDriver, GreenhousePostingFormPartSettingsDisplayDriver>();
 
             services.AddScoped<IDataMigration, Migrations>();
 

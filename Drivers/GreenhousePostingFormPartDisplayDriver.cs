@@ -8,6 +8,7 @@ using OrchardCore.ContentManagement.Display.ContentDisplay;
 using OrchardCore.ContentManagement.Display.Models;
 using OrchardCore.DisplayManagement.ModelBinding;
 using OrchardCore.DisplayManagement.Views;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -42,7 +43,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
             }
 
             var posting = JsonConvert.DeserializeObject<GreenhouseJobPosting>(postingPart.PostingData);
-            var questions = new List<dynamic>();
+            IList<dynamic> questions = Array.Empty<dynamic>();
 
             if (part.ShowApplicationForm)
             {
@@ -52,6 +53,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
             return Initialize<GreenhousePostingFormPartViewModel>("GreenhousePostingFormPart", model =>
             {
                 model.Questions = questions;
+                model.Settings = context.TypePartDefinition.GetSettings<GreenhousePostingFormPartSettings>();
                 model.ShowApplicationForm = part.ShowApplicationForm;
             }).Location("Detail", "Content:10");
         }
