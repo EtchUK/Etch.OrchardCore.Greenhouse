@@ -13,24 +13,9 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
 {
     public class GreenhousePostingPartDisplayDriver : ContentPartDisplayDriver<GreenhousePostingPart>
     {
-        #region Dependencies
-
-        private readonly IGreenhouseQuestionShapeFactory _greenhouseQuestionShapeFactory;
-
-        #endregion
-
-        #region Constructor
-
-        public GreenhousePostingPartDisplayDriver(IGreenhouseQuestionShapeFactory greenhouseQuestionShapeFactory)
-        {
-            _greenhouseQuestionShapeFactory = greenhouseQuestionShapeFactory;
-        }
-
-        #endregion
-
         #region Overrides
 
-        public override async Task<IDisplayResult> DisplayAsync(GreenhousePostingPart part, BuildPartDisplayContext context)
+        public override IDisplayResult Display(GreenhousePostingPart part, BuildPartDisplayContext context)
         {
             if (string.IsNullOrEmpty(part.PostingData))
             {
@@ -38,13 +23,11 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
             }
 
             var posting = JsonConvert.DeserializeObject<GreenhouseJobPosting>(part.PostingData);
-            var questions = await _greenhouseQuestionShapeFactory.CreateAsync(posting);
 
             return Initialize<GreenhousePostingPartViewModel>("GreenhousePostingPart", model =>
             {
                 model.Job = JsonConvert.DeserializeObject<GreenhouseJob>(part.JobData);
                 model.Posting = posting;
-                model.Questions = questions;
             }).Location("Detail", "Content:5");
         }
 

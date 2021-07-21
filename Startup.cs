@@ -28,9 +28,10 @@ namespace Etch.OrchardCore.Greenhouse
     {
         static Startup()
         {
-            TemplateContext.GlobalMemberAccessStrategy.Register<GreenhousePostingPartViewModel>();
             TemplateContext.GlobalMemberAccessStrategy.Register<GreenhouseJobPosting>();
             TemplateContext.GlobalMemberAccessStrategy.Register<GreenhouseQuestion>();
+            TemplateContext.GlobalMemberAccessStrategy.Register<GreenhousePostingFormPartViewModel>();
+            TemplateContext.GlobalMemberAccessStrategy.Register<GreenhousePostingPartViewModel>();
             TemplateContext.GlobalMemberAccessStrategy.Register<GreenhouseQuestionValue>();
         }
 
@@ -43,6 +44,9 @@ namespace Etch.OrchardCore.Greenhouse
 
             services.AddContentPart<GreenhousePostingPart>()
                 .UseDisplayDriver<GreenhousePostingPartDisplayDriver>();
+
+            services.AddContentPart<GreenhousePostingFormPart>()
+                .UseDisplayDriver<GreenhousePostingFormPartDisplayDriver>();
 
             services.AddScoped<IDataMigration, Migrations>();
 
