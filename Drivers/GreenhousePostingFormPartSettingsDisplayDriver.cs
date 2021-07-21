@@ -22,7 +22,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
             {
                 var settings = contentTypePartDefinition.GetSettings<GreenhousePostingFormPartSettings>();
 
-                model.AllowedFileExtensions = string.Join(", ", settings.AllowedFileExtensions ?? Array.Empty<string>());
+                model.AllowedFileExtensions = string.Join(",", settings.AllowedFileExtensions ?? Array.Empty<string>());
                 model.ApplicationSuccessUrl = settings.ApplicationSuccessUrl;
                 model.MaxFileSize = settings.MaxFileSize;
                 model.ShowApplicationForm = settings.ShowApplicationForm;
