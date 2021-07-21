@@ -28,7 +28,7 @@ namespace Etch.OrchardCore.Greenhouse.Indexes
                     return new GreenhousePostingPartIndex
                     {
                         GreenhouseId = part.GreenhouseId,
-                        UpdatedAt = part.UpdateAt
+                        UpdatedAt = part.UpdatedAt
                     };
                 });
         }

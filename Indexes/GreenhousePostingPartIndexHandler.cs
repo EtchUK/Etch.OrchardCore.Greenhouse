@@ -10,6 +10,7 @@ namespace Etch.OrchardCore.Greenhouse.Indexes
         {
             context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.{nameof(GreenhousePostingPart.Department)}", part.Department, DocumentIndexOptions.Store);
             context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.{nameof(GreenhousePostingPart.Location)}", part.Location, DocumentIndexOptions.Store);
+            context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.{nameof(GreenhousePostingPart.UpdatedAt)}", part.UpdatedAt, DocumentIndexOptions.Store);
 
             return Task.CompletedTask;
         }

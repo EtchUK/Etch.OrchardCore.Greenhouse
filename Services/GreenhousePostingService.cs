@@ -61,7 +61,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
                     .OrderByDescending(x => x.UpdatedAt)
                 .FirstOrDefaultAsync();
 
-            return contentItem != null ? contentItem.As<GreenhousePostingPart>().UpdateAt : (DateTime?)null;
+            return contentItem != null ? contentItem.As<GreenhousePostingPart>().UpdatedAt : (DateTime?)null;
         }
 
         public async Task SyncAsync(IList<GreenhouseJobPosting> postings, GreenhouseSyncOptions options)

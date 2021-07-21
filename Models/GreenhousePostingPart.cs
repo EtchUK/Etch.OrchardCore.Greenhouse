@@ -36,7 +36,7 @@ namespace Etch.OrchardCore.Greenhouse.Models
             }
         }
 
-        public DateTime? UpdateAt
+        public DateTime? UpdatedAt
         {
             get
             {
