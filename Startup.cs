@@ -10,7 +10,6 @@ using Etch.OrchardCore.Greenhouse.Workflows.Activities;
 using Etch.OrchardCore.Greenhouse.Workflows.Drivers;
 using Fluid;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Display.ContentDisplay;
 using OrchardCore.Data.Migration;
@@ -21,7 +20,6 @@ using OrchardCore.Modules;
 using OrchardCore.Navigation;
 using OrchardCore.Settings;
 using OrchardCore.Workflows.Helpers;
-using System.Collections.Generic;
 using YesSql.Indexes;
 
 namespace Etch.OrchardCore.Greenhouse
@@ -49,6 +47,7 @@ namespace Etch.OrchardCore.Greenhouse
             services.AddScoped<IDataMigration, Migrations>();
 
             services.AddActivity<SyncGreenhousePostingsTask, SyncGreenhousePostingsTaskDisplay>();
+            services.AddActivity<GreenhouseApplicationNotificationEvent, GreenhouseApplicationNotificationDisplay>();
 
             services.AddScoped<IGreenhouseApiService, GreenhouseApiService>();
             services.AddScoped<IGreenhouseApplyService, GreenhouseApplyService>();

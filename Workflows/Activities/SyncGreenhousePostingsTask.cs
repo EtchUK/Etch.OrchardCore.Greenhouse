@@ -50,7 +50,7 @@ namespace Etch.OrchardCore.Greenhouse.Workflows.Activities
 
         public override LocalizedString DisplayText => T["Synchronise content items with postings retrieved from Greenhouse"];
 
-        public override LocalizedString Category => T["Content"];
+        public override LocalizedString Category => T["Greenhouse"];
 
         public override IEnumerable<Outcome> GetPossibleOutcomes(WorkflowExecutionContext workflowContext, ActivityContext activityContext)
         {

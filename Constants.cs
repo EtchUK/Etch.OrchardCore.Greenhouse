@@ -15,6 +15,12 @@
             public const long MaxFileSize = 2097152;
         }
 
+        public static class GreenhouseApplicationPhases
+        {
+            public const string Apply = "Apply";
+            public const string Validation = "Validation";
+        }
+
         public static class GreenhouseFieldNames
         {
             private static readonly string[] _fixedFields = new string[] { Email, Firstname, Lastname, Phone };

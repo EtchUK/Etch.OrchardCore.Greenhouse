@@ -1,0 +1,9 @@
+﻿@model ActivityViewModel<GreenhouseApplicationNotificationEvent>
+
+@using OrchardCore.Workflows.Helpers
+@using OrchardCore.Workflows.ViewModels
+@using Etch.OrchardCore.Greenhouse.Workflows.Activities
+
+<header>
+    <h4><span class="fa fa-bell"></span> @Model.Activity.GetTitleOrDefault(() => T["Greenhouse application event"])</h4>
+</header>

@@ -2,12 +2,15 @@
 using Etch.OrchardCore.Greenhouse.Models;
 using Etch.OrchardCore.Greenhouse.Services;
 using Etch.OrchardCore.Greenhouse.Services.Dtos;
+using Etch.OrchardCore.Greenhouse.Workflows.Activities;
+using Etch.OrchardCore.Greenhouse.Workflows.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Routing;
 using OrchardCore.Entities;
 using OrchardCore.Settings;
+using OrchardCore.Workflows.Services;
 using System;
 using System.Threading.Tasks;
 
@@ -22,18 +25,20 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
         private readonly IGreenhouseApplyService _greenhouseApplyService;
         private readonly ILogger<ApplyController> _logger;
         private readonly ISiteService _siteService;
+        private readonly IWorkflowManager _workflowManager;
 
         #endregion Dependancies
 
         #region Constructor
 
-        public ApplyController(IAutorouteEntries autorouteEntries, IContentManager contentManager, IGreenhouseApplyService greenhouseApplyService, ILogger<ApplyController> logger, ISiteService siteService)
+        public ApplyController(IAutorouteEntries autorouteEntries, IContentManager contentManager, IGreenhouseApplyService greenhouseApplyService, ILogger<ApplyController> logger, ISiteService siteService, IWorkflowManager workflowManager)
         {
             _autorouteEntries = autorouteEntries;
             _contentManager = contentManager;
             _greenhouseApplyService = greenhouseApplyService;
             _logger = logger;
             _siteService = siteService;
+            _workflowManager = workflowManager;
         }
 
         #endregion
@@ -68,6 +73,13 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
             } 
             catch (Exception ex)
             {
+                await TriggerNotificationEventAsync(jobPosting, new GreenhouseApplicationNotificationEventViewModel
+                {
+                    Error = ex.Message,
+                    IsSuccess = false,
+                    Phase = Constants.GreenhouseApplicationPhases.Validation
+                });
+
                 TempData["ModelState"] = ModelState.Serialize();
                 _logger.LogError(ex, "Error when binding/valdating Greenhouse application");
                 return new RedirectResult(referer);
@@ -79,17 +91,35 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
                 return new RedirectResult(referer);
             }
 
+            GreenhouseCandidateResponse response;
+
             try
             {
-                var response = await _greenhouseApplyService.ApplyAsync(candidate);
-                return new RedirectResult($"{Request.PathBase}{settings.DefaultSuccessUrl}?applicationId={response.Id}&contentItemId={contentItem.ContentItemId}");
+                response = await _greenhouseApplyService.ApplyAsync(candidate);
             }
             catch (Exception ex)
             {
+                await TriggerNotificationEventAsync(jobPosting, new GreenhouseApplicationNotificationEventViewModel
+                {
+                    Candidate = candidate,
+                    Error = ex.Message,
+                    IsSuccess = false,
+                    Phase = Constants.GreenhouseApplicationPhases.Apply
+                });
+
                 TempData["ModelState"] = ModelState.Serialize();
                 _logger.LogError(ex, "Error submitting Greenhouse application");
                 return new RedirectResult(referer);
             }
+
+            await TriggerNotificationEventAsync(jobPosting, new GreenhouseApplicationNotificationEventViewModel
+            {
+                Candidate = candidate,
+                IsSuccess = true,
+                Response = response
+            });
+
+            return new RedirectResult($"{Request.PathBase}{settings.DefaultSuccessUrl}?applicationId={response.Id}&contentItemId={contentItem.ContentItemId}");
         }
 
         #region Helper Methods
@@ -106,6 +136,18 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
             }
 
             return referer;
+        }
+
+        private async Task TriggerNotificationEventAsync(GreenhouseJobPosting posting, GreenhouseApplicationNotificationEventViewModel viewModel)
+        {
+            await _workflowManager.TriggerEventAsync(
+                nameof(GreenhouseApplicationNotificationEvent),
+                input: new
+                {
+                    GreenhouseApplicationNotificationEventViewModel = viewModel
+                },
+                correlationId: posting.Id.ToString()
+            );
         }
 
         #endregion
