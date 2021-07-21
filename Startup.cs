@@ -34,6 +34,7 @@ namespace Etch.OrchardCore.Greenhouse
             TemplateContext.GlobalMemberAccessStrategy.Register<GreenhousePostingFormPartSettings>();
             TemplateContext.GlobalMemberAccessStrategy.Register<GreenhousePostingFormPartViewModel>();
             TemplateContext.GlobalMemberAccessStrategy.Register<GreenhousePostingPartViewModel>();
+            TemplateContext.GlobalMemberAccessStrategy.Register<GreenhouseQuestionDisplayContext>();
             TemplateContext.GlobalMemberAccessStrategy.Register<GreenhouseQuestionValue>();
         }
 

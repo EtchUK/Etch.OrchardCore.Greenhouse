@@ -3,7 +3,7 @@
     var fieldValue = string.Empty;
     var modelState = (TempData["ModelState"]?.ToString() ?? string.Empty).DeserializeModelState();
 
-    if (modelState.TryGetValue((string)Model.Name, out var fieldEntry))
+    if (modelState.TryGetValue((string)Model.Question.Name, out var fieldEntry))
     {
         errors = fieldEntry.Errors;
         fieldValue = fieldEntry.AttemptedValue;
@@ -11,24 +11,24 @@
 }
 
 <div class="form-group">
-	<label for="@Model.Name">
-        @Model.Label @if (Model.Required) { <span class="required">*</span> }
+	<label for="@Model.Question.Name">
+        @Model.Question.Label @if (Model.Question.Required) { <span class="required">*</span> }
     </label>
 
-    @if (!string.IsNullOrEmpty(Model.Description))
+    @if (!string.IsNullOrEmpty(Model.Question.Description))
     {
-        <span id="@Model.Name-hint" class="hint">
-            @Html.Raw(Model.Description)
+        <span id="@Model.Question.Name-hint" class="hint">
+            @Html.Raw(Model.Question.Description)
         </span>
     }
 
     <input 
         type="text" 
-        id="@Model.Name" 
-        name="@Model.Name"
+        id="@Model.Question.Name" 
+        name="@Model.Question.Name"
         value="@fieldValue"
-        @if (!string.IsNullOrEmpty(Model.Description)) { <text>aria-describedby="@Model.Name-hint"</text> } 
-        @if (Model.Required) { <text>required</text> }
+        @if (!string.IsNullOrEmpty(Model.Question.Description)) { <text>aria-describedby="@Model.Question.Name-hint"</text> } 
+        @if (Model.Question.Required) { <text>required</text> }
     />
 
     @foreach (var error in errors) 

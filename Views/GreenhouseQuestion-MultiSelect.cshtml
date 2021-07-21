@@ -3,7 +3,7 @@
     var fieldValue = Array.Empty<string>();
     var modelState = (TempData["ModelState"]?.ToString() ?? string.Empty).DeserializeModelState();
 
-    if (modelState.TryGetValue((string)Model.Name, out var fieldEntry))
+    if (modelState.TryGetValue((string)Model.Question.Name, out var fieldEntry))
     {
         errors = fieldEntry.Errors;
         fieldValue = fieldEntry.AttemptedValue?.Split(",", StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
@@ -11,33 +11,33 @@
 }
 
 <div class="form-group">
-    <label for="@Model.Name">
-        @Model.Label @if (Model.Required)
+    <label for="@Model.Question.Name">
+        @Model.Question.Label @if (Model.Question.Required)
         {<span class="required">*</span>}
     </label>
 
-    @if (!string.IsNullOrEmpty(Model.Description))
+    @if (!string.IsNullOrEmpty(Model.Question.Description))
     {
-        <span id="@Model.Name-hint" class="hint">
-            @Html.Raw(Model.Description)
+        <span id="@Model.Question.Name-hint" class="hint">
+            @Html.Raw(Model.Question.Description)
         </span>
     }
 
     <div class="checkboxes">
-        @for (var i = 0; i < Model.Values.Length; i++)
+        @for (var i = 0; i < Model.Question.Values.Length; i++)
         {
         <div class="checkboxes__item">
             <input 
                 class="checkboxes__input" 
-                id="@Model.Name-@i" 
-                name="@Model.Name" 
+                id="@Model.Question.Name-@i" 
+                name="@Model.Question.Name" 
                 type="checkbox"
-                value="@Model.Values[i].Value"
-                @if (fieldValue.Any(x => x.Equals(Model.Values[i].Value.ToString()))) { <text>checked</text> }
+                value="@Model.Question.Values[i].Value"
+                @if (fieldValue.Any(x => x.Equals(Model.Question.Values[i].Value.ToString()))) { <text>checked</text> }
             />
 
-            <label class="label checkboxes__label" for="@Model.Name-@i">
-                @Model.Values[i].Label
+            <label class="label checkboxes__label" for="@Model.Question.Name-@i">
+                @Model.Question.Values[i].Label
             </label>
         </div>
         }

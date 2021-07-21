@@ -48,13 +48,13 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
 
             if (part.ShowApplicationForm)
             {
-                questions = await _greenhouseQuestionShapeFactory.CreateAsync(posting);
+                questions = await _greenhouseQuestionShapeFactory.CreateAsync(posting, settings);
             }
 
             return Initialize<GreenhousePostingFormPartViewModel>("GreenhousePostingFormPart", model =>
             {
                 model.Questions = questions;
-                model.Settings = context.TypePartDefinition.GetSettings<GreenhousePostingFormPartSettings>();
+                model.Settings = settings;
                 model.ShowApplicationForm = settings.ShowApplicationForm && part.ShowApplicationForm;
             }).Location("Detail", "Content:10");
         }
