@@ -35,6 +35,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
 
         public override async Task<IDisplayResult> DisplayAsync(GreenhousePostingFormPart part, BuildPartDisplayContext context)
         {
+            var settings = context.TypePartDefinition.GetSettings<GreenhousePostingFormPartSettings>();
             var postingPart = part.ContentItem.As<GreenhousePostingPart>();
 
             if (postingPart == null || string.IsNullOrEmpty(postingPart.PostingData))
@@ -54,7 +55,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
             {
                 model.Questions = questions;
                 model.Settings = context.TypePartDefinition.GetSettings<GreenhousePostingFormPartSettings>();
-                model.ShowApplicationForm = part.ShowApplicationForm;
+                model.ShowApplicationForm = settings.ShowApplicationForm && part.ShowApplicationForm;
             }).Location("Detail", "Content:10");
         }
 

@@ -1,5 +1,16 @@
 ﻿@model Etch.OrchardCore.Greenhouse.ViewModels.GreenhousePostingFormPartSettingsViewModel
 
+
+<div class="form-group">
+    <div class="custom-control custom-checkbox">
+        <input asp-for="ShowApplicationForm" type="checkbox" class="custom-control-input content-preview-select" checked="@Model.ShowApplicationForm" />
+        <label class="custom-control-label" asp-for="ShowApplicationForm">
+            @T["Show application form"]
+            <span class="hint dashed">@T["When checked, users will be able to apply for job posting directly on this website."]</span>
+        </label>
+    </div>
+</div>
+
 <div class="form-group">
     <label asp-for="ApplicationSuccessUrl">@T["Application Success URL"]</label>
     <input asp-for="ApplicationSuccessUrl" class="form-control" />

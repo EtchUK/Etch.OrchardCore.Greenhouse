@@ -25,6 +25,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
                 model.AllowedFileExtensions = string.Join(", ", settings.AllowedFileExtensions ?? Array.Empty<string>());
                 model.ApplicationSuccessUrl = settings.ApplicationSuccessUrl;
                 model.MaxFileSize = settings.MaxFileSize;
+                model.ShowApplicationForm = settings.ShowApplicationForm;
                 model.SubmitButtonLabel = settings.SubmitButtonLabel;
             }).Location("Content");
         }
@@ -45,6 +46,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
                 AllowedFileExtensions = model.AllowedFileExtensions.Split(",", StringSplitOptions.RemoveEmptyEntries),
                 ApplicationSuccessUrl = model.ApplicationSuccessUrl,
                 MaxFileSize = model.MaxFileSize,
+                ShowApplicationForm = model.ShowApplicationForm,
                 SubmitButtonLabel = model.SubmitButtonLabel
             });
 
