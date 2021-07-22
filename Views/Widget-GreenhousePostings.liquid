@@ -9,8 +9,6 @@
     {% assign pageSize = greenhousePostings.PageSize.Value %}
 {% endif %}
 
-{% assign fetchCount = pageSize | plus: 1 %}
-
 {% assign query = greenhousePostings.Source.Value %}
 {% assign paging = greenhousePostings.Paging.Value %}
 
@@ -31,6 +29,8 @@
 {% endif %}
 
 {% assign totalItems = Queries[query] | query: size: 10000, department: department, location: location %}
+
+{% assign fetchCount = pageSize | plus: 1 %}
 
 {% if pageSize > 0 %}
     {% assign items = Queries[query] | query: size: fetchCount, from: fromValue, department: department, location: location, excludedIds: pinnedPostingIds %}
