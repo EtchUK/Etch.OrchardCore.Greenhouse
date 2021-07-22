@@ -50,12 +50,5 @@ namespace Etch.OrchardCore.Greenhouse
 
             return 4;
         }
-
-        public async Task<int> UpdateFrom4Async()
-        {
-            await _recipeMigrator.ExecuteAsync("update4.recipe.json", this);
-
-            return 5;
-        }
     }
 }

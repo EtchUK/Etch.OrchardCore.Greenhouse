@@ -57,6 +57,26 @@
                   "Position": "3"
                 }
               }
+            },
+            {
+              "PartName": "GreenhousePostingFormPart",
+              "Name": "GreenhousePostingFormPart",
+              "Settings": {
+                "ContentTypePartSettings": {
+                  "Position": "4"
+                },
+                "GreenhousePostingFormPartSettings": {
+                  "AllowedFileExtensions": [
+                    ".docx",
+                    ".doc",
+                    ".pdf"
+                  ],
+                  "ApplicationSuccessUrl": "/success",
+                  "MaxFileSize": 2097152,
+                  "ShowApplicationForm": true,
+                  "SubmitButtonLabel": "Apply"
+                }
+              }
             }
           ]
         }
@@ -69,6 +89,17 @@
               "Attachable": true,
               "Description": "Stores data about posting retrieved from Greenhouse.",
               "DisplayName": "Greenhouse Posting"
+            }
+          },
+          "ContentPartFieldDefinitionRecords": []
+        },
+        {
+          "Name": "GreenhousePostingFormPart",
+          "Settings": {
+            "ContentPartSettings": {
+              "Attachable": false,
+              "Description": "Customise appearance of application form.",
+              "DisplayName": "Greenhouse Posting Form"
             }
           },
           "ContentPartFieldDefinitionRecords": []
