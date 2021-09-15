@@ -27,17 +27,6 @@ namespace Etch.OrchardCore.Greenhouse
 {
     public class Startup : StartupBase
     {
-        static Startup()
-        {
-            TemplateContext.GlobalMemberAccessStrategy.Register<GreenhouseJobPosting>();
-            TemplateContext.GlobalMemberAccessStrategy.Register<GreenhouseQuestion>();
-            TemplateContext.GlobalMemberAccessStrategy.Register<GreenhousePostingFormPartSettings>();
-            TemplateContext.GlobalMemberAccessStrategy.Register<GreenhousePostingFormPartViewModel>();
-            TemplateContext.GlobalMemberAccessStrategy.Register<GreenhousePostingPartViewModel>();
-            TemplateContext.GlobalMemberAccessStrategy.Register<GreenhouseQuestionDisplayContext>();
-            TemplateContext.GlobalMemberAccessStrategy.Register<GreenhouseQuestionValue>();
-        }
-
         public override void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
@@ -64,6 +53,17 @@ namespace Etch.OrchardCore.Greenhouse
 
             services.AddSingleton<IIndexProvider, GreenhousePostingPartIndexProvider>();
             services.AddScoped<IContentPartIndexHandler, GreenhousePostingPartIndexHandler>();
+
+            services.Configure<TemplateOptions>(o =>
+            {
+                o.MemberAccessStrategy.Register<GreenhouseJobPosting>();
+                o.MemberAccessStrategy.Register<GreenhouseQuestion>();
+                o.MemberAccessStrategy.Register<GreenhousePostingFormPartSettings>();
+                o.MemberAccessStrategy.Register<GreenhousePostingFormPartViewModel>();
+                o.MemberAccessStrategy.Register<GreenhousePostingPartViewModel>();
+                o.MemberAccessStrategy.Register<GreenhouseQuestionDisplayContext>();
+                o.MemberAccessStrategy.Register<GreenhouseQuestionValue>();
+            });
 
             services.AddLiquidFilter<DepartmentOptionsFilter>("greenhouse_department_options");
             services.AddLiquidFilter<LocationOptionsFilter>("greenhouse_location_options");

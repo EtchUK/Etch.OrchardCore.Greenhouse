@@ -55,6 +55,10 @@
               "Settings": {
                 "ContentTypePartSettings": {
                   "Position": "3"
+                },
+                "ContentIndexSettings": {
+                  "Included": true,
+                  "Stored": true
                 }
               }
             },

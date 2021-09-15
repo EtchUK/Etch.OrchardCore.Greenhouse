@@ -1,12 +1,9 @@
-﻿using Etch.OrchardCore.Greenhouse.Extensions;
-using Etch.OrchardCore.Greenhouse.ModelBinding;
+﻿using Etch.OrchardCore.Greenhouse.ModelBinding;
 using Etch.OrchardCore.Greenhouse.Models;
 using Etch.OrchardCore.Greenhouse.Services.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json.Linq;
-using OrchardCore.Entities;
-using OrchardCore.Settings;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,7 +39,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
             return createdCandidate;
         }
 
-        public async Task<GreenhouseCandidate> BindAsync(ModelStateDictionary modelState, HttpRequest request, GreenhouseJobPosting posting, GreenhousePostingFormPartSettings settings)
+        public GreenhouseCandidate Bind(ModelStateDictionary modelState, HttpRequest request, GreenhouseJobPosting posting, GreenhousePostingFormPartSettings settings)
         {
             var binders = new Dictionary<string, IGreenhouseCandidateModelBinder>
             {
@@ -110,8 +107,6 @@ namespace Etch.OrchardCore.Greenhouse.Services
     public interface IGreenhouseApplyService
     {
         Task<GreenhouseCandidateResponse> ApplyAsync(GreenhouseCandidate candidate);
-
-        Task<GreenhouseCandidate> BindAsync(ModelStateDictionary modelState, HttpRequest request, GreenhouseJobPosting posting, GreenhousePostingFormPartSettings settings);
-
+        GreenhouseCandidate Bind(ModelStateDictionary modelState, HttpRequest request, GreenhouseJobPosting posting, GreenhousePostingFormPartSettings settings);
     }
 }

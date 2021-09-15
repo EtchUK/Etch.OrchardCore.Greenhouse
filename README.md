@@ -8,7 +8,7 @@ Integrates Greenhouse with Orchard Core
 
 ## Orchard Core Reference
 
-This module is referencing the RC1 build of Orchard Core ([`1.0.0-rc2-13450`](https://www.nuget.org/packages/OrchardCore.Module.Targets/1.0.0-rc2-13450)).
+This module is referencing a stable build of Orchard Core ([`1.0.0`](https://www.nuget.org/packages/OrchardCore.Module.Targets/1.0.0)).
 
 ## Installing
 
@@ -18,7 +18,58 @@ Alternatively you can [download the source](https://github.com/etchuk/Etch.Orcha
 
 ## Usage
 
-*Add instructions on how to use module features.*
+First step is to enable "Greenhouse" within the features section of the admin dashboard. Enabling the module will make a new "Greenhouse" option available within the "Configuration" section of the admin menu. This option will navigate to the settings for this module, which is where settings need to be configured in order for the site to communicate with the Greenhouse API.
+
+_If you don't have access to an API key you can mock the API and change the hostname within the settings to point to your mock API_
+
+### Fetching Postings
+
+Enabling this module will create a new "Greenhouse Posting" content type that will represent a posting within Greenhouse. Workflows are leveraged in order to sync job postings from Greenhouse. By using workflows it gives you control of the trigger for when a sync should be initiated. When creating a workflow, there is a "Sync Greenhouse Postings" task that contains some optional configuration options. The sync will only fetch job postings from Greenhouse that have been updated since the date of the last updated Greenhouse posting within the Orchard Core site. If a sync hasn't occurred then it will fetch all the Greenhouse postings from the API. 
+
+Greenhouse postings have flags to indicate whether the posting is `active` or `live`. When a posting's `active` state changes to `false`, this means the posting has been removed, which means the sync will remove the associated content item from the site. `live` signifies the posting status, when this is `false` the content item will be saved as a draft.
+
+### Applying
+
+The "Greenhouse Posting" content type contains a "GreenhousePostingFormPart" that can be used to control whether the application form is displayed and various settings for configuring the behaviour of the application form. The application form fields are represented as JSON and stored within the `GreenhousePostingFormPart`. Application forms can be made up of different types of fields (e.g. short text, multi select, etc...). When rendering the `GreenhousePostingFormPart`, each field within the application form is represented by a shape that's is then rendered by the `GreenhousePostingFormPart` shape. Theme developers can override these shapes with a custom template. For example to customise the long text field display, add a `GreenhouseQuestion-LongText` template to your theme. 
+
+The currently supported form fields are shown below.
+
+- Attachment
+- Boolean
+- LongText
+- MultiSelect
+- ShortText
+- SingleSelect
+
+#### Workflows
+
+This module provides a "Greenhouse application event" that will trigger when an application is submitted through the site. There are outcomes for handling whether the application was successful or failed.
+
+### Listings
+
+This module provides a "Greenhouse Postings" widget that provides a variety of ways to display a collection of greenhouse postings. This widget includes options for providing basic filters for filtering posts by location or department, paging, customising layout and defining labels displayed on the UI.
+
+### Liquid Filters
+
+Below are the liquid flters that are provided.
+
+#### greenhouse_department_options
+
+Returns a collection of `<option>` elements that represent a distinct list of the different departments associated to greenhouse postings within site. This filter needs the results from an Orchard Core query ("AllGreenhousePostings" is created when enabling this module) that contains all the Greenhouse postings in order to access the departments. If a `department` query string is present and has a matching value then the `<option>` element will have a `selected` attribute. Below is an example of how to use the filter.
+
+```
+{% assign allPostings = Queries.AllGreenhousePostings | query %}
+{{ allPostings | greenhouse_department_options | raw }}
+```
+
+#### greenhouse_location_options
+
+Returns a collection of `<option>` elements that represent a distinct list of the different locations associated to greenhouse postings within site. This filter needs the results from an Orchard Core query ("AllGreenhousePostings" is created when enabling this module) that contains all the Greenhouse postings in order to access the locations. If a `location` query string is present and has a matching value then the `<option>` element will have a `selected` attribute. Below is an example of how to use the filter.
+
+```
+{% assign allPostings = Queries.AllGreenhousePostings | query %}
+{{ allPostings | greenhouse_location_options | raw }}
+```
 
 ## Packaging
 

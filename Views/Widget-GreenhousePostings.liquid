@@ -23,9 +23,9 @@
 {% assign showPinned = location == nil and department == nil and page == 1 %}
 
 {% if showPinned %}
-    {% assign pageSize = pageSize - pinnedPostings.size  %}
+    {% assign pageSize = pageSize | minus: pinnedPostings.size  %}
 {% else %}
-    {% assign fromValue = fromValue - pinnedPostings.size %}
+    {% assign fromValue = fromValue | minus: pinnedPostings.size %}
 {% endif %}
 
 {% assign totalItems = Queries[query] | query: size: 10000, department: department, location: location %}
@@ -40,11 +40,11 @@
 {% assign pageUrl = pageUrl | append: "?" %}
 
 {% if department != null %}
-    {% assign pageUrl = pageUrl | append: "department=" + department + "&" %}
+    {% assign pageUrl = pageUrl | append: "department=" | append: department | append: "&" %}
 {% endif %}
 
 {% if location != null %}
-    {% assign pageUrl = pageUrl | append: "location=" + location + "&" %}
+    {% assign pageUrl = pageUrl | append: "location=" | append: location | append: "&" %}
 {% endif %}
 
 {% assign hideDepartment = greenhousePostings.HideDepartmentFilter.Value %}

@@ -62,7 +62,7 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
 
             try
             {
-                candidate = await _greenhouseApplyService.BindAsync(ModelState, Request, jobPosting, formPartSettings);
+                candidate = _greenhouseApplyService.Bind(ModelState, Request, jobPosting, formPartSettings);
             } 
             catch (Exception ex)
             {
@@ -100,9 +100,9 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
 
         private async Task<ContentItem> GetContentItemAsync()
         {
-            _autorouteEntries.TryGetEntryByPath(GetReferrerRoute(), out var entry);
+            (var result, var entry) = await _autorouteEntries.TryGetEntryByPathAsync(GetReferrerRoute());
 
-            if (entry == null)
+            if (!result)
             {
                 return null;
             }

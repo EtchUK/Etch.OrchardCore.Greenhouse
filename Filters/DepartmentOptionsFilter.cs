@@ -19,13 +19,13 @@ namespace Etch.OrchardCore.Greenhouse.Filters
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async ValueTask<FluidValue> ProcessAsync(FluidValue input, FilterArguments arguments, TemplateContext ctx)
+        public async ValueTask<FluidValue> ProcessAsync(FluidValue input, FilterArguments arguments, LiquidTemplateContext context)
         {
             var departments = new List<string>();
 
             foreach (var value in input.Enumerate())
             {
-                departments.Add((await value.GetValueAsync($"{nameof(GreenhousePostingPart)}.{nameof(GreenhousePostingPart.Department)}", ctx)).ToStringValue());
+                departments.Add((await value.GetValueAsync($"{nameof(GreenhousePostingPart)}.{nameof(GreenhousePostingPart.Department)}", context)).ToStringValue());
             }
 
             return new StringValue(StringUtils.GetOptions(departments.Distinct().OrderBy(x => x).ToList(), _httpContextAccessor.HttpContext.Request.Query["department"].FirstOrDefault()));

@@ -3,6 +3,7 @@ using OrchardCore.Data.Migration;
 using OrchardCore.Recipes.Services;
 using System;
 using System.Threading.Tasks;
+using YesSql.Sql;
 
 namespace Etch.OrchardCore.Greenhouse
 {
@@ -24,7 +25,7 @@ namespace Etch.OrchardCore.Greenhouse
 
         public int UpdateFrom1()
         {
-            SchemaBuilder.CreateMapIndexTable(nameof(GreenhousePostingPartIndex), table => table
+            SchemaBuilder.CreateMapIndexTable<GreenhousePostingPartIndex>(table => table
                 .Column<long>("GreenhouseId")
             );
 
