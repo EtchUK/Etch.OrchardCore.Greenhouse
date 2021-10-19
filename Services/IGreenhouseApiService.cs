@@ -10,6 +10,6 @@ namespace Etch.OrchardCore.Greenhouse.Services
         Task<IList<GreenhouseAttachmentResponse>> AddAttachmentsAsync(long candidateId, IList<GreenhouseAttachment> attachments);
         Task<GreenhouseCandidateResponse> CreateCandidateAsync(GreenhouseCandidate candidate);
         Task<GreenhouseJob> GetJobAsync(long id);
-        Task<IEnumerable<GreenhouseJobPosting>> GetJobPostingsAsync(DateTime? updatedAfter);
+        Task<IEnumerable<GreenhouseJobPosting>> GetJobPostingsAsync(DateTime? updatedAfter, int page = 1);
     }
 }

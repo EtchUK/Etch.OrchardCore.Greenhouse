@@ -3,6 +3,7 @@ using Etch.OrchardCore.Greenhouse.Services.Dtos;
 using Flurl.Http;
 using OrchardCore.Entities;
 using OrchardCore.Settings;
+using OrchardCore.Workflows.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,6 +12,12 @@ namespace Etch.OrchardCore.Greenhouse.Services
 {
     public class GreenhouseApiService : IGreenhouseApiService
     {
+        #region Constants
+
+        private const int PageSize = 150;
+
+        #endregion
+
         #region Dependencies
 
         private readonly ISiteService _siteService;
@@ -66,17 +73,24 @@ namespace Etch.OrchardCore.Greenhouse.Services
             return await requestUrl.WithBasicAuth(settings.ApiKey, string.Empty).GetAsync().ReceiveJson<GreenhouseJob>();
         }
 
-        public async Task<IEnumerable<GreenhouseJobPosting>> GetJobPostingsAsync(DateTime? updatedAfter)
+        public async Task<IEnumerable<GreenhouseJobPosting>> GetJobPostingsAsync(DateTime? updatedAfter, int page = 1)
         {
             var settings = (await _siteService.GetSiteSettingsAsync()).As<GreenhouseSettings>();
-            var requestUrl = $"{settings.ApiHostname}/job_posts";
+            var requestUrl = $"{settings.ApiHostname}/job_posts?active=true&live=true&per_page={PageSize}& page={page}";
 
             if (updatedAfter.HasValue)
             {
                 requestUrl += $"?updated_after={updatedAfter.Value:o}";
             }
 
-            return await requestUrl.WithBasicAuth(settings.ApiKey, string.Empty).GetAsync().ReceiveJson<IList<GreenhouseJobPosting>>();
+            var postings = await requestUrl.WithBasicAuth(settings.ApiKey, string.Empty).GetAsync().ReceiveJson<IList<GreenhouseJobPosting>>();
+
+            if (postings.Count == PageSize)
+            {
+                postings.AddRange(await GetJobPostingsAsync(updatedAfter, page + 1));
+            }
+
+            return postings;
         }
 
         #endregion

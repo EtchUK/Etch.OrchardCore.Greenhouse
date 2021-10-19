@@ -25,6 +25,8 @@ namespace Etch.OrchardCore.Greenhouse.Services
         private readonly ISession _session;
         private readonly ISlugService _slugService;
 
+        private readonly Dictionary<long, GreenhouseJob> _cachedJobs = new Dictionary<long, GreenhouseJob>();
+
         #endregion
 
         #region Constructor
@@ -124,7 +126,12 @@ namespace Etch.OrchardCore.Greenhouse.Services
                 return;
             }
 
-            var job = await _greenhouseApiService.GetJobAsync(posting.JobId);
+            if (!_cachedJobs.ContainsKey(posting.JobId))
+            {
+                _cachedJobs.Add(posting.JobId, await _greenhouseApiService.GetJobAsync(posting.JobId));
+            }
+
+            var job = _cachedJobs[posting.JobId];
 
             if (contentItem == null)
             {
