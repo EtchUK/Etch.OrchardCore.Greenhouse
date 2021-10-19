@@ -28,7 +28,7 @@ namespace Etch.OrchardCore.Greenhouse.ModelBinding
 
         public object Bind(ModelStateDictionary modelState, HttpRequest request, GreenhouseQuestion question)
         {
-            if (question.Required && !request.Form.Files.Any(x => x.Name == question.Name))
+            if (question.Required.HasValue && question.Required.Value && !request.Form.Files.Any(x => x.Name == question.Name))
             {
                 modelState.AddModelError(question.Name, $"{question.Label} is required");
                 return null;

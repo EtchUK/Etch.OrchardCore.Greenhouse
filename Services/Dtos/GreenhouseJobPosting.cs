@@ -19,7 +19,7 @@ namespace Etch.OrchardCore.Greenhouse.Services.Dtos
         public bool External { get; set; }
 
         [JsonProperty("first_published_at")]
-        public DateTime FirstPublishedAt { get; set; }
+        public DateTime? FirstPublishedAt { get; set; }
 
         [JsonProperty("id")]
         public long Id { get; set; }

@@ -17,7 +17,7 @@ namespace Etch.OrchardCore.Greenhouse.Services.Dtos
         public bool Private { get; set; }
 
         [JsonProperty("required")]
-        public bool Required { get; set; }
+        public bool? Required { get; set; }
 
         [JsonProperty("type")]
         public string Type { get; set; }

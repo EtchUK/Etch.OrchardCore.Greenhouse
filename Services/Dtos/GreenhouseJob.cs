@@ -9,7 +9,7 @@ namespace Etch.OrchardCore.Greenhouse.Services.Dtos
         public bool Confidential { get; set; }
 
         [JsonProperty("closed_at")]
-        public DateTime ClosedAt { get; set; }
+        public DateTime? ClosedAt { get; set; }
 
         [JsonProperty("created_at")]
         public DateTime CreatedAt { get; set; }

@@ -11,7 +11,7 @@ namespace Etch.OrchardCore.Greenhouse.ModelBinding
         {
             modelState.SetModelValue(question.Name, request.Form[question.Name], request.Form[question.Name]);
 
-            if (question.Required && string.IsNullOrWhiteSpace(request.Form[question.Name]))
+            if (question.Required.HasValue && question.Required.Value && string.IsNullOrWhiteSpace(request.Form[question.Name]))
             {
                 modelState.AddModelError(question.Name, $"{question.Label} is required");
             }
