@@ -6,6 +6,7 @@ using OrchardCore.Settings;
 using OrchardCore.Workflows.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Etch.OrchardCore.Greenhouse.Services
@@ -76,7 +77,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
         public async Task<IEnumerable<GreenhouseJobPosting>> GetJobPostingsAsync(DateTime? updatedAfter, int page = 1)
         {
             var settings = (await _siteService.GetSiteSettingsAsync()).As<GreenhouseSettings>();
-            var requestUrl = $"{settings.ApiHostname}/job_posts?active=true&live=true&per_page={PageSize}& page={page}";
+            var requestUrl = $"{settings.ApiHostname}/job_posts?active=true&live=true&per_page={PageSize}&page={page}";
 
             if (updatedAfter.HasValue)
             {
@@ -90,7 +91,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
                 postings.AddRange(await GetJobPostingsAsync(updatedAfter, page + 1));
             }
 
-            return postings;
+            return postings.Where(x => x.External);
         }
 
         #endregion
