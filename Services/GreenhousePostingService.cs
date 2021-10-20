@@ -112,6 +112,14 @@ namespace Etch.OrchardCore.Greenhouse.Services
             }
         }
 
+        private async Task<bool> CheckJobExists(long id)
+        {
+            return await _session.Query<ContentItem>()
+                .With<GreenhousePostingPartIndex>()
+                    .Where(x => x.JobId == id)
+                .CountAsync() > 0;
+        }
+
         private async Task RemoveAsync(ContentItem contentItem)
         {
             await _contentManager.RemoveAsync(contentItem);
@@ -123,6 +131,10 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
             if ((contentItem != null && (contentItem.As<GreenhousePostingPart>()?.IgnoreSync ?? false)) || (contentItem == null && !posting.Active))
             {
+                return;
+            }
+
+            if (options.PreventDuplicatePostingsForSameJob && contentItem == null && await CheckJobExists(posting.JobId)) {
                 return;
             }
 

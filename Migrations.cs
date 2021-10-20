@@ -51,5 +51,14 @@ namespace Etch.OrchardCore.Greenhouse
 
             return 4;
         }
+
+        public int UpdateFrom4()
+        {
+            SchemaBuilder.AlterTable(nameof(GreenhousePostingPartIndex), table => table
+                .AddColumn<long>("JobId")
+            );
+
+            return 5;
+        }
     }
 }

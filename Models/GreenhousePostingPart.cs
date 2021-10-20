@@ -27,6 +27,15 @@ namespace Etch.OrchardCore.Greenhouse.Models
             }
         }
 
+        public long JobId
+        {
+            get
+            {
+                ParseJobData();
+                return _jobData?.Id ?? 0;
+            }
+        }
+
         public string Location
         {
             get

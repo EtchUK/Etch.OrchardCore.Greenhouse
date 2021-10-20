@@ -8,6 +8,7 @@ namespace Etch.OrchardCore.Greenhouse.Indexes
     public class GreenhousePostingPartIndex : MapIndex
     {
         public long GreenhouseId { get; set; }
+        public long JobId { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }
 
@@ -28,6 +29,7 @@ namespace Etch.OrchardCore.Greenhouse.Indexes
                     return new GreenhousePostingPartIndex
                     {
                         GreenhouseId = part.GreenhouseId,
+                        JobId = part.JobId,
                         UpdatedAt = part.UpdatedAt
                     };
                 });
