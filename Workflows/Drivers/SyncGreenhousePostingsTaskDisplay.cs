@@ -1,9 +1,7 @@
 ﻿using Etch.OrchardCore.Greenhouse.Workflows.Activities;
 using Etch.OrchardCore.Greenhouse.Workflows.ViewModels;
-using Newtonsoft.Json;
 using OrchardCore.Workflows.Display;
 using OrchardCore.Workflows.Models;
-using System.Collections.Generic;
 
 namespace Etch.OrchardCore.Greenhouse.Workflows.Drivers
 {
@@ -13,6 +11,7 @@ namespace Etch.OrchardCore.Greenhouse.Workflows.Drivers
         {
             model.Author = activity.Author.Expression;
             model.ContentType = activity.ContentType.Expression;
+            model.ExternalOnly = bool.Parse(activity.ExternalOnly.Expression ?? "False");
             model.Locations = activity.Locations.Expression ?? "[]";
         }
 
@@ -20,6 +19,7 @@ namespace Etch.OrchardCore.Greenhouse.Workflows.Drivers
         {
             activity.Author = new WorkflowExpression<string>(model.Author);
             activity.ContentType = new WorkflowExpression<string>(model.ContentType);
+            activity.ExternalOnly = new WorkflowExpression<bool>(model.ExternalOnly.ToString());
             activity.Locations = new WorkflowExpression<string>(model.Locations);
         }
     }

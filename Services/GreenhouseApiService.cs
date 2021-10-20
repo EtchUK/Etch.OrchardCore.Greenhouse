@@ -106,6 +106,11 @@ namespace Etch.OrchardCore.Greenhouse.Services
                 return false;
             }
 
+            if (options.ExternalOnly && !posting.External)
+            {
+                return false;
+            }
+
             return true;
         }
 

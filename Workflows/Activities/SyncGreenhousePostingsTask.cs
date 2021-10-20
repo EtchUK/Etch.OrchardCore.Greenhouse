@@ -66,12 +66,13 @@ namespace Etch.OrchardCore.Greenhouse.Workflows.Activities
                 {
                     Author = string.IsNullOrWhiteSpace(Author.Expression) ? Constants.Defaults.Author : Author.Expression,
                     ContentType = string.IsNullOrWhiteSpace(ContentType.Expression) ? Constants.Defaults.ContentType : ContentType.Expression,
+                    ExternalOnly = string.IsNullOrWhiteSpace(ExternalOnly.Expression) ? false : bool.Parse(ExternalOnly.Expression),
                     Locations = string.IsNullOrWhiteSpace(Locations.Expression) ? Array.Empty<string>() : JsonConvert.DeserializeObject<string[]>(Locations.Expression)
                 };
 
                 await _greenhousePostingService.SyncAsync(
                     (await _greenhouseApiService.GetJobPostingsAsync(
-                        await _greenhousePostingService.GetLatestUpdatedAtAsync(), new GreenhouseFilterOptions { Locations = options.Locations })).ToList(), options);
+                        await _greenhousePostingService.GetLatestUpdatedAtAsync(), new GreenhouseFilterOptions { ExternalOnly = options.ExternalOnly, Locations = options.Locations })).ToList(), options);
 
                 return Outcomes(OutcomeDone);
             }
@@ -95,6 +96,12 @@ namespace Etch.OrchardCore.Greenhouse.Workflows.Activities
         public WorkflowExpression<string> ContentType
         {
             get => GetProperty(() => new WorkflowExpression<string>());
+            set => SetProperty(value);
+        }
+
+        public WorkflowExpression<bool> ExternalOnly
+        {
+            get => GetProperty(() => new WorkflowExpression<bool>());
             set => SetProperty(value);
         }
 
