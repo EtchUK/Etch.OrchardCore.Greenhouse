@@ -1,5 +1,6 @@
 ﻿using Etch.OrchardCore.Greenhouse.Models;
 using Etch.OrchardCore.Greenhouse.Services.Dtos;
+using Etch.OrchardCore.Greenhouse.Services.Options;
 using Flurl.Http;
 using OrchardCore.Entities;
 using OrchardCore.Settings;
@@ -74,7 +75,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
             return await requestUrl.WithBasicAuth(settings.ApiKey, string.Empty).GetAsync().ReceiveJson<GreenhouseJob>();
         }
 
-        public async Task<IEnumerable<GreenhouseJobPosting>> GetJobPostingsAsync(DateTime? updatedAfter, int page = 1)
+        public async Task<IEnumerable<GreenhouseJobPosting>> GetJobPostingsAsync(DateTime? updatedAfter, GreenhouseFilterOptions options, int page = 1)
         {
             var settings = (await _siteService.GetSiteSettingsAsync()).As<GreenhouseSettings>();
             var requestUrl = $"{settings.ApiHostname}/job_posts?active=true&live=true&per_page={PageSize}&page={page}";
@@ -88,10 +89,24 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
             if (postings.Count == PageSize)
             {
-                postings.AddRange(await GetJobPostingsAsync(updatedAfter, page + 1));
+                postings.AddRange(await GetJobPostingsAsync(updatedAfter, options, page + 1));
             }
 
-            return postings.Where(x => x.External);
+            return postings.Where(x => ShouldIncludePosting(x, options));
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private bool ShouldIncludePosting(GreenhouseJobPosting posting, GreenhouseFilterOptions options)
+        {
+            if (options.Locations.Any() && (posting.Location == null || !options.Locations.Any(x => string.Equals(x, posting.Location.Name, StringComparison.OrdinalIgnoreCase))))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         #endregion

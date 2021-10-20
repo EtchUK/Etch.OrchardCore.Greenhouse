@@ -2,6 +2,7 @@
 using Etch.OrchardCore.Greenhouse.Services.Options;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using OrchardCore.Workflows.Abstractions.Models;
 using OrchardCore.Workflows.Activities;
 using OrchardCore.Workflows.Models;
@@ -64,10 +65,13 @@ namespace Etch.OrchardCore.Greenhouse.Workflows.Activities
                 var options = new GreenhouseSyncOptions
                 {
                     Author = string.IsNullOrWhiteSpace(Author.Expression) ? Constants.Defaults.Author : Author.Expression,
-                    ContentType = string.IsNullOrWhiteSpace(ContentType.Expression) ? Constants.Defaults.ContentType : ContentType.Expression
+                    ContentType = string.IsNullOrWhiteSpace(ContentType.Expression) ? Constants.Defaults.ContentType : ContentType.Expression,
+                    Locations = string.IsNullOrWhiteSpace(Locations.Expression) ? Array.Empty<string>() : JsonConvert.DeserializeObject<string[]>(Locations.Expression)
                 };
 
-                await _greenhousePostingService.SyncAsync((await _greenhouseApiService.GetJobPostingsAsync(await _greenhousePostingService.GetLatestUpdatedAtAsync())).ToList(), options);
+                await _greenhousePostingService.SyncAsync(
+                    (await _greenhouseApiService.GetJobPostingsAsync(
+                        await _greenhousePostingService.GetLatestUpdatedAtAsync(), new GreenhouseFilterOptions { Locations = options.Locations })).ToList(), options);
 
                 return Outcomes(OutcomeDone);
             }
@@ -89,6 +93,12 @@ namespace Etch.OrchardCore.Greenhouse.Workflows.Activities
         }
 
         public WorkflowExpression<string> ContentType
+        {
+            get => GetProperty(() => new WorkflowExpression<string>());
+            set => SetProperty(value);
+        }
+
+        public WorkflowExpression<string> Locations
         {
             get => GetProperty(() => new WorkflowExpression<string>());
             set => SetProperty(value);

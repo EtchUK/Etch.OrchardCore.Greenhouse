@@ -11,3 +11,52 @@
     <input asp-for="ContentType" class="form-control" />
     <span class="hint">@T["Content type of content items created/updated via sync."]</span>
 </div>
+
+<script asp-src="https://vuejs.org/js/vue.min.js" debug-src="https://vuejs.org/js/vue.js" asp-name="vuejs"
+        at="Foot"></script>
+<script asp-src="https://cdn.jsdelivr.net/sortable/1.4.2/Sortable.min.js"
+        debug-src="https://cdn.jsdelivr.net/sortable/1.4.2/Sortable.js" asp-name="sortable" at="Foot"></script>
+<script asp-src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.14.1/vuedraggable.min.js"
+        debug-src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.14.1/vuedraggable.js" asp-name="vuedraggable"
+        depends-on="vuejs, sortable" at="Foot"></script>
+
+<script asp-src="~/Etch.OrchardCore.Greenhouse/Scripts/admin.js" asp-name="values" depends-on="jquery"
+        at="Foot"></script>
+<script at="Foot">
+        initializeValuesEditor(document.getElementById('@Html.IdFor(m => m)'));
+</script>
+
+<div class="form-group">
+    <label asp-for="Locations">@T["Locations"]</label>
+
+    <p class="hint">Filter which job postings are synced based on location.</p>
+
+    <div id="@Html.IdFor(m => m)" data-for="@Html.IdFor(m => m.Locations)" asp-validation-class-for="Locations">
+        <input type="hidden" asp-for="Locations" :value="value" data-init="@Model.Locations">
+
+        <div class="form-inline mb-3">
+            <div class="form-group mr-3 w-100" style="max-width: 300px;">
+                <label for="@Html.IdFor(m => m.Locations)_NewValue" class="sr-only">@T["New Value"]</label>
+                <input type="text" class="form-control w-100" id="@Html.IdFor(m => m.Locations)_NewValue" placeholder="Enter location name" v-model="newValue" v-on:keydown.enter.prevent="add">
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" v-on:click="add">@T["Add"]</button>
+        </div>
+
+        <draggable tag="ul" class="list-group" v-model="items" handle=".handle">
+            <li v-for="(item, index) in items" class="list-group-item">
+                <div class="d-flex">
+                    <div class="w-100 text-left align-self-center">
+                        {{item}}
+                    </div>
+                    <div class="flex-shrink-1 text-right align-self-center">
+                        <button v-on:click="remove(index)" class="btn btn-danger btn-sm" type="button">
+                            <span class="fa fa-trash-alt"></span>
+                        </button>
+                    </div>
+                </div>
+            </li>
+        </draggable>
+
+        <p v-if="!hasValues" class="hint">Currently no locations, so all job postings will be synced.</p>
+    </div>
+</div>

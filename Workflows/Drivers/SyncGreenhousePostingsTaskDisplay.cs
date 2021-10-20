@@ -1,7 +1,9 @@
 ﻿using Etch.OrchardCore.Greenhouse.Workflows.Activities;
 using Etch.OrchardCore.Greenhouse.Workflows.ViewModels;
+using Newtonsoft.Json;
 using OrchardCore.Workflows.Display;
 using OrchardCore.Workflows.Models;
+using System.Collections.Generic;
 
 namespace Etch.OrchardCore.Greenhouse.Workflows.Drivers
 {
@@ -11,12 +13,14 @@ namespace Etch.OrchardCore.Greenhouse.Workflows.Drivers
         {
             model.Author = activity.Author.Expression;
             model.ContentType = activity.ContentType.Expression;
+            model.Locations = activity.Locations.Expression ?? "[]";
         }
 
         protected override void UpdateActivity(SyncGreenhousePostingsTaskViewModel model, SyncGreenhousePostingsTask activity)
         {
             activity.Author = new WorkflowExpression<string>(model.Author);
             activity.ContentType = new WorkflowExpression<string>(model.ContentType);
+            activity.Locations = new WorkflowExpression<string>(model.Locations);
         }
     }
 }
