@@ -20,5 +20,28 @@ namespace Etch.OrchardCore.Greenhouse.Utilities
 
             return builder.ToString();
         }
+
+        public static string GetRadios(IList<string> items, string selectedValue)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("<div class=\"radios__item\">");
+            builder.AppendLine("<input class=\"radios__input\" type=\"radio\" id=\"department-all\" name=\"department\" value=\"\">");
+            builder.AppendLine("<label class=\"label radios__label\" for=\"department-all\">");
+            builder.AppendLine("All");
+            builder.AppendLine("</label>");
+            builder.AppendLine("</div>");
+
+            for (int i = 0; i < items.Count; ++i)
+            {
+                builder.AppendLine("<div class=\"radios__item\">");
+                builder.AppendLine($"<input class=\"radios__input\" type=\"radio\" id=\"department-{i}\" name=\"department\" value=\"{items[i]}\">");
+                builder.AppendLine($"<label class=\"label radios__label\" for=\"department-{i}\">");
+                builder.AppendLine(items[i]);
+                builder.AppendLine("</label>");
+                builder.AppendLine("</div>");
+            }
+
+            return builder.ToString();
+        }
     }
 }

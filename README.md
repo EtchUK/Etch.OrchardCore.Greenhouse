@@ -71,6 +71,24 @@ Returns a collection of `<option>` elements that represent a distinct list of th
 {{ allPostings | greenhouse_location_options | raw }}
 ```
 
+#### greenhouse_unique_departments
+
+Returns an array of distinct departments. This filter needs the results from an Orchard Core query ("AllGreenhousePostings" is created when enabling this module) that contains all the Greenhouse postings in order to access the departments.
+
+```
+{% assign allPostings = Queries.AllGreenhousePostings | query %}
+{% departments | greenhouse_unique_departments %}
+```
+
+#### greenhouse_unique_locations
+
+Returns an array of distinct locations. This filter needs the results from an Orchard Core query ("AllGreenhousePostings" is created when enabling this module) that contains all the Greenhouse postings in order to access the locations.
+
+```
+{% assign allPostings = Queries.AllGreenhousePostings | query %}
+{% locations | greenhouse_unique_locations %}
+```
+
 ## Packaging
 
 When the theme is compiled (using `dotnet build`) it's configured to generate a `.nupkg` file (this can be found in `\bin\Debug\` or `\bin\Release`).

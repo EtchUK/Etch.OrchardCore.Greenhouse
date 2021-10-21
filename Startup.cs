@@ -67,6 +67,7 @@ namespace Etch.OrchardCore.Greenhouse
 
             services.AddLiquidFilter<DepartmentOptionsFilter>("greenhouse_department_options");
             services.AddLiquidFilter<LocationOptionsFilter>("greenhouse_location_options");
+            services.AddLiquidFilter<UniqueDepartmentsFilter>("greenhouse_unique_departments");
 
             services.AddScoped<IGreenhouseQuestionShapeFactory, GreenhouseQuestionShapeFactory>();
         }
