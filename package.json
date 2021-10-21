@@ -1,6 +1,6 @@
 {
   "name": "etch.orchardcore.greenhouse",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Integrates Greenhouse with Orchard Core",
   "scripts": {
     "build": "webpack",
