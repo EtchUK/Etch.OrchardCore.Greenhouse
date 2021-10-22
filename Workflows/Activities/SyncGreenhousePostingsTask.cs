@@ -68,7 +68,8 @@ namespace Etch.OrchardCore.Greenhouse.Workflows.Activities
                     ContentType = string.IsNullOrWhiteSpace(ContentType.Expression) ? Constants.Defaults.ContentType : ContentType.Expression,
                     ExternalOnly = !string.IsNullOrWhiteSpace(ExternalOnly.Expression) && bool.Parse(ExternalOnly.Expression),
                     Locations = string.IsNullOrWhiteSpace(Locations.Expression) ? Array.Empty<string>() : JsonConvert.DeserializeObject<string[]>(Locations.Expression),
-                    PreventDuplicatePostingsForSameJob = !string.IsNullOrWhiteSpace(PreventDuplicatePostingsForSameJob.Expression) && bool.Parse(PreventDuplicatePostingsForSameJob.Expression)
+                    PreventDuplicatePostingsForSameJob = !string.IsNullOrWhiteSpace(PreventDuplicatePostingsForSameJob.Expression) && bool.Parse(PreventDuplicatePostingsForSameJob.Expression),
+                    UrlPrefix = string.IsNullOrWhiteSpace(UrlPrefix.Expression) ? string.Empty : UrlPrefix.Expression
                 };
 
                 await _greenhousePostingService.SyncAsync(
@@ -115,6 +116,12 @@ namespace Etch.OrchardCore.Greenhouse.Workflows.Activities
         public WorkflowExpression<bool> PreventDuplicatePostingsForSameJob
         {
             get => GetProperty(() => new WorkflowExpression<bool>());
+            set => SetProperty(value);
+        }
+
+        public WorkflowExpression<string> UrlPrefix
+        {
+            get => GetProperty(() => new WorkflowExpression<string>());
             set => SetProperty(value);
         }
 

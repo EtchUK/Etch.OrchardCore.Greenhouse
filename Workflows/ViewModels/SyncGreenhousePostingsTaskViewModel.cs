@@ -7,5 +7,6 @@
         public bool ExternalOnly { get; set; }
         public string Locations { get; set; }
         public bool PreventDuplicatePostingsForSameJob { get; set; }
+        public string UrlPrefix { get; set; }
     }
 }

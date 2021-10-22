@@ -14,6 +14,7 @@ namespace Etch.OrchardCore.Greenhouse.Workflows.Drivers
             model.ExternalOnly = bool.Parse(activity.ExternalOnly.Expression ?? "False");
             model.Locations = activity.Locations.Expression ?? "[]";
             model.PreventDuplicatePostingsForSameJob = bool.Parse(activity.PreventDuplicatePostingsForSameJob.Expression ?? "False");
+            model.UrlPrefix = activity.UrlPrefix.Expression;
         }
 
         protected override void UpdateActivity(SyncGreenhousePostingsTaskViewModel model, SyncGreenhousePostingsTask activity)
@@ -23,6 +24,7 @@ namespace Etch.OrchardCore.Greenhouse.Workflows.Drivers
             activity.ExternalOnly = new WorkflowExpression<bool>(model.ExternalOnly.ToString());
             activity.Locations = new WorkflowExpression<string>(model.Locations);
             activity.PreventDuplicatePostingsForSameJob = new WorkflowExpression<bool>(model.PreventDuplicatePostingsForSameJob.ToString());
+            activity.UrlPrefix = new WorkflowExpression<string>(model.UrlPrefix);
         }
     }
 }

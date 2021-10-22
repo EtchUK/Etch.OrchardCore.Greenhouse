@@ -98,7 +98,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
             contentItem.Apply(nameof(GreenhousePostingPart), greenhousePostingPart);
 
             var autoroutePart = contentItem.As<AutoroutePart>();
-            autoroutePart.Path = $"{_slugService.Slugify(posting.Title)}/{posting.Id}";
+            autoroutePart.Path = $"{options.UrlPrefix ?? string.Empty}{_slugService.Slugify(posting.Title)}/{posting.Id}";
             contentItem.Apply(nameof(AutoroutePart), autoroutePart);
 
             var titlePart = contentItem.As<TitlePart>();
