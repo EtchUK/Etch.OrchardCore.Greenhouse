@@ -122,6 +122,8 @@ namespace Etch.OrchardCore.Greenhouse.Services
             return await _session.Query<ContentItem>()
                 .With<GreenhousePostingPartIndex>()
                     .Where(x => x.JobId == id)
+                .With<ContentItemIndex>()
+                    .Where(x => !(!x.Latest && !x.Published))
                 .CountAsync() > 0;
         }
 
