@@ -8,6 +8,7 @@ using OrchardCore.Autoroute.Models;
 using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Records;
 using OrchardCore.Liquid;
+using OrchardCore.Title.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -99,6 +100,10 @@ namespace Etch.OrchardCore.Greenhouse.Services
             var autoroutePart = contentItem.As<AutoroutePart>();
             autoroutePart.Path = $"{_slugService.Slugify(posting.Title)}/{posting.Id}";
             contentItem.Apply(nameof(AutoroutePart), autoroutePart);
+
+            var titlePart = contentItem.As<TitlePart>();
+            titlePart.Title = posting.Title;
+            contentItem.Apply(nameof(TitlePart), titlePart);
 
             contentItem.Author = options.Author;
 
