@@ -82,7 +82,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
             if (updatedAfter.HasValue)
             {
-                requestUrl += $"?updated_after={updatedAfter.Value:o}";
+                requestUrl += $"&updated_after={updatedAfter.Value:o}";
             }
 
             var postings = await requestUrl.WithBasicAuth(settings.ApiKey, string.Empty).GetAsync().ReceiveJson<IList<GreenhouseJobPosting>>();
