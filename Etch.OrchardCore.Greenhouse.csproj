@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <PackageId>Etch.OrchardCore.Greenhouse</PackageId>
     <Title>Greenhouse</Title>
     <Authors>Etch UK</Authors>
