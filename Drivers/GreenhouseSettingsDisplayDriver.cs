@@ -46,6 +46,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
             {
                 model.ApiHostname = section.ApiHostname;
                 model.ApiKey = section.ApiKey;
+                model.BoardUrl = section.BoardUrl;
                 model.OnBehalfOfId = section.OnBehalfOfId;
             }).Location("Content:3").OnGroup(Constants.GroupId);
         }
@@ -67,6 +68,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
                 {
                     section.ApiHostname = string.IsNullOrWhiteSpace(model.ApiHostname) ? Constants.Defaults.ApiHostname : model.ApiHostname.TrimEnd('/');
                     section.ApiKey = model.ApiKey;
+                    section.BoardUrl = model.BoardUrl;
                     section.OnBehalfOfId = model.OnBehalfOfId;
                 }
             }
