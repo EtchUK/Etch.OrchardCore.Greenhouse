@@ -7,10 +7,12 @@ using Newtonsoft.Json;
 using OrchardCore.Autoroute.Models;
 using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Records;
+using OrchardCore.Infrastructure.Html;
 using OrchardCore.Liquid;
 using OrchardCore.Title.Models;
 using System;
 using System.Collections.Generic;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using YesSql;
 
@@ -21,6 +23,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
         #region Dependencies
 
         private readonly IContentManager _contentManager;
+        private readonly HtmlEncoder _htmlEncoder;
         private readonly IGreenhouseApiService _greenhouseApiService;
         private readonly ILogger<GreenhousePostingService> _logger;
         private readonly ISession _session;
@@ -32,9 +35,10 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
         #region Constructor
 
-        public GreenhousePostingService(IContentManager contentManager, IGreenhouseApiService greenhouseApiService, ILogger<GreenhousePostingService> logger, ISession session, ISlugService slugService)
+        public GreenhousePostingService(IContentManager contentManager, HtmlEncoder htmlEncoder, IGreenhouseApiService greenhouseApiService, ILogger<GreenhousePostingService> logger, ISession session, ISlugService slugService)
         {
             _contentManager = contentManager;
+            _htmlEncoder = htmlEncoder;
             _greenhouseApiService = greenhouseApiService;
             _logger = logger;
             _session = session;
@@ -91,6 +95,8 @@ namespace Etch.OrchardCore.Greenhouse.Services
             var contentItem = await _contentManager.NewAsync(options.ContentType);
             contentItem.DisplayText = posting.Title;
 
+            var encoded = _htmlEncoder.Encode(posting.Content);
+
             var greenhousePostingPart = contentItem.As<GreenhousePostingPart>();
             greenhousePostingPart.GreenhouseId = posting.Id;
             greenhousePostingPart.JobData = JsonConvert.SerializeObject(job);
@@ -123,7 +129,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
                 .With<GreenhousePostingPartIndex>()
                     .Where(x => x.JobId == id)
                 .With<ContentItemIndex>()
-                    .Where(x => !(!x.Latest && !x.Published))
+                    .Where(x => x.Latest)
                 .CountAsync() > 0;
         }
 
