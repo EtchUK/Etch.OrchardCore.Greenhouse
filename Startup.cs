@@ -44,6 +44,7 @@ namespace Etch.OrchardCore.Greenhouse
 
             services.AddScoped<IDataMigration, Migrations>();
 
+            services.AddActivity<SyncGreenhouseBoardTask, SyncGreenhouseBoardTaskDisplay>();
             services.AddActivity<SyncGreenhousePostingsTask, SyncGreenhousePostingsTaskDisplay>();
             services.AddActivity<GreenhouseApplicationNotificationEvent, GreenhouseApplicationNotificationDisplay>();
 

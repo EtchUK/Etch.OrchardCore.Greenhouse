@@ -75,6 +75,20 @@ namespace Etch.OrchardCore.Greenhouse.Services
             return await requestUrl.WithBasicAuth(settings.ApiKey, string.Empty).GetAsync().ReceiveJson<GreenhouseJob>();
         }
 
+        public async Task<IList<GreenhouseJobPosting>> GetJobBoardAsync(string token)
+        {
+            var settings = (await _siteService.GetSiteSettingsAsync()).As<GreenhouseSettings>();
+            var board = await $"https://boards-api.greenhouse.io/v1/boards/{token}/jobs".GetAsync().ReceiveJson<GreenhouseJobBoard>();
+            var postings = new List<GreenhouseJobPosting>();
+
+            foreach (var job in board.Jobs)
+            {
+                postings.Add(await GetJobPostingAsync(job.PostingId, settings));
+            }
+
+            return postings;
+        }
+
         public async Task<IEnumerable<GreenhouseJobPosting>> GetJobPostingsAsync(DateTime? updatedAfter, GreenhouseFilterOptions options, int page = 1)
         {
             var settings = (await _siteService.GetSiteSettingsAsync()).As<GreenhouseSettings>();
@@ -98,6 +112,13 @@ namespace Etch.OrchardCore.Greenhouse.Services
         #endregion
 
         #region Private Methods
+
+        private async Task<GreenhouseJobPosting> GetJobPostingAsync(long id, GreenhouseSettings settings)
+        {
+            var requestUrl = $"{settings.ApiHostname}/job_posts/{id}";
+
+            return await requestUrl.WithBasicAuth(settings.ApiKey, string.Empty).GetAsync().ReceiveJson<GreenhouseJobPosting>();
+        }
 
         private bool ShouldIncludePosting(GreenhouseJobPosting posting, GreenhouseFilterOptions options)
         {
