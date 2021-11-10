@@ -24,9 +24,17 @@ _If you don't have access to an API key you can mock the API and change the host
 
 ### Fetching Postings
 
-Enabling this module will create a new "Greenhouse Posting" content type that will represent a posting within Greenhouse. Workflows are leveraged in order to sync job postings from Greenhouse. By using workflows it gives you control of the trigger for when a sync should be initiated. When creating a workflow, there is a "Sync Greenhouse Postings" task that contains some optional configuration options. The sync will only fetch job postings from Greenhouse that have been updated since the date of the last updated Greenhouse posting within the Orchard Core site. If a sync hasn't occurred then it will fetch all the Greenhouse postings from the API.
+Enabling this module will create a new "Greenhouse Posting" content type that will represent a posting within Greenhouse. Workflows are leveraged in order to sync job postings from Greenhouse. By using workflows it gives you control of the trigger for when a sync should be initiated. 
+
+#### Sync Greenhouse Postings
+
+When creating a workflow, there is a "Sync Greenhouse Postings" task that contains some optional configuration options. The sync will only fetch job postings from Greenhouse that have been updated since the date of the last updated Greenhouse posting within the Orchard Core site. If a sync hasn't occurred then it will fetch all the Greenhouse postings from the API.
 
 Greenhouse postings have flags to indicate whether the posting is `active` or `live`. When a posting's `active` state changes to `false`, this means the posting has been removed, which means the sync will remove the associated content item from the site. `live` signifies the posting status, when this is `false` the content item will be saved as a draft.
+
+#### Sync Greenhouse Board
+
+When creating a workflow, there is a "Sync Greenhouse Board" task that contains some optional configuration options. The sync will fetch jobs from a job board whose token is specified within the task. 
 
 ### Applying
 
