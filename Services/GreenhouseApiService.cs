@@ -113,7 +113,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
         #region Private Methods
 
-        private async Task<GreenhouseJobPosting> GetJobPostingAsync(long id, GreenhouseSettings settings)
+        private static async Task<GreenhouseJobPosting> GetJobPostingAsync(long id, GreenhouseSettings settings)
         {
             var requestUrl = $"{settings.ApiHostname}/job_posts/{id}";
 
