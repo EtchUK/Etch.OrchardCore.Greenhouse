@@ -12,9 +12,11 @@ using OrchardCore.Liquid;
 using OrchardCore.Title.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using YesSql;
+using YesSql.Services;
 
 namespace Etch.OrchardCore.Greenhouse.Services
 {
@@ -83,6 +85,24 @@ namespace Etch.OrchardCore.Greenhouse.Services
                 {
                     _logger.LogError(ex, $"Failed to sync posting: {posting.Id}");
                 }
+            }
+
+            await RemoveDeletedPostsAsync(postings);
+        }
+
+        public async Task RemoveDeletedPostsAsync(IList<GreenhouseJobPosting> postings)
+        {
+            var postingIds = postings.Select(x => x.Id).ToArray();
+            var contentItemsToBeRemoved = await _session.Query<ContentItem>()
+                .With<ContentItemIndex>()
+                    .Where(x => x.Latest)
+                .With<GreenhousePostingPartIndex>()
+                    .Where(x => x.GreenhouseId.IsNotIn(postingIds))
+                .ListAsync();
+
+            foreach (var contentItem in contentItemsToBeRemoved)
+            {
+                await _contentManager.RemoveAsync(contentItem);
             }
         }
 
