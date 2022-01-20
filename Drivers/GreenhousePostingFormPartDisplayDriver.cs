@@ -35,6 +35,11 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
 
         public override async Task<IDisplayResult> DisplayAsync(GreenhousePostingFormPart part, BuildPartDisplayContext context)
         {
+            if (context.DisplayType != "Detail")
+            {
+                return null;
+            }
+
             var settings = context.TypePartDefinition.GetSettings<GreenhousePostingFormPartSettings>();
             var postingPart = part.ContentItem.As<GreenhousePostingPart>();
 
