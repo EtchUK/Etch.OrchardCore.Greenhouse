@@ -22,6 +22,13 @@ namespace Etch.OrchardCore.Greenhouse.Models
         {
             get
             {
+                ParsePostingData();
+
+                if (_postingData?.Departments?.Any() ?? false)
+                {
+                    return _postingData?.Departments?.FirstOrDefault()?.Name;
+                }
+
                 ParseJobData();
                 return _jobData?.Departments?.FirstOrDefault()?.Name;
             }

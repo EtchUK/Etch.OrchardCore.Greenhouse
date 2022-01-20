@@ -15,6 +15,9 @@ namespace Etch.OrchardCore.Greenhouse.Services.Dtos
         [JsonProperty("content")]
         public string Content { get; set; }
 
+        [JsonProperty("departments")]
+        public GreenhouseDepartment[] Departments { get; set; }
+
         [JsonProperty("external")]
         public bool External { get; set; }
 
