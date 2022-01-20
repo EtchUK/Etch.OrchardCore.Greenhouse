@@ -26,7 +26,9 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
 
             return Initialize<GreenhousePostingPartViewModel>("GreenhousePostingPart", model =>
             {
+                model.ContentItem = part.ContentItem;
                 model.Job = JsonConvert.DeserializeObject<GreenhouseJob>(part.JobData);
+                model.Part = part;
                 model.Posting = posting;
             }).Location("Detail", "Content:5");
         }

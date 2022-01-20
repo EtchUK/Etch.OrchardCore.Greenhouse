@@ -52,6 +52,15 @@ namespace Etch.OrchardCore.Greenhouse.Models
             }
         }
 
+        public long PostingId
+        {
+            get
+            {
+                ParsePostingData();
+                return _postingData?.Id ?? 0;
+            }
+        }
+
         public DateTime? UpdatedAt
         {
             get
