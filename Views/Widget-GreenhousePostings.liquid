@@ -1,12 +1,14 @@
 ﻿{% assign greenhousePostings = Model.ContentItem.Content.GreenhousePostings %}
 
 {% assign pageSize = "12" %}
+{% assign originalPageSize = "12" %}
 
 {% assign pinnedPostingIds = greenhousePostings.PinnedPostings.ContentItemIds %}
 {% assign pinnedPostings = pinnedPostingIds | content_item_id %}
 
 {% if greenhousePostings.PageSize.Value != nil %}
     {% assign pageSize = greenhousePostings.PageSize.Value %}
+    {% assign originalPageSize = greenhousePostings.PageSize.Value %}
 {% endif %}
 
 {% assign query = greenhousePostings.Source.Value %}
@@ -57,11 +59,17 @@
 {% assign nextPageLabel = greenhousePostings.NextPageLabel.Text %}
 {% assign previousPageLabel = greenhousePostings.PreviousPageLabel.Text %}
 
-{% assign cssClasses = "content-feed js-analytics-list" %}
+{% assign cssClasses = "content-feed js-analytics-list js-filterable-jobs" %}
 
 {% assign styles = "" %}
 
-<div id="postings" class="{{ cssClasses }}" style="{{ styles }}" data-list="{{ Model.ContentItem | displayText }}">
+<div    id="postings" 
+        class="{{ cssClasses }}" 
+        style="{{ styles }}" 
+        data-list="{{ Model.ContentItem | displayText }}"
+        data-base-url="{{ Request.PathBase }}" 
+        data-query="{{ query }}" 
+        data-page-size="{{ originalPageSize }}">
     {% if hideHeader == false %}
         <header class="content-feed__header">
             <h2 class="content-feed__title">{{ Model.ContentItem | displayText }}</h2>
@@ -69,7 +77,7 @@
     {% endif %}
 
     {% if hideDepartment == false or hideLocation == false %}
-    <form method="get" action="#postings" class="content-feed__filters">
+    <form method="get" action="#postings" class="content-feed__filters js-filterable-jobs-form">
         {% if hideLocation == false %}
         <div class="content-feed__filter">
             <label for="location">
@@ -80,7 +88,7 @@
                 {% endif %}
             </label>
 
-            <select id="location" name="location">
+            <select id="location" name="location" class="js-filterable-jobs-filter">
                 {{ allPostings | greenhouse_location_options | raw }}
             </select>
         </div>
@@ -95,7 +103,7 @@
                         {{ "Department" | t }}
                     {% endif %}
                 </label>
-                <select id="department" name="department">
+                <select id="department" name="department" class="js-filterable-jobs-filter">
                     {{ allPostings | greenhouse_department_options | raw }}
                 </select>
             </div>
@@ -115,15 +123,15 @@
 
     {% if hideResultsSummary == false %}
         <div class="content-feed__summary">
-            <h3>{{ totalItems | size }} {{ "results" | t}}</h3>
+            <h3><span class="js-filterable-jobs-total">{{ totalItems | size }}</span> {{ "results" | t}}</h3>
         </div>
     {% endif %}
 
     {% if items.size > 0 or pinnedPostings.size > 0 %}
-        <div class="content-feed__list content-feed__list--{{ greenhousePostings.Columns.Text }}-cols columns--{{ greenhousePostings.Columns.Text }}">
+        <div class="content-feed__list content-feed__list--{{ greenhousePostings.Columns.Text }}-cols columns--{{ greenhousePostings.Columns.Text }} js-filterable-jobs-items">
             {% if showPinned %}
                 {% for item in pinnedPostings %}
-                    <div class="content-feed__item">
+                    <div class="content-feed__item is-pinned">
                         {{ item | shape_build_display: "Summary" | shape_render }}
                     </div>
                 {% endfor %}
@@ -140,32 +148,28 @@
     {% endif %}
 
     {% if paging %}
-        <ul class="content-feed__pager pager margin--bottom-large">
-            {% if from > 0 %}
-                {% assign prevPage = page | minus: 1 %}
-                <li>
-                    <a href="{{ pageUrl | append: "page=" | append: prevPage | append: "#postings" }}">
-                    {% if previousPageLabel != nil %}
-                        {{ previousPageLabel }}
-                    {% else %}
-                        {{ "Previous postings" | t}}
-                    {% endif %}
-                    </a>
-                </li>
-            {% endif %}
+        <ul class="content-feed__pager pager margin--bottom-large js-filterable-jobs-pager">
+            {% assign prevPage = page | minus: 1 %}
+            <li {% if prevPage == 0 %}class="display--none"{% endif %}>
+                <a href="{{ pageUrl | append: "page=" | append: prevPage | append: "#postings" }}" class="js-filterable-jobs-pager-prev-btn">
+                {% if previousPageLabel != nil %}
+                    {{ previousPageLabel }}
+                {% else %}
+                    {{ "Previous postings" | t}}
+                {% endif %}
+                </a>
+            </li>
 
-            {% if items.size > pageSize %}
-                {% assign nextPage = page | plus: 1 %}
-                <li>
-                    <a href="{{ pageUrl | append: "page=" | append: nextPage | append: "#postings" }}">
-                    {% if nextPageLabel != nil %}
-                        {{ nextPageLabel }}
-                    {% else %}
-                        {{ "Next postings" | t}}
-                    {% endif %}
-                    </a>
-                </li>
-            {% endif %}
+            {% assign nextPage = page | plus: 1 %}
+            <li {% if items.size <= pageSize %}class="display--none"{% endif %}>
+                <a href="{{ pageUrl | append: "page=" | append: nextPage | append: "#postings" }}" class="js-filterable-jobs-pager-next-btn">
+                {% if nextPageLabel != nil %}
+                    {{ nextPageLabel }}
+                {% else %}
+                    {{ "Next postings" | t}}
+                {% endif %}
+                </a>
+            </li>
         </ul>
     {% endif %}
 </div>
