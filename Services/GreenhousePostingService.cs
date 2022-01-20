@@ -115,11 +115,14 @@ namespace Etch.OrchardCore.Greenhouse.Services
             var contentItem = await _contentManager.NewAsync(options.ContentType);
             contentItem.DisplayText = posting.Title;
 
-            var encoded = _htmlEncoder.Encode(posting.Content);
-
             var greenhousePostingPart = contentItem.As<GreenhousePostingPart>();
             greenhousePostingPart.GreenhouseId = posting.Id;
-            greenhousePostingPart.JobData = JsonConvert.SerializeObject(job);
+
+            if (job != null)
+            {
+                greenhousePostingPart.JobData = JsonConvert.SerializeObject(job);
+            }
+
             greenhousePostingPart.PostingData = JsonConvert.SerializeObject(posting);
             contentItem.Apply(nameof(GreenhousePostingPart), greenhousePostingPart);
 
@@ -160,6 +163,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
         private async Task SyncAsync(GreenhouseJobPosting posting, GreenhouseSyncOptions options)
         {
+            GreenhouseJob job = null;
             var contentItem = await GetByGreenhouseIdAsync(posting.Id);
 
             if ((contentItem != null && (contentItem.As<GreenhousePostingPart>()?.IgnoreSync ?? false)) || (contentItem == null && !posting.Active))
@@ -171,12 +175,15 @@ namespace Etch.OrchardCore.Greenhouse.Services
                 return;
             }
 
-            if (!_cachedJobs.ContainsKey(posting.JobId))
+            if (posting.JobId != 0)
             {
-                _cachedJobs.Add(posting.JobId, await _greenhouseApiService.GetJobAsync(posting.JobId));
-            }
+                if (!_cachedJobs.ContainsKey(posting.JobId))
+                {
+                    _cachedJobs.Add(posting.JobId, await _greenhouseApiService.GetJobAsync(posting.JobId));
+                }
 
-            var job = _cachedJobs[posting.JobId];
+                job = _cachedJobs[posting.JobId];
+            }
 
             if (contentItem == null)
             {
@@ -199,7 +206,12 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
             var greenhousePostingPart = contentItem.As<GreenhousePostingPart>();
             greenhousePostingPart.GreenhouseId = posting.Id;
-            greenhousePostingPart.JobData = JsonConvert.SerializeObject(job);
+
+            if (job != null)
+            {
+                greenhousePostingPart.JobData = JsonConvert.SerializeObject(job);
+            }
+
             greenhousePostingPart.PostingData = JsonConvert.SerializeObject(posting);
             contentItem.Apply(nameof(GreenhousePostingPart), greenhousePostingPart);
 

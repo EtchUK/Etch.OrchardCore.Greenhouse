@@ -77,13 +77,16 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
         public async Task<IList<GreenhouseJobPosting>> GetJobBoardAsync(string token)
         {
-            var settings = (await _siteService.GetSiteSettingsAsync()).As<GreenhouseSettings>();
             var board = await $"https://boards-api.greenhouse.io/v1/boards/{token}/jobs".GetAsync().ReceiveJson<GreenhouseJobBoard>();
             var postings = new List<GreenhouseJobPosting>();
 
             foreach (var job in board.Jobs)
             {
-                postings.Add(await GetJobPostingAsync(job.PostingId, settings));
+                var posting = await GetJobPostingAsync(token, job.PostingId);
+
+                // assume posting is active as it appears on job board
+                posting.Active = posting.Live = true;
+                postings.Add(posting);
             }
 
             return postings;
@@ -112,6 +115,11 @@ namespace Etch.OrchardCore.Greenhouse.Services
         #endregion
 
         #region Private Methods
+
+        private static async Task<GreenhouseJobPosting> GetJobPostingAsync(string token, long jobId)
+        {
+            return await $"https://boards-api.greenhouse.io/v1/boards/{token}/jobs/{jobId}?questions=true".GetAsync().ReceiveJson<GreenhouseJobPosting>();
+        }
 
         private static async Task<GreenhouseJobPosting> GetJobPostingAsync(long id, GreenhouseSettings settings)
         {
