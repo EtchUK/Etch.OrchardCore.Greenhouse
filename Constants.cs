@@ -35,12 +35,11 @@
 
         public static class GreenhouseFieldTypes
         {
-            public const string Attachment = "attachment";
-            public const string Boolean = "boolean";
-            public const string LongText = "long_text";
-            public const string MultiSelect = "multi_select";
-            public const string ShortText = "short_text";
-            public const string SingleSelect = "single_select";
+            public const string Attachment = "input_file";
+            public const string LongText = "textarea";
+            public const string MultiSelect = "multi_value_multi_select";
+            public const string ShortText = "input_text";
+            public const string SingleSelect = "multi_value_single_select";
         }
     }
 }

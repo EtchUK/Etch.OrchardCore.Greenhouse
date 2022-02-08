@@ -1,6 +1,6 @@
 ﻿{% if Model.ShowApplicationForm %}
-<section class="section">
-  <div class="constrain">
+<section class="section section--spaced-after-none" style="--sectionBackgroundColor:#eae8e5;">
+  <div class="section__content constrain">
     <form method="post" action="{{ Request.PathBase }}/greenhouse/apply" enctype="multipart/form-data">
       {% for question in Model.Questions %}
         {{ question | shape_render }}

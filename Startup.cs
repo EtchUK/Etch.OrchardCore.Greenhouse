@@ -57,6 +57,7 @@ namespace Etch.OrchardCore.Greenhouse
 
             services.Configure<TemplateOptions>(o =>
             {
+                o.MemberAccessStrategy.Register<GreenhouseField>();
                 o.MemberAccessStrategy.Register<GreenhouseJobPosting>();
                 o.MemberAccessStrategy.Register<GreenhouseQuestion>();
                 o.MemberAccessStrategy.Register<GreenhousePostingFormPartSettings>();
