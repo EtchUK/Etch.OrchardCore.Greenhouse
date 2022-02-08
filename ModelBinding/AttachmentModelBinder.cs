@@ -28,44 +28,46 @@ namespace Etch.OrchardCore.Greenhouse.ModelBinding
 
         public object Bind(ModelStateDictionary modelState, HttpRequest request, GreenhouseQuestion question)
         {
-            if (question.Required.HasValue && question.Required.Value && !request.Form.Files.Any(x => x.Name == question.Name))
+            var field = question.Fields.FirstOrDefault();
+
+            if (question.Required.HasValue && question.Required.Value && !request.Form.Files.Any(x => x.Name == field.Name))
             {
-                modelState.AddModelError(question.Name, $"{question.Label} is required");
+                modelState.AddModelError(field.Name, $"{question.Label} is required");
                 return null;
             }
 
-            var postedFile = request.Form.Files.SingleOrDefault(x => x.Name == question.Name);
+            var postedFile = request.Form.Files.SingleOrDefault(x => x.Name == field.Name);
 
             if (postedFile == null)
             {
-                modelState.MarkFieldValid(question.Name);
+                modelState.MarkFieldValid(field.Name);
                 return null;
             }
 
             if (!_settings.AllowedFileExtensions.Any(x => x.Trim().Equals(Path.GetExtension(postedFile.FileName), StringComparison.OrdinalIgnoreCase)))
             {
-                modelState.AddModelError(question.Name, $"File extension is not allowed: {Path.GetExtension(postedFile.FileName)}");
+                modelState.AddModelError(field.Name, $"File extension is not allowed: {Path.GetExtension(postedFile.FileName)}");
                 return null;
             }
 
             if (postedFile.Length > _settings.MaxFileSize)
             {
-                modelState.AddModelError(question.Name, $"File exceeds maximum file size");
+                modelState.AddModelError(field.Name, $"File exceeds maximum file size");
                 return null;
             }
 
-            modelState.MarkFieldValid(question.Name);
+            modelState.MarkFieldValid(field.Name);
 
-            if (!request.Form.Files.Any(x => x.Name == question.Name))
+            if (!request.Form.Files.Any(x => x.Name == field.Name))
             {
                 return null;
             }
 
             return new GreenhouseAttachment {
-                Content = request.Form.Files[question.Name].ToBase64(),
-                ContentType = request.Form.Files[question.Name].ContentType,
-                Filename = request.Form.Files[question.Name].FileName,
-                Type = question.Name
+                Content = request.Form.Files[field.Name].ToBase64(),
+                ContentType = request.Form.Files[field.Name].ContentType,
+                Filename = request.Form.Files[field.Name].FileName,
+                Type = field.Name
             };
         }
     }

@@ -23,12 +23,20 @@ namespace Etch.OrchardCore.Greenhouse.Display
         {
             var shapes = new List<dynamic>();
 
-            foreach (var question in posting.Questions.Where(x => !x.Private))
+            foreach (var question in posting.Questions)
             {
-                if (question.Type == Constants.GreenhouseFieldTypes.Attachment)
+                var field = question.Fields.FirstOrDefault();
+
+                if (field == null)
+                {
+                    continue;
+                }
+
+                if (field.Type == Constants.GreenhouseFieldTypes.Attachment)
                 {
                     shapes.Add(await _shapeFactory.New.GreenhouseQuestion__Attachment(new GreenhouseQuestionDisplayContext
                     {
+                        Fields = question.Fields,
                         FormSettings = settings,
                         Question = question
                     }));
@@ -36,57 +44,51 @@ namespace Etch.OrchardCore.Greenhouse.Display
                     continue;
                 }
 
-                if (question.Type == Constants.GreenhouseFieldTypes.Boolean)
-                {
-                    shapes.Add(await _shapeFactory.New.GreenhouseQuestion__Boolean(new GreenhouseQuestionDisplayContext
-                    {
-                        FormSettings = settings,
-                        Question = question
-                    }));
-                    continue;
-                }
-
-                if (question.Type == Constants.GreenhouseFieldTypes.LongText)
+                if (field.Type == Constants.GreenhouseFieldTypes.LongText)
                 {
                     shapes.Add(await _shapeFactory.New.GreenhouseQuestion__LongText(new GreenhouseQuestionDisplayContext
                     {
+                        Fields = question.Fields,
                         FormSettings = settings,
                         Question = question
                     }));
                     continue;
                 }
 
-                if (question.Type == Constants.GreenhouseFieldTypes.MultiSelect)
+                if (field.Type == Constants.GreenhouseFieldTypes.MultiSelect)
                 {
                     shapes.Add(await _shapeFactory.New.GreenhouseQuestion__MultiSelect(new GreenhouseQuestionDisplayContext
                     {
+                        Fields = question.Fields,
                         FormSettings = settings,
                         Question = question
                     }));
                     continue;
                 }
 
-                if (question.Type == Constants.GreenhouseFieldTypes.ShortText)
+                if (field.Type == Constants.GreenhouseFieldTypes.ShortText)
                 {
                     shapes.Add(await _shapeFactory.New.GreenhouseQuestion__ShortText(new GreenhouseQuestionDisplayContext
                     {
+                        Fields = question.Fields,
                         FormSettings = settings,
                         Question = question
                     }));
                     continue;
                 }
 
-                if (question.Type == Constants.GreenhouseFieldTypes.SingleSelect)
+                if (field.Type == Constants.GreenhouseFieldTypes.SingleSelect)
                 {
                     shapes.Add(await _shapeFactory.New.GreenhouseQuestion__SingleSelect(new GreenhouseQuestionDisplayContext
                     {
+                        Fields = question.Fields,
                         FormSettings = settings,
                         Question = question
                     }));
                     continue;
                 }
 
-                _logger.LogWarning($"Unsupported Greenhouse question: {question.Type}");
+                _logger.LogWarning($"Unsupported Greenhouse question: {field.Type}");
             }
 
             return shapes;

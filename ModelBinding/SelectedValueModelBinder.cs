@@ -9,29 +9,31 @@ namespace Etch.OrchardCore.Greenhouse.ModelBinding
     {
         public object Bind(ModelStateDictionary modelState, HttpRequest request, GreenhouseQuestion question)
         {
-            modelState.SetModelValue(question.Name, request.Form[question.Name], request.Form[question.Name]);
+            var field = question.Fields.FirstOrDefault();
 
-            if (question.Required.HasValue && question.Required.Value && string.IsNullOrWhiteSpace(request.Form[question.Name]))
+            modelState.SetModelValue(field.Name, request.Form[field.Name], request.Form[field.Name]);
+
+            if (question.Required.HasValue && question.Required.Value && string.IsNullOrWhiteSpace(request.Form[field.Name]))
             {
-                modelState.AddModelError(question.Name, $"{question.Label} is required");
+                modelState.AddModelError(field.Name, $"{question.Label} is required");
             }
 
-            if (!string.IsNullOrWhiteSpace(request.Form[question.Name]) && question.Values.Any() && !question.Values.Any(x => x.Value.ToString() == request.Form[question.Name].ToString()))
+            if (!string.IsNullOrWhiteSpace(request.Form[field.Name]) && field.Values.Any() && !field.Values.Any(x => x.Value.ToString() == request.Form[field.Name].ToString()))
             {
-                modelState.AddModelError(question.Name, $"Unrecognised value: {request.Form[question.Name]}");
+                modelState.AddModelError(field.Name, $"Unrecognised value: {request.Form[field.Name]}");
             }
 
-            if (modelState[question.Name].ValidationState != ModelValidationState.Invalid)
+            if (modelState[field.Name].ValidationState != ModelValidationState.Invalid)
             {
-                modelState.MarkFieldValid(question.Name);
+                modelState.MarkFieldValid(field.Name);
             }
 
-            if (string.IsNullOrEmpty(request.Form[question.Name]))
+            if (string.IsNullOrEmpty(request.Form[field.Name]))
             {
                 return null;
             }
 
-            return question.Values.SingleOrDefault(x => x.Value.ToString() == request.Form[question.Name].ToString())?.Value ?? null;
+            return field.Values.SingleOrDefault(x => x.Value.ToString() == request.Form[field.Name].ToString())?.Value ?? null;
         }
     }
 }
