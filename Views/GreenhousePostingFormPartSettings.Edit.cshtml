@@ -20,6 +20,12 @@
 <h4>Form UI</h4>
 
 <div class="form-group">
+    <label asp-for="ApplicationErrorMessage">@T["Application Error Message"]</label>
+    <input asp-for="ApplicationErrorMessage" class="form-control" />
+    <span class="hint">@T["Feedback displayed to user when there is a technical error when submitting their application."]</span>
+</div>
+
+<div class="form-group">
     <label asp-for="SubmitButtonLabel">@T["Submit Button Label"]</label>
     <input asp-for="SubmitButtonLabel" class="form-control" />
     <span class="hint">@T["Label for button used to submit an application."]</span>

@@ -23,6 +23,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
                 var settings = contentTypePartDefinition.GetSettings<GreenhousePostingFormPartSettings>();
 
                 model.AllowedFileExtensions = string.Join(",", settings.AllowedFileExtensions ?? Array.Empty<string>());
+                model.ApplicationErrorMessage = settings.ApplicationErrorMessage;
                 model.ApplicationSuccessUrl = settings.ApplicationSuccessUrl;
                 model.MaxFileSize = settings.MaxFileSize;
                 model.ShowApplicationForm = settings.ShowApplicationForm;
@@ -44,6 +45,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
             context.Builder.WithSettings(new GreenhousePostingFormPartSettings
             {
                 AllowedFileExtensions = model.AllowedFileExtensions.Split(",", StringSplitOptions.RemoveEmptyEntries),
+                ApplicationErrorMessage = model.ApplicationErrorMessage,
                 ApplicationSuccessUrl = model.ApplicationSuccessUrl,
                 MaxFileSize = model.MaxFileSize,
                 ShowApplicationForm = model.ShowApplicationForm,

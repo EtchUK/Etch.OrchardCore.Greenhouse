@@ -3,7 +3,6 @@ using Etch.OrchardCore.Greenhouse.Models;
 using Etch.OrchardCore.Greenhouse.Services.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,19 +26,12 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
         #endregion
 
-        public async Task<GreenhouseCandidateResponse> ApplyAsync(GreenhouseCandidate candidate)
+        public async Task<GreenhouseApplicationResponse> ApplyAsync(long jobId, GreenhouseApplication application)
         {
-            // create candidate
-            var createdCandidate = await _greenhouseApiSerice.CreateCandidateAsync(candidate);
-
-            // add attachments
-            await _greenhouseApiSerice.AddAttachmentsAsync(createdCandidate.Id, candidate.Attachments);
-
-            // respond
-            return createdCandidate;
+            return await _greenhouseApiSerice.CreateApplicationAsync(jobId, application);
         }
 
-        public GreenhouseCandidate Bind(ModelStateDictionary modelState, HttpRequest request, GreenhouseJobPosting posting, GreenhousePostingFormPartSettings settings)
+        public GreenhouseApplication Bind(ModelStateDictionary modelState, HttpRequest request, GreenhouseJobPosting posting, GreenhousePostingFormPartSettings settings)
         {
             var binders = new Dictionary<string, IGreenhouseCandidateModelBinder>
             {
@@ -50,34 +42,19 @@ namespace Etch.OrchardCore.Greenhouse.Services
                 { Constants.GreenhouseFieldTypes.SingleSelect, new SelectedValueModelBinder() }
             };
 
-            var candidate = new GreenhouseCandidate
+            var application = new GreenhouseApplication
             {
-                Applications = new List<GreenhouseApplication> { new GreenhouseApplication { JobId = posting.JobId } },
-                Firstname = (string)binders[Constants.GreenhouseFieldTypes.ShortText].Bind(modelState, request, posting.Questions.SingleOrDefault(x => x.Fields.FirstOrDefault()?.Name == Constants.GreenhouseFieldNames.Firstname)),
-                Lastname = (string)binders[Constants.GreenhouseFieldTypes.ShortText].Bind(modelState, request, posting.Questions.SingleOrDefault(x => x.Fields.FirstOrDefault()?.Name == Constants.GreenhouseFieldNames.Lastname)),
+                Cover = (GreenhouseAttachment)binders[Constants.GreenhouseFieldTypes.Attachment].Bind(modelState, request, posting.Questions.SingleOrDefault(x => x.Fields.FirstOrDefault()?.Name == Constants.GreenhouseFieldNames.Cover)),
+                CoverText = (string)new AttachmentTextModelBinder().Bind(modelState, request, posting.Questions.SingleOrDefault(x => x.Fields.Any(x => x.Name == Constants.GreenhouseFieldNames.CoverText))),
+                Email = (string)binders[Constants.GreenhouseFieldTypes.ShortText].Bind(modelState, request, posting.Questions.SingleOrDefault(x => x.Fields.FirstOrDefault()?.Name == Constants.GreenhouseFieldNames.Email)),
+                FirstName = (string)binders[Constants.GreenhouseFieldTypes.ShortText].Bind(modelState, request, posting.Questions.SingleOrDefault(x => x.Fields.FirstOrDefault()?.Name == Constants.GreenhouseFieldNames.Firstname)),
+                LastName = (string)binders[Constants.GreenhouseFieldTypes.ShortText].Bind(modelState, request, posting.Questions.SingleOrDefault(x => x.Fields.FirstOrDefault()?.Name == Constants.GreenhouseFieldNames.Lastname)),
+                Location = (string)binders[Constants.GreenhouseFieldTypes.ShortText].Bind(modelState, request, posting.Questions.SingleOrDefault(x => x.Fields.FirstOrDefault()?.Name == Constants.GreenhouseFieldNames.Location)),
+                Phone = (string)binders[Constants.GreenhouseFieldTypes.ShortText].Bind(modelState, request, posting.Questions.SingleOrDefault(x => x.Fields.FirstOrDefault()?.Name == Constants.GreenhouseFieldNames.Phone)),
+                Resume = (GreenhouseAttachment)binders[Constants.GreenhouseFieldTypes.Attachment].Bind(modelState, request, posting.Questions.SingleOrDefault(x => x.Fields.FirstOrDefault()?.Name == Constants.GreenhouseFieldNames.Resume)),
+                ResumeText = (string)new AttachmentTextModelBinder().Bind(modelState, request, posting.Questions.SingleOrDefault(x => x.Fields.Any(x => x.Name == Constants.GreenhouseFieldNames.ResumeText)))
             };
-
-
-            if (posting.Questions.Any(x => x.Fields.FirstOrDefault()?.Name == Constants.GreenhouseFieldNames.Email))
-            {
-                var emailAddress = (string)binders[Constants.GreenhouseFieldTypes.ShortText].Bind(modelState, request, posting.Questions.SingleOrDefault(x => x.Fields.FirstOrDefault()?.Name == Constants.GreenhouseFieldNames.Email));
-
-                if (!string.IsNullOrEmpty(emailAddress))
-                {
-                    candidate.EmailAddresses.Add(new GreenhouseValueType { Type = "personal", Value = emailAddress });
-                }
-            }
-
-            if (posting.Questions.Any(x => x.Fields.FirstOrDefault()?.Name == Constants.GreenhouseFieldNames.Phone))
-            {
-                var phone = (string)binders[Constants.GreenhouseFieldTypes.ShortText].Bind(modelState, request, posting.Questions.SingleOrDefault(x => x.Fields.FirstOrDefault()?.Name == Constants.GreenhouseFieldNames.Phone));
-
-                if (!string.IsNullOrEmpty(phone))
-                {
-                    candidate.PhoneNumbers.Add(new GreenhouseValueType { Type = "personal", Value = phone });
-                }
-            }
-
+            
             foreach (var question in posting.Questions.Where(x => !Constants.GreenhouseFieldNames.FixedFields.Contains(x.Fields.FirstOrDefault()?.Name)))
             {
                 var field = question.Fields.FirstOrDefault();
@@ -87,32 +64,20 @@ namespace Etch.OrchardCore.Greenhouse.Services
                     continue;
                 }
 
-                if (field.Type == Constants.GreenhouseFieldTypes.Attachment)
-                {
-                    var attachment = (GreenhouseAttachment)binders[Constants.GreenhouseFieldTypes.Attachment].Bind(modelState, request, question);
-
-                    if (attachment != null)
-                    {
-                        candidate.Attachments.Add(attachment);
-                    }
-
-                    continue;
-                }
-
-                candidate.CustomFields.Add(new GreenhouseCustomField
+                application.Questions.Add(new GreenhouseCustomField
                 {
                     Name = question.Fields.FirstOrDefault()?.Name,
-                    Value = new JValue(binders[field.Type].Bind(modelState, request, question))
+                    Value = binders[field.Type].Bind(modelState, request, question)
                 });
             }
 
-            return candidate;
+            return application;
         }
     }
 
     public interface IGreenhouseApplyService
     {
-        Task<GreenhouseCandidateResponse> ApplyAsync(GreenhouseCandidate candidate);
-        GreenhouseCandidate Bind(ModelStateDictionary modelState, HttpRequest request, GreenhouseJobPosting posting, GreenhousePostingFormPartSettings settings);
+        Task<GreenhouseApplicationResponse> ApplyAsync(long jobId, GreenhouseApplication application);
+        GreenhouseApplication Bind(ModelStateDictionary modelState, HttpRequest request, GreenhouseJobPosting posting, GreenhousePostingFormPartSettings settings);
     }
 }

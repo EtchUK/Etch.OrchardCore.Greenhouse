@@ -9,6 +9,11 @@ namespace Etch.OrchardCore.Greenhouse.ModelBinding
     {
         public object Bind(ModelStateDictionary modelState, HttpRequest request, GreenhouseQuestion question)
         {
+            if (question == null)
+            {
+                return null;
+            }
+
             var field = question.Fields.FirstOrDefault();
 
             modelState.SetModelValue(field.Name, request.Form[field.Name], request.Form[field.Name]);
