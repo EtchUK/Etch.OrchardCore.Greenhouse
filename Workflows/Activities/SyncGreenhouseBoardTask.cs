@@ -63,13 +63,12 @@ namespace Etch.OrchardCore.Greenhouse.Workflows.Activities
                 var options = new GreenhouseSyncBoardOptions
                 {
                     Author = string.IsNullOrWhiteSpace(Author.Expression) ? Constants.Defaults.Author : Author.Expression,
-                    BoardToken = BoardToken.Expression,
                     ContentType = string.IsNullOrWhiteSpace(ContentType.Expression) ? Constants.Defaults.ContentType : ContentType.Expression,
                     UrlPrefix = string.IsNullOrWhiteSpace(UrlPrefix.Expression) ? string.Empty : UrlPrefix.Expression
                 };
 
                 await _greenhousePostingService.SyncAsync(
-                    await _greenhouseApiService.GetJobBoardAsync(options.BoardToken), 
+                    await _greenhouseApiService.GetJobBoardAsync(), 
                     new GreenhouseSyncOptions
                     {
                         Author = options.Author,
@@ -93,12 +92,6 @@ namespace Etch.OrchardCore.Greenhouse.Workflows.Activities
         #region Workflow Parameters
 
         public WorkflowExpression<string> Author
-        {
-            get => GetProperty(() => new WorkflowExpression<string>());
-            set => SetProperty(value);
-        }
-
-        public WorkflowExpression<string> BoardToken
         {
             get => GetProperty(() => new WorkflowExpression<string>());
             set => SetProperty(value);
