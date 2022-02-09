@@ -60,14 +60,15 @@ namespace Etch.OrchardCore.Greenhouse.Services
             return response;
         }
 
-        public async Task<IList<GreenhouseJobPosting>> GetJobBoardAsync(string token)
+        public async Task<IList<GreenhouseJobPosting>> GetJobBoardAsync()
         {
-            var board = await $"https://boards-api.greenhouse.io/v1/boards/{token}/jobs".GetAsync().ReceiveJson<GreenhouseJobBoard>();
+            var settings = (await _siteService.GetSiteSettingsAsync()).As<GreenhouseSettings>();
+            var board = await $"https://boards-api.greenhouse.io/v1/boards/{settings.BoardToken}/jobs".GetAsync().ReceiveJson<GreenhouseJobBoard>();
             var postings = new List<GreenhouseJobPosting>();
 
             foreach (var job in board.Jobs)
             {
-                var posting = await GetJobPostingAsync(token, job.PostingId);
+                var posting = await GetJobPostingAsync(settings.BoardToken, job.PostingId);
 
                 // assume posting is active as it appears on job board
                 posting.Active = posting.Live = true;
