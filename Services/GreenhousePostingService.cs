@@ -175,16 +175,6 @@ namespace Etch.OrchardCore.Greenhouse.Services
                 return;
             }
 
-            if (posting.JobId != 0)
-            {
-                if (!_cachedJobs.ContainsKey(posting.JobId))
-                {
-                    _cachedJobs.Add(posting.JobId, await _greenhouseApiService.GetJobAsync(posting.JobId));
-                }
-
-                job = _cachedJobs[posting.JobId];
-            }
-
             if (contentItem == null)
             {
                 await CreateAsync(posting, job, options);
