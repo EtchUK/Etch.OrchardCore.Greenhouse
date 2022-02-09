@@ -11,12 +11,6 @@ namespace Etch.OrchardCore.Greenhouse.Services
 {
     public class GreenhouseApiService : IGreenhouseApiService
     {
-        #region Constants
-
-        private const int PageSize = 150;
-
-        #endregion
-
         #region Dependencies
 
         private readonly ILogger<GreenhouseApiService> _logger;

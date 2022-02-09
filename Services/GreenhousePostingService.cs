@@ -25,21 +25,17 @@ namespace Etch.OrchardCore.Greenhouse.Services
         #region Dependencies
 
         private readonly IContentManager _contentManager;
-        private readonly IGreenhouseApiService _greenhouseApiService;
         private readonly ILogger<GreenhousePostingService> _logger;
         private readonly ISession _session;
         private readonly ISlugService _slugService;
-
-        private readonly Dictionary<long, GreenhouseJob> _cachedJobs = new Dictionary<long, GreenhouseJob>();
 
         #endregion
 
         #region Constructor
 
-        public GreenhousePostingService(IContentManager contentManager, IGreenhouseApiService greenhouseApiService, ILogger<GreenhousePostingService> logger, ISession session, ISlugService slugService)
+        public GreenhousePostingService(IContentManager contentManager, ILogger<GreenhousePostingService> logger, ISession session, ISlugService slugService)
         {
             _contentManager = contentManager;
-            _greenhouseApiService = greenhouseApiService;
             _logger = logger;
             _session = session;
             _slugService = slugService;
