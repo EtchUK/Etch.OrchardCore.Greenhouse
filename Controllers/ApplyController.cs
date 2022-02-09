@@ -14,6 +14,7 @@ using OrchardCore.Workflows.Services;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using static Etch.OrchardCore.Greenhouse.Constants;
 
 namespace Etch.OrchardCore.Greenhouse.Controllers
 {
@@ -58,15 +59,16 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
             var jobPosting = contentItem.As<GreenhousePostingPart>().GetJobPostingData();
             var formPartSettings = GetFormPartSettings(contentItem);
 
-            GreenhouseCandidate candidate;
+            GreenhouseApplication application;
 
             try
             {
-                candidate = _greenhouseApplyService.Bind(ModelState, Request, jobPosting, formPartSettings);
+                application = _greenhouseApplyService.Bind(ModelState, Request, jobPosting, formPartSettings);
             } 
             catch (Exception ex)
             {
-                return await HandleErrorAsync(jobPosting, ex, Constants.GreenhouseApplicationPhases.Validation);
+                _logger.LogError(ex, "Error validiting Greenhouse application");
+                return await HandleErrorAsync(jobPosting, ex.Message, Constants.GreenhouseApplicationPhases.Validation, formPartSettings.ApplicationErrorMessage);
             }
 
             if (!ModelState.IsValid)
@@ -75,25 +77,32 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
                 return new RedirectResult(Request.Headers["Referer"].ToString());
             }
 
-            GreenhouseCandidateResponse response;
+            GreenhouseApplicationResponse response;
 
             try
             {
-                response = await _greenhouseApplyService.ApplyAsync(candidate);
+                response = await _greenhouseApplyService.ApplyAsync(jobPosting.Id, application);
             }
             catch (Exception ex)
             {
-                return await HandleErrorAsync(jobPosting, ex, Constants.GreenhouseApplicationPhases.Apply, candidate);
+                _logger.LogError(ex, "Error submitting Greenhouse application");
+                return await HandleErrorAsync(jobPosting, ex.Message, Constants.GreenhouseApplicationPhases.Apply, formPartSettings.ApplicationErrorMessage, application);
+            }
+
+            if (!response.Success)
+            {
+                return await HandleErrorAsync(jobPosting, response.Error, Constants.GreenhouseApplicationPhases.Apply, formPartSettings.ApplicationErrorMessage, application);
             }
 
             await TriggerNotificationEventAsync(jobPosting, new GreenhouseApplicationNotificationEventViewModel
             {
-                Candidate = candidate,
-                IsSuccess = true,
+                Application = application,
+                Error = response.Error,
+                IsSuccess = response.Success,
                 Response = response
             });
 
-            return new RedirectResult($"{Request.PathBase}{formPartSettings.ApplicationSuccessUrl}?applicationId={response.Id}&contentItemId={contentItem.ContentItemId}");
+            return new RedirectResult($"{Request.PathBase}{formPartSettings.ApplicationSuccessUrl}?contentItemId={contentItem.ContentItemId}");
         }
 
         #region Helper Methods
@@ -144,20 +153,25 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
             return partDefinition.GetSettings<GreenhousePostingFormPartSettings>();
         }
 
-        private async Task<ActionResult> HandleErrorAsync(GreenhouseJobPosting posting, Exception ex, string phase, GreenhouseCandidate candidate = null)
+        private async Task<ActionResult> HandleErrorAsync(GreenhouseJobPosting posting, string error, string phase, string userFeedback, GreenhouseApplication application = null)
         {
             var referer = Request.Headers["Referer"].ToString();
 
+            if (!referer.EndsWith("#apply"))
+            {
+                referer += "#apply";
+            }
+
             await TriggerNotificationEventAsync(posting, new GreenhouseApplicationNotificationEventViewModel
             {
-                Candidate = candidate,
-                Error = ex.Message,
+                Application = application,
+                Error = error,
                 IsSuccess = false,
                 Phase = phase
             });
 
+            TempData[TempDataKeys.ApplicationError] = userFeedback;
             TempData["ModelState"] = ModelState.Serialize();
-            _logger.LogError(ex, "Error submitting Greenhouse application");
             return new RedirectResult(referer);
         }
 

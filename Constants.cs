@@ -23,12 +23,17 @@
 
         public static class GreenhouseFieldNames
         {
-            private static readonly string[] _fixedFields = new string[] { Email, Firstname, Lastname, Phone };
+            private static readonly string[] _fixedFields = new string[] { Cover, CoverText, Email, Firstname, Lastname, Location, Phone, Resume, ResumeText };
 
+            public const string Cover = "cover_letter";
+            public const string CoverText = "cover_letter_text";
             public const string Email = "email";
             public const string Firstname = "first_name";
             public const string Lastname = "last_name";
+            public const string Location = "location";
             public const string Phone = "phone";
+            public const string Resume = "resume";
+            public const string ResumeText = "resume_text";
 
             public static string[] FixedFields { get; set; } = _fixedFields;
         }
@@ -40,6 +45,11 @@
             public const string MultiSelect = "multi_value_multi_select";
             public const string ShortText = "input_text";
             public const string SingleSelect = "multi_value_single_select";
+        }
+
+        public static class TempDataKeys
+        {
+            public const string ApplicationError = "GreenhouseApplicationError";
         }
     }
 }

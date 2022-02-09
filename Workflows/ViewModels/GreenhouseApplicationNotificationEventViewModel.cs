@@ -4,10 +4,10 @@ namespace Etch.OrchardCore.Greenhouse.Workflows.ViewModels
 {
     public class GreenhouseApplicationNotificationEventViewModel
     {
-        public GreenhouseCandidate Candidate { get; set; }
+        public GreenhouseApplication Application { get; set; }
         public string Error { get; set; }
         public bool IsSuccess { get; set; }
         public string Phase { get; set; }
-        public GreenhouseCandidateResponse Response { get; set; }
+        public GreenhouseApplicationResponse Response { get; set; }
     }
 }

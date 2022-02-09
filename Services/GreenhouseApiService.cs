@@ -2,6 +2,7 @@
 using Etch.OrchardCore.Greenhouse.Services.Dtos;
 using Etch.OrchardCore.Greenhouse.Services.Options;
 using Flurl.Http;
+using Microsoft.Extensions.Logging;
 using OrchardCore.Entities;
 using OrchardCore.Settings;
 using OrchardCore.Workflows.Helpers;
@@ -22,14 +23,16 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
         #region Dependencies
 
+        private readonly ILogger<GreenhouseApiService> _logger;
         private readonly ISiteService _siteService;
 
         #endregion
 
         #region Constructor
 
-        public GreenhouseApiService(ISiteService siteService)
+        public GreenhouseApiService(ILogger<GreenhouseApiService> logger, ISiteService siteService)
         {
+            _logger = logger;
             _siteService = siteService;
         }
 
@@ -37,34 +40,28 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
         #region Implementation
 
-        public async Task<IList<GreenhouseAttachmentResponse>> AddAttachmentsAsync(long candidateId, IList<GreenhouseAttachment> attachments)
+        public async Task<GreenhouseApplicationResponse> CreateApplicationAsync(long jobId, GreenhouseApplication application)
         {
             var settings = (await _siteService.GetSiteSettingsAsync()).As<GreenhouseSettings>();
-            var attachmentResponses = new List<GreenhouseAttachmentResponse>();
-            var requestUrl = $"{settings.ApiHostname}/candidates/{candidateId}/attachments";
+            var requestUrl = $"https://boards-api.greenhouse.io/v1/boards/{settings.BoardToken}/jobs/{jobId}";
+            var response = new GreenhouseApplicationResponse();
 
-            foreach (var attachment in attachments)
+            try
             {
-                attachmentResponses.Add(await (await requestUrl
-                    .WithHeader("On-Behalf-Of", settings.OnBehalfOfId)
+                var rawResponse = await requestUrl
                     .WithBasicAuth(settings.ApiKey, string.Empty)
-                    .PostJsonAsync(attachment))
-                .GetJsonAsync<GreenhouseAttachmentResponse>());
+                    .PostJsonAsync(application.ToDictionary());
+
+                response.ResponseCode = rawResponse.StatusCode;
+            } 
+            catch (FlurlHttpException ex)
+            {
+                _logger.LogError(ex, "Exception thrown when attempting to submit job application");
+                response.Error = ex.Message;
+                response.ResponseCode = ex.StatusCode.HasValue ? ex.StatusCode.Value : 0;
             }
 
-            return attachmentResponses;
-        }
-
-        public async Task<GreenhouseCandidateResponse> CreateCandidateAsync(GreenhouseCandidate candidate)
-        {
-            var settings = (await _siteService.GetSiteSettingsAsync()).As<GreenhouseSettings>();
-            var requestUrl = $"{settings.ApiHostname}/candidates";
-
-            return await (await requestUrl
-                .WithHeader("On-Behalf-Of", settings.OnBehalfOfId)
-                .WithBasicAuth(settings.ApiKey, string.Empty)
-                .PostJsonAsync(candidate))
-            .GetJsonAsync<GreenhouseCandidateResponse>();
+            return response;
         }
 
         public async Task<GreenhouseJob> GetJobAsync(long id)

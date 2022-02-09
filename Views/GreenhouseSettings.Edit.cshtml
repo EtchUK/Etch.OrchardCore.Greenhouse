@@ -19,7 +19,7 @@
 </div>
 
 <div class="form-group">
-    <label asp-for="BoardUrl">@T["Board URL"]</label>
-    <input asp-for="BoardUrl" class="form-control" placeholder="https://boards.greenhouse.io/..." />
-    <span class="hint">@T["URL to job board on Greenhouse."]</span>
+    <label asp-for="BoardToken">@T["Board Token"]</label>
+    <input asp-for="BoardToken" class="form-control" />
+    <span class="hint">@T["Token for job board on Greenhouse. If board URL is 'boards.greenhouse.io/my-agency', then token would be 'my-agency'."]</span>
 </div>
