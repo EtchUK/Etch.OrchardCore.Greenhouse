@@ -20,21 +20,13 @@ Alternatively you can [download the source](https://github.com/etchuk/Etch.Orcha
 
 First step is to enable "Greenhouse" within the features section of the admin dashboard. Enabling the module will make a new "Greenhouse" option available within the "Configuration" section of the admin menu. This option will navigate to the settings for this module, which is where settings need to be configured in order for the site to communicate with the Greenhouse API.
 
-_If you don't have access to an API key you can mock the API and change the hostname within the settings to point to your mock API_
-
 ### Fetching Postings
 
-Enabling this module will create a new "Greenhouse Posting" content type that will represent a posting within Greenhouse. Workflows are leveraged in order to sync job postings from Greenhouse. By using workflows it gives you control of the trigger for when a sync should be initiated. 
-
-#### Sync Greenhouse Postings
-
-When creating a workflow, there is a "Sync Greenhouse Postings" task that contains some optional configuration options. The sync will only fetch job postings from Greenhouse that have been updated since the date of the last updated Greenhouse posting within the Orchard Core site. If a sync hasn't occurred then it will fetch all the Greenhouse postings from the API.
-
-Greenhouse postings have flags to indicate whether the posting is `active` or `live`. When a posting's `active` state changes to `false`, this means the posting has been removed, which means the sync will remove the associated content item from the site. `live` signifies the posting status, when this is `false` the content item will be saved as a draft.
+Enabling this module will create a new "Greenhouse Posting" content type that will represent a posting within Greenhouse. Workflows are leveraged in order to sync job postings from Greenhouse. By using workflows it gives you control of the trigger for when a sync should be initiated.
 
 #### Sync Greenhouse Board
 
-When creating a workflow, there is a "Sync Greenhouse Board" task that contains some optional configuration options. The sync will fetch jobs from a job board whose token is specified within the task. 
+When creating a workflow, there is a "Sync Greenhouse Board" task that contains some optional configuration options. The sync will fetch jobs from a job board whose token is specified within the task.
 
 ### Applying
 

@@ -32,7 +32,7 @@ namespace Etch.OrchardCore.Greenhouse.Workflows.Activities
 
         #region Constructor
 
-        public SyncGreenhouseBoardTask(IGreenhouseApiService greenhouseService, IGreenhousePostingService greenhousePostingService, ILogger<SyncGreenhouseBoardTask> logger, IStringLocalizer<SyncGreenhousePostingsTask> stringLocalizer)
+        public SyncGreenhouseBoardTask(IGreenhouseApiService greenhouseService, IGreenhousePostingService greenhousePostingService, ILogger<SyncGreenhouseBoardTask> logger, IStringLocalizer<SyncGreenhouseBoardTask> stringLocalizer)
         {
             _greenhouseApiService = greenhouseService;
             _greenhousePostingService = greenhousePostingService;
