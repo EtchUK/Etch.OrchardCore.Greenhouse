@@ -10,5 +10,6 @@ namespace Etch.OrchardCore.Greenhouse.ViewModels
         public GreenhouseJob Job { get; set; }
         public GreenhousePostingPart Part { get; set; }
         public GreenhouseJobPosting Posting { get; set; }
+        public bool ShowApplicationForm { get; set; }
     }
 }

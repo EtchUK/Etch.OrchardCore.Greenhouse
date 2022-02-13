@@ -3,6 +3,7 @@ using Etch.OrchardCore.Greenhouse.Models;
 using Etch.OrchardCore.Greenhouse.Services.Dtos;
 using Etch.OrchardCore.Greenhouse.ViewModels;
 using Newtonsoft.Json;
+using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Display.ContentDisplay;
 using OrchardCore.ContentManagement.Display.Models;
 using OrchardCore.DisplayManagement.ModelBinding;
@@ -23,6 +24,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
             }
 
             var posting = JsonConvert.DeserializeObject<GreenhouseJobPosting>(part.PostingData);
+            var postingFormPart = part.ContentItem.As<GreenhousePostingFormPart>();
 
             return Initialize<GreenhousePostingPartViewModel>("GreenhousePostingPart", model =>
             {
@@ -35,6 +37,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
 
                 model.Part = part;
                 model.Posting = posting;
+                model.ShowApplicationForm = postingFormPart?.ShowApplicationForm ?? false;
             }).Location("Detail", "Content:5");
         }
 
