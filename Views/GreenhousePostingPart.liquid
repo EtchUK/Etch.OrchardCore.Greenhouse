@@ -1,5 +1,15 @@
 ﻿<section class="section section--spaced-after-none">
 	<div class="section__content constrain">
 		{{ Model.Posting.Content | raw }}
+
+		{% if Model.ShowApplicationForm %}
+		<p>
+			<a href="#apply" class="btn btn--primary">{{ "Apply now" | t }}</a>
+		</p>
+		{% else %}
+		<p>
+			<a href="{{ Site.Properties.GreenhouseSettings.BoardUrl }}/jobs/{{ Model.Posting.Id }}#app" class="btn btn--primary">{{ "Apply now" | t }}</a>
+		</p>
+		{% endif %}
 	</div>
 </section>
