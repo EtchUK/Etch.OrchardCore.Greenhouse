@@ -10,6 +10,7 @@ using Etch.OrchardCore.Greenhouse.Workflows.Activities;
 using Etch.OrchardCore.Greenhouse.Workflows.Drivers;
 using Fluid;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Display.ContentDisplay;
 using OrchardCore.ContentTypes.Editors;
@@ -29,7 +30,17 @@ namespace Etch.OrchardCore.Greenhouse
     {
         public override void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                var T = services.BuildServiceProvider().GetService<IStringLocalizerFactory>().Create("ModelBindingMessages", "WebUI");
+
+                options.ModelBindingMessageProvider.SetValueIsInvalidAccessor((x) => T["The value is invalid."]);
+                options.ModelBindingMessageProvider.SetValueMustBeANumberAccessor((x) => T["The field {0} must be a number."]);
+                options.ModelBindingMessageProvider.SetMissingBindRequiredValueAccessor((x) => T["A value for the '{0}' property was not provided.", x]);
+                options.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor((x, y) => T["The value is not valid for {1}.", x, y]);
+                options.ModelBindingMessageProvider.SetUnknownValueIsInvalidAccessor((x) => T["The supplied value is invalid for {0}.", x]);
+                options.ModelBindingMessageProvider.SetValueMustBeANumberAccessor((x) => T["Null value is invalid.", x]);
+            });
 
             services.AddScoped<IDisplayDriver<ISite>, GreenhouseSettingsDisplayDriver>();
             services.AddScoped<INavigationProvider, AdminMenu>();
