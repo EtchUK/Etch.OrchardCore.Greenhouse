@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OrchardCore.Autoroute.Models;
 using OrchardCore.ContentManagement;
+using OrchardCore.ContentManagement.Metadata;
 using OrchardCore.ContentManagement.Records;
 using OrchardCore.Liquid;
 using OrchardCore.Title.Models;
@@ -13,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using YesSql;
 using YesSql.Services;
@@ -24,6 +24,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
     {
         #region Dependencies
 
+        private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IContentManager _contentManager;
         private readonly ILogger<GreenhousePostingService> _logger;
         private readonly ISession _session;
@@ -33,8 +34,9 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
         #region Constructor
 
-        public GreenhousePostingService(IContentManager contentManager, ILogger<GreenhousePostingService> logger, ISession session, ISlugService slugService)
+        public GreenhousePostingService(IContentDefinitionManager contentDefinitionManager, IContentManager contentManager, ILogger<GreenhousePostingService> logger, ISession session, ISlugService slugService)
         {
+            _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
             _logger = logger;
             _session = session;
@@ -122,6 +124,19 @@ namespace Etch.OrchardCore.Greenhouse.Services
             greenhousePostingPart.PostingData = JsonConvert.SerializeObject(posting);
             contentItem.Apply(nameof(GreenhousePostingPart), greenhousePostingPart);
 
+            var formPartSettings = GetFormPartSettings(contentItem);
+
+            if (formPartSettings != null)
+            {
+                var greenhousePostingFormPart = contentItem.As<GreenhousePostingFormPart>();
+
+                if (greenhousePostingFormPart != null)
+                {
+                    greenhousePostingFormPart.ShowApplicationForm = formPartSettings.ShowApplicationForm;
+                    contentItem.Apply(nameof(GreenhousePostingFormPart), greenhousePostingFormPart);
+                }
+            }
+
             var autoroutePart = contentItem.As<AutoroutePart>();
             autoroutePart.Path = $"{options.UrlPrefix ?? string.Empty}{_slugService.Slugify(posting.Title)}/{posting.Id}";
             contentItem.Apply(nameof(AutoroutePart), autoroutePart);
@@ -150,6 +165,19 @@ namespace Etch.OrchardCore.Greenhouse.Services
                 .With<ContentItemIndex>()
                     .Where(x => x.Latest)
                 .CountAsync() > 0;
+        }
+
+        private GreenhousePostingFormPartSettings GetFormPartSettings(ContentItem contentItem)
+        {
+            var typeDefinition = _contentDefinitionManager.GetTypeDefinition(contentItem.ContentType);
+            var partDefinition = typeDefinition.Parts.FirstOrDefault(x => x.Name == nameof(GreenhousePostingFormPart));
+
+            if (partDefinition == null)
+            {
+                return null;
+            }
+
+            return partDefinition.GetSettings<GreenhousePostingFormPartSettings>();
         }
 
         private async Task RemoveAsync(ContentItem contentItem)
@@ -202,6 +230,19 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
             greenhousePostingPart.PostingData = JsonConvert.SerializeObject(posting);
             contentItem.Apply(nameof(GreenhousePostingPart), greenhousePostingPart);
+
+            var formPartSettings = GetFormPartSettings(contentItem);
+
+            if (formPartSettings != null)
+            {
+                var greenhousePostingFormPart = contentItem.As<GreenhousePostingFormPart>();
+
+                if (greenhousePostingFormPart != null)
+                {
+                    greenhousePostingFormPart.ShowApplicationForm = formPartSettings.ShowApplicationForm;
+                    contentItem.Apply(nameof(GreenhousePostingFormPart), greenhousePostingFormPart);
+                }
+            }
 
             contentItem.Author = options.Author;
 
