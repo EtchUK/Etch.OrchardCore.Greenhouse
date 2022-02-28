@@ -8,6 +8,7 @@ namespace Etch.OrchardCore.Greenhouse.ViewModels
     {
         public GreenhouseJob Job { get; set; }
         public GreenhouseJobPosting Posting { get; set; }
+        public GreenhousePostingPart PostingPart { get; set; }
         public IList<dynamic> Questions { get; set; }
         public GreenhousePostingFormPartSettings Settings { get; set; }
         public bool ShowApplicationForm {get; set; }
