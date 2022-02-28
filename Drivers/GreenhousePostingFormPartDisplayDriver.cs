@@ -59,6 +59,8 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
             return Initialize<GreenhousePostingFormPartViewModel>("GreenhousePostingFormPart", model =>
             {
                 model.Questions = questions;
+                model.Posting = posting;
+                model.PostingPart = postingPart;
                 model.Settings = settings;
                 model.ShowApplicationForm = settings.ShowApplicationForm && part.ShowApplicationForm;
             }).Location("Detail", "Content:10");
