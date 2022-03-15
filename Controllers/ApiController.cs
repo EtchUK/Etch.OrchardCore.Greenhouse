@@ -45,6 +45,11 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
         [Route("jobs")]
         public async Task<IActionResult> Content([FromQuery] GreenhouseQueryViewModel parameters)
         {
+            if (string.IsNullOrWhiteSpace(parameters.Query))
+            {
+                return BadRequest();
+            }
+
             var luceneQuery = (await _queryManager.GetQueryAsync(parameters.Query)) as LuceneQuery;
 
             var queryParameters = new Dictionary<string, object>
