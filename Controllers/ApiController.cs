@@ -52,6 +52,11 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
 
             var luceneQuery = (await _queryManager.GetQueryAsync(parameters.Query)) as LuceneQuery;
 
+            if (luceneQuery == null)
+            {
+                return BadRequest();
+            }
+
             var queryParameters = new Dictionary<string, object>
             {
                 { "department", parameters.Department },
