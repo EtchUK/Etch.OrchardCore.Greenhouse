@@ -2,6 +2,7 @@
 {
     public static class Constants
     {
+        public const string AnchorUrl = "apply";
         public const string GroupId = "Greenhouse";
 
         public static class Defaults
