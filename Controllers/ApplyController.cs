@@ -5,6 +5,7 @@ using Etch.OrchardCore.Greenhouse.Services.Dtos;
 using Etch.OrchardCore.Greenhouse.Workflows.Activities;
 using Etch.OrchardCore.Greenhouse.Workflows.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
 using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Metadata;
@@ -27,29 +28,44 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
         private readonly IContentManager _contentManager;
         private readonly IGreenhouseApplyService _greenhouseApplyService;
         private readonly ILogger<ApplyController> _logger;
+        private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IWorkflowManager _workflowManager;
 
         #endregion Dependancies
 
         #region Constructor
 
-        public ApplyController(IAutorouteEntries autorouteEntries, IContentDefinitionManager contentDefinitionManager, IContentManager contentManager, IGreenhouseApplyService greenhouseApplyService, ILogger<ApplyController> logger, IWorkflowManager workflowManager)
+        public ApplyController(
+            IAutorouteEntries autorouteEntries,
+            IContentDefinitionManager contentDefinitionManager,
+            IContentManager contentManager,
+            IGreenhouseApplyService greenhouseApplyService,
+            ILogger<ApplyController> logger,
+            IUrlHelperFactory urlHelperFactory,
+            IWorkflowManager workflowManager
+        )
         {
             _autorouteEntries = autorouteEntries;
             _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
             _greenhouseApplyService = greenhouseApplyService;
             _logger = logger;
+            _urlHelperFactory = urlHelperFactory;
             _workflowManager = workflowManager;
         }
 
         #endregion
 
         [HttpPost]
-        [Route("greenhouse/apply")]
-        public async Task<ActionResult> Index()
+        [Route("greenhouse/apply/{contentItemId}")]
+        public async Task<ActionResult> Index(string contentItemId)
         {
-            var contentItem = await GetContentItemAsync();
+            if (string.IsNullOrWhiteSpace(contentItemId))
+            {
+                return NotFound();
+            }
+
+            var contentItem = await GetContentItemAsync(contentItemId);
 
             if (contentItem == null)
             {
@@ -58,6 +74,7 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
 
             var jobPosting = contentItem.As<GreenhousePostingPart>().GetJobPostingData();
             var formPartSettings = GetFormPartSettings(contentItem);
+            var returnUrl = await GetContentItemUrlAsync(contentItem);
 
             GreenhouseApplication application;
 
@@ -68,13 +85,13 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error validiting Greenhouse application");
-                return await HandleErrorAsync(jobPosting, ex.Message, Constants.GreenhouseApplicationPhases.Validation, formPartSettings.ApplicationErrorMessage);
+                return await HandleErrorAsync(jobPosting, ex.Message, GreenhouseApplicationPhases.Validation, formPartSettings.ApplicationErrorMessage, returnUrl);
             }
 
             if (!ModelState.IsValid)
             {
                 TempData["ModelState"] = ModelState.Serialize();
-                return new RedirectResult(Request.Headers["Referer"].ToString());
+                return new RedirectResult($"{returnUrl}");
             }
 
             GreenhouseApplicationResponse response;
@@ -86,12 +103,12 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error submitting Greenhouse application");
-                return await HandleErrorAsync(jobPosting, ex.Message, Constants.GreenhouseApplicationPhases.Apply, formPartSettings.ApplicationErrorMessage, application);
+                return await HandleErrorAsync(jobPosting, ex.Message, GreenhouseApplicationPhases.Apply, formPartSettings.ApplicationErrorMessage, returnUrl, application);
             }
 
             if (!response.Success)
             {
-                return await HandleErrorAsync(jobPosting, response.Error, Constants.GreenhouseApplicationPhases.Apply, formPartSettings.ApplicationErrorMessage, application);
+                return await HandleErrorAsync(jobPosting, response.Error, GreenhouseApplicationPhases.Apply, formPartSettings.ApplicationErrorMessage, returnUrl, application);
             }
 
             await TriggerNotificationEventAsync(jobPosting, new GreenhouseApplicationNotificationEventViewModel
@@ -107,16 +124,9 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
 
         #region Helper Methods
 
-        private async Task<ContentItem> GetContentItemAsync()
+        private async Task<ContentItem> GetContentItemAsync(string contentItemId)
         {
-            (var result, var entry) = await _autorouteEntries.TryGetEntryByPathAsync(GetReferrerRoute());
-
-            if (!result)
-            {
-                return null;
-            }
-
-            var contentItem = await _contentManager.GetAsync(entry.ContentItemId);
+            var contentItem = await _contentManager.GetAsync(contentItemId);
 
             if (contentItem == null || !contentItem.Has<GreenhousePostingPart>())
             {
@@ -126,18 +136,11 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
             return contentItem;
         }
 
-        private string GetReferrerRoute()
+        private async Task<string> GetContentItemUrlAsync(ContentItem contentItem)
         {
-            var referer = Request.Headers["Referer"].ToString();
-            referer = referer.Replace($"{Request.Scheme}://", "");
-            referer = referer.Replace(Request.Host.ToString(), "");
-
-            if (!string.IsNullOrWhiteSpace(Request.PathBase))
-            {
-                referer = referer.Replace(Request.PathBase, "");
-            }
-
-            return referer;
+            var contentItemMetadata = await _contentManager.PopulateAspectAsync<ContentItemMetadata>(contentItem);
+            var routeValues = contentItemMetadata.DisplayRouteValues;
+            return $"{_urlHelperFactory.GetUrlHelper(ControllerContext).RouteUrl(routeValues)}#{Constants.AnchorUrl}";
         }
 
         private GreenhousePostingFormPartSettings GetFormPartSettings(ContentItem contentItem)
@@ -153,15 +156,8 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
             return partDefinition.GetSettings<GreenhousePostingFormPartSettings>();
         }
 
-        private async Task<ActionResult> HandleErrorAsync(GreenhouseJobPosting posting, string error, string phase, string userFeedback, GreenhouseApplication application = null)
+        private async Task<ActionResult> HandleErrorAsync(GreenhouseJobPosting posting, string error, string phase, string userFeedback, string returnUrl, GreenhouseApplication application = null)
         {
-            var referer = Request.Headers["Referer"].ToString();
-
-            if (!referer.EndsWith("#apply"))
-            {
-                referer += "#apply";
-            }
-
             await TriggerNotificationEventAsync(posting, new GreenhouseApplicationNotificationEventViewModel
             {
                 Application = application,
@@ -172,7 +168,7 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
 
             TempData[TempDataKeys.ApplicationError] = userFeedback;
             TempData["ModelState"] = ModelState.Serialize();
-            return new RedirectResult(referer);
+            return new RedirectResult($"{returnUrl}#apply");
         }
 
         private async Task TriggerNotificationEventAsync(GreenhouseJobPosting posting, GreenhouseApplicationNotificationEventViewModel viewModel)

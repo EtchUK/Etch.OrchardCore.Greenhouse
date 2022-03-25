@@ -4,9 +4,9 @@
 
 @if (Model.ShowApplicationForm)
 {
-    <section id="apply" class="section section--spaced-after-none" style="--sectionBackgroundColor:#eae8e5;">
+    <section id="@Constants.AnchorUrl" class="section section--spaced-after-none" style="--sectionBackgroundColor:#eae8e5;">
         <div class="section__content constrain">
-            <form method="post" action="@Context.Request.PathBase/greenhouse/apply" enctype="multipart/form-data">
+            <form method="post" action="@Context.Request.PathBase/greenhouse/apply/@Model.ContentItem.ContentItemId" enctype="multipart/form-data">
                 @if (TempData.ContainsKey(Constants.TempDataKeys.ApplicationError))
                 {
                     <p class="alert alert--error">@TempData[Constants.TempDataKeys.ApplicationError]</p>
