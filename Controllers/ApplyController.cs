@@ -23,7 +23,6 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
     {
         #region Dependencies
 
-        private readonly IAutorouteEntries _autorouteEntries;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IContentManager _contentManager;
         private readonly IGreenhouseApplyService _greenhouseApplyService;
@@ -36,7 +35,6 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
         #region Constructor
 
         public ApplyController(
-            IAutorouteEntries autorouteEntries,
             IContentDefinitionManager contentDefinitionManager,
             IContentManager contentManager,
             IGreenhouseApplyService greenhouseApplyService,
@@ -45,7 +43,6 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
             IWorkflowManager workflowManager
         )
         {
-            _autorouteEntries = autorouteEntries;
             _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
             _greenhouseApplyService = greenhouseApplyService;
