@@ -8,5 +8,6 @@
         public long MaxFileSize { get; set; } = Constants.Defaults.MaxFileSize;
         public bool ShowApplicationForm { get; set; }
         public string SubmitButtonLabel { get; set; }
+        public string ValidationErrorsMessage { get; set; }
     }
 }

@@ -28,6 +28,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
                 model.MaxFileSize = settings.MaxFileSize;
                 model.ShowApplicationForm = settings.ShowApplicationForm;
                 model.SubmitButtonLabel = settings.SubmitButtonLabel;
+                model.ValidationErrorsMessage = settings.ValidationErrorsMessage;
             }).Location("Content");
         }
 
@@ -49,7 +50,8 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
                 ApplicationSuccessUrl = model.ApplicationSuccessUrl,
                 MaxFileSize = model.MaxFileSize,
                 ShowApplicationForm = model.ShowApplicationForm,
-                SubmitButtonLabel = model.SubmitButtonLabel
+                SubmitButtonLabel = model.SubmitButtonLabel,
+                ValidationErrorsMessage = model.ValidationErrorsMessage
             });
 
             return Edit(contentTypePartDefinition, context.Updater);

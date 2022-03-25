@@ -1,6 +1,10 @@
 ﻿@model Etch.OrchardCore.Greenhouse.ViewModels.GreenhousePostingFormPartViewModel
 
-@using Etch.OrchardCore.Greenhouse 
+@using Etch.OrchardCore.Greenhouse
+
+@{
+    var modelState = (TempData["ModelState"]?.ToString() ?? string.Empty).DeserializeModelState();
+}
 
 @if (Model.ShowApplicationForm)
 {
@@ -12,13 +16,18 @@
                     <p class="alert alert--error">@TempData[Constants.TempDataKeys.ApplicationError]</p>
                 }
 
+                @if (!modelState.IsValid && !string.IsNullOrWhiteSpace(Model.Settings.ValidationErrorsMessage) && !TempData.ContainsKey(Constants.TempDataKeys.ApplicationError))
+                {
+                    <p class="alert alert--error">@Html.Raw(Model.Settings.ValidationErrorsMessage)</p>
+                }
+
                 @foreach (var question in Model.Questions)
                 {
                     @await DisplayAsync(question)
                 }
-      
+
                 @Html.AntiForgeryToken()
-      
+
                 <button type="submit" class="btn btn--primary">@Model.Settings.SubmitButtonLabel</button>
             </form>
         </div>
