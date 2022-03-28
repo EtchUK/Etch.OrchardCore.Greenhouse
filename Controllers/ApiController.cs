@@ -66,13 +66,13 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
 
             var model = new GreenhouseQueryResultViewModel
             {
-                From = parameters.From,
-                Size = parameters.Size,
+                From = parameters.From > 0 ? parameters.From : 0,
+                Size = parameters.Size > 0 ? parameters.Size : 1,
                 TotalItems = (await _luceneQuerySource.ExecuteQueryAsync(luceneQuery, queryParameters)).Items.Count()
             };
 
-            queryParameters.Add("from", parameters.From);
-            queryParameters.Add("size", parameters.Size);
+            queryParameters.Add("from", model.From);
+            queryParameters.Add("size", model.Size);
 
             foreach (var contentItem in (await _luceneQuerySource.ExecuteQueryAsync(luceneQuery, queryParameters)).Items)
             {
