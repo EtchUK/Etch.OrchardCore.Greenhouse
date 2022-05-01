@@ -14,7 +14,7 @@ namespace Etch.OrchardCore.Greenhouse.Filters
         {
             var departments = new List<string>();
 
-            foreach (var value in input.Enumerate())
+            foreach (var value in input.Enumerate(context))
             {
                 departments.Add((await value.GetValueAsync($"{nameof(GreenhousePostingPart)}.{nameof(GreenhousePostingPart.Department)}", context)).ToStringValue());
             }

@@ -23,7 +23,7 @@ namespace Etch.OrchardCore.Greenhouse.Filters
         {
             var locations = new List<string>();
 
-            foreach (var value in input.Enumerate())
+            foreach (var value in input.Enumerate(context))
             {
                 locations.Add((await value.GetValueAsync($"{nameof(GreenhousePostingPart)}.{nameof(GreenhousePostingPart.Location)}", context)).ToStringValue());
             }
