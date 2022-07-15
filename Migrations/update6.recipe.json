@@ -1,0 +1,59 @@
+{
+    "name": "",
+    "issetuprecipe": false,
+    "steps": [
+        {
+            "name": "ContentDefinition",
+            "ContentParts": [
+                {
+                    "Name": "GreenhousePostings",
+                    "Settings": {},
+                    "ContentPartFieldDefinitionRecords": [
+                        {
+                            "FieldName": "TextField",
+                            "Name": "DepartmentPrefill",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "Prefill Department Filter",
+                                    "Position": "13"
+                                },
+                                "TextFieldSettings": {
+                                    "Hint": "Optionally specify a department to display by default. If not specified, all departments will be displayed."
+                                },
+                                "ContentIndexSettings": {}
+                            }
+                        },
+                        {
+                            "FieldName": "TextField",
+                            "Name": "LocationPrefill",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "Prefill Location Filter",
+                                    "Position": "14"
+                                },
+                                "TextFieldSettings": {
+                                    "Hint": "Optionally specify a location to display by default. If not specified, all locations will be displayed."
+                                },
+                                "ContentIndexSettings": {}
+                            }
+                        },
+                        {
+                            "FieldName": "BooleanField",
+                            "Name": "HideDepartmentFilter",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "Hide Department Filter",
+                                    "Position": "10"
+                                },
+                                "BooleanFieldSettings": {
+                                    "Hint": "You may wish to hide the department filter by ticking this box."
+                                },
+                                "ContentIndexSettings": {}
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
