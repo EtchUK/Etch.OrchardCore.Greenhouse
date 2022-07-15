@@ -22,13 +22,14 @@ namespace Etch.OrchardCore.Greenhouse.Filters
         public async ValueTask<FluidValue> ProcessAsync(FluidValue input, FilterArguments arguments, LiquidTemplateContext context)
         {
             var locations = new List<string>();
+            var selectedItem = arguments.At(0).ToStringValue();
 
             foreach (var value in input.Enumerate(context))
             {
                 locations.Add((await value.GetValueAsync($"{nameof(GreenhousePostingPart)}.{nameof(GreenhousePostingPart.Location)}", context)).ToStringValue());
             }
 
-            return new StringValue(StringUtils.GetOptions(locations.Distinct().OrderBy(x => x).ToList(), _httpContextAccessor.HttpContext.Request.Query["location"].FirstOrDefault()));
+            return new StringValue(StringUtils.GetOptions(locations.Distinct().OrderBy(x => x).ToList(), selectedItem));
         }
     }
 }
