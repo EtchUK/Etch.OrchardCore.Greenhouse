@@ -16,13 +16,21 @@
 
 {% assign allPostings = Queries.AllGreenhousePostings | query %}
 
-{% assign location = Request.Query.location | first %}
-{% assign department = Request.Query.department | first %}
+{% assign location = greenhousePostings.LocationPrefill.Text %}
+{% assign department = greenhousePostings.DepartmentPrefill.Text %}
+
+{% if Request.Query.location != nil %}
+    {% assign location = Request.Query.location | first %}
+{% endif %}
+
+{% if Request.Query.department != nil %}
+    {% assign department = Request.Query.department | first %}
+{% endif %}
 
 {% assign page = Request.Query["page"] | first | at_least: 1 %}
 {% assign fromValue = page | times: pageSize | minus: pageSize  | at_least: 0 %}
 
-{% assign showPinned = location == nil and department == nil and page == 1 %}
+{% assign showPinned = location == blank and department == blank and page == 1 %}
 
 {% if showPinned %}
     {% assign pageSize = pageSize | minus: pinnedPostings.size  %}
@@ -89,7 +97,7 @@
             </label>
 
             <select id="location" name="location" class="js-filterable-jobs-filter">
-                {{ allPostings | greenhouse_location_options | raw }}
+                {{ allPostings | greenhouse_location_options: location | raw }}
             </select>
         </div>
         {% endif %}
@@ -104,7 +112,7 @@
                     {% endif %}
                 </label>
                 <select id="department" name="department" class="js-filterable-jobs-filter">
-                    {{ allPostings | greenhouse_department_options | raw }}
+                    {{ allPostings | greenhouse_department_options: department | raw }}
                 </select>
             </div>
         {% endif %}
