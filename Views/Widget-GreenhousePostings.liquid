@@ -6,7 +6,7 @@
 {% assign pinnedPostingIds = greenhousePostings.PinnedPostings.ContentItemIds %}
 {% assign pinnedPostings = pinnedPostingIds | content_item_id %}
 
-{% if greenhousePostings.PageSize.Value != nil %}
+{% if greenhousePostings.PageSize.Value != blank %}
     {% assign pageSize = greenhousePostings.PageSize.Value %}
     {% assign originalPageSize = greenhousePostings.PageSize.Value %}
 {% endif %}
@@ -53,11 +53,11 @@
 {% assign hideLocation = greenhousePostings.HideLocationFilter.Value %}
 {% assign hideResultsSummary = greenhousePostings.HideResultsSummary.Value %}
 
-{% assign departmentLabel = greenhousePostings.DepartmentLabel.Text %}
-{% assign locationLabel = greenhousePostings.LocationLabel.Text %}
-{% assign submitLabel = greenhousePostings.SubmitLabel.Text %}
-{% assign nextPageLabel = greenhousePostings.NextPageLabel.Text %}
-{% assign previousPageLabel = greenhousePostings.PreviousPageLabel.Text %}
+{% assign departmentLabel = greenhousePostings.DepartmentLabel.Text | default: "Department" %}
+{% assign locationLabel = greenhousePostings.LocationLabel.Text | default: "Location" %}
+{% assign submitLabel = greenhousePostings.SubmitLabel.Text | default: "Update" %}
+{% assign nextPageLabel = greenhousePostings.NextPageLabel.Text | default: "Next postings" %}
+{% assign previousPageLabel = greenhousePostings.PreviousPageLabel.Text | default: "Previous postings" %}
 
 {% assign cssClasses = "content-feed content-feed--jobs js-analytics-list js-filterable-jobs" %}
 
@@ -81,13 +81,8 @@
         {% if hideLocation == false %}
         <div class="content-feed__filter">
             <label for="location">
-                {% if locationLabel != nil %}
-                    {{ locationLabel }}
-                {% else %}
-                    {{ "Location" | t }}
-                {% endif %}
+                {{ locationLabel }}
             </label>
-
             <select id="location" name="location" class="js-filterable-jobs-filter">
                 {{ allPostings | greenhouse_location_options | raw }}
             </select>
@@ -97,11 +92,7 @@
         {% if hideDepartment == false %}
             <div class="content-feed__filter">
                 <label for="department">
-                    {% if departmentLabel != nil %}
-                        {{ departmentLabel }}
-                    {% else %}
-                        {{ "Department" | t }}
-                    {% endif %}
+                    {{ departmentLabel }}
                 </label>
                 <select id="department" name="department" class="js-filterable-jobs-filter">
                     {{ allPostings | greenhouse_department_options | raw }}
@@ -111,11 +102,7 @@
 
         <div class="content-feed__filter js-job-filter-button">
             <button type="submit" class="btn btn--primary">
-                {% if submitLabel != nil %}
-                    {{ submitLabel }}
-                {% else %}
-                    {{ "Update" | t }}
-                {% endif %}
+                {{ submitLabel }}
             </button>
         </div>
     </form>
@@ -152,22 +139,14 @@
             {% assign prevPage = page | minus: 1 %}
             <li {% if prevPage == 0 %}class="display--none"{% endif %}>
                 <a href="{{ pageUrl | append: "page=" | append: prevPage | append: "#postings" }}" class="js-filterable-jobs-pager-prev-btn">
-                {% if previousPageLabel != nil %}
                     {{ previousPageLabel }}
-                {% else %}
-                    {{ "Previous postings" | t}}
-                {% endif %}
                 </a>
             </li>
 
             {% assign nextPage = page | plus: 1 %}
             <li {% if items.size <= pageSize %}class="display--none"{% endif %}>
                 <a href="{{ pageUrl | append: "page=" | append: nextPage | append: "#postings" }}" class="js-filterable-jobs-pager-next-btn">
-                {% if nextPageLabel != nil %}
                     {{ nextPageLabel }}
-                {% else %}
-                    {{ "Next postings" | t}}
-                {% endif %}
                 </a>
             </li>
         </ul>
