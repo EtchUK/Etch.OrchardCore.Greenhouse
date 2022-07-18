@@ -8,9 +8,31 @@
 
 @if (Model.ShowApplicationForm)
 {
+    @if (Model.UseReCaptcha)
+    {
+        <script at="Head">
+            window.onGreenhouseRecaptchComplete = function(token) {
+                document.getElementById('greenhouse-apply-form').submit();
+            }
+
+            window.onGreenhouseApplySubmit = function() {
+                grecaptcha.execute();
+                return false;
+            };
+        </script>
+
+        <script src="https://www.google.com/recaptcha/api.js" at="Head" async defer></script>
+    }
+
     <section id="@Constants.AnchorUrl" class="section section--spaced-after-none" style="--sectionBackgroundColor:#eae8e5;">
         <div class="section__content constrain">
-            <form method="post" action="@Context.Request.PathBase/greenhouse/apply/@Model.ContentItem.ContentItemId" enctype="multipart/form-data">
+            <form 
+                id="greenhouse-apply-form" 
+                method="post" 
+                action="@Context.Request.PathBase/greenhouse/apply/@Model.ContentItem.ContentItemId" 
+                enctype="multipart/form-data"
+                onsubmit="@(Model.UseReCaptcha ? "window.onGreenhouseApplySubmit()" : string.Empty)">
+
                 @if (TempData.ContainsKey(Constants.TempDataKeys.ApplicationError))
                 {
                     <p class="alert alert--error">@TempData[Constants.TempDataKeys.ApplicationError]</p>
@@ -28,7 +50,19 @@
 
                 @Html.AntiForgeryToken()
 
-                <button type="submit" class="btn btn--primary">@Model.Settings.SubmitButtonLabel</button>
+                @if (Model.UseReCaptcha)
+                {
+                    <div class="g-recaptcha"
+                      data-sitekey="@Model.ReCaptchaSettings.SiteKey"
+                      data-callback="onGreenhouseRecaptchComplete"
+                      data-size="invisible"></div>
+                }
+
+                <button 
+                    class="btn btn--primary g-recaptcha"
+                    type="submit"
+                    data-sitekey="6Le40u4gAAAAAKiNH5ejY2iGO7X1wYaf7B3WB03p" 
+                    data-callback="onWorkableApplySubmit">@Model.Settings.SubmitButtonLabel</button>
             </form>
         </div>
     </section>

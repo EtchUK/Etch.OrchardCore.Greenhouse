@@ -36,7 +36,7 @@ namespace Etch.OrchardCore.Greenhouse.ModelBinding
             var fileField = question.Fields.FirstOrDefault(x => x.Type == Constants.GreenhouseFieldTypes.Attachment);
             var textField = question.Fields.FirstOrDefault(x => x.Type == Constants.GreenhouseFieldTypes.LongText);
 
-            if (question.Required.HasValue && question.Required.Value && !request.Form.Files.Any(x => x.Name == fileField.Name) && string.IsNullOrWhiteSpace(request.Form[textField.Name]))
+            if (question.Required.HasValue && question.Required.Value && !request.Form.Files.Any(x => x.Name == fileField.Name) && (textField == null || string.IsNullOrWhiteSpace(request.Form[textField.Name])))
             {
                 modelState.AddModelError(fileField.Name, $"{question.Label} is required");
                 return null;

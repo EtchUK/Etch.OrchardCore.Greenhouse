@@ -8,6 +8,7 @@
         public long MaxFileSize { get; set; } = Constants.Defaults.MaxFileSize;
         public bool ShowApplicationForm { get; set; }
         public string SubmitButtonLabel { get; set; }
+        public bool UseReCaptcha { get; set; }
         public string ValidationErrorsMessage { get; set; }
     }
 }

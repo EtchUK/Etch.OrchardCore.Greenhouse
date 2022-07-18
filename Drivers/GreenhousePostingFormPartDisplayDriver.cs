@@ -8,6 +8,9 @@ using OrchardCore.ContentManagement.Display.ContentDisplay;
 using OrchardCore.ContentManagement.Display.Models;
 using OrchardCore.DisplayManagement.ModelBinding;
 using OrchardCore.DisplayManagement.Views;
+using OrchardCore.Entities;
+using OrchardCore.ReCaptcha.Configuration;
+using OrchardCore.Settings;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,14 +22,19 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
         #region Dependencies
 
         private readonly IGreenhouseQuestionShapeFactory _greenhouseQuestionShapeFactory;
+        private readonly ISiteService _siteService;
 
         #endregion
 
         #region Constructor
 
-        public GreenhousePostingFormPartDisplayDriver(IGreenhouseQuestionShapeFactory greenhouseQuestionShapeFactory)
+        public GreenhousePostingFormPartDisplayDriver(
+            IGreenhouseQuestionShapeFactory greenhouseQuestionShapeFactory,
+            ISiteService siteService
+            )
         {
             _greenhouseQuestionShapeFactory = greenhouseQuestionShapeFactory;
+            _siteService = siteService;
         }
 
         #endregion
@@ -39,6 +47,9 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
             {
                 return null;
             }
+
+            var siteSettings = await _siteService.GetSiteSettingsAsync();
+            var recaptchaSettings = siteSettings.As<ReCaptchaSettings>();
 
             var settings = context.TypePartDefinition.GetSettings<GreenhousePostingFormPartSettings>();
             var postingPart = part.ContentItem.As<GreenhousePostingPart>();
@@ -62,8 +73,10 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
                 model.Questions = questions;
                 model.Posting = posting;
                 model.PostingPart = postingPart;
+                model.ReCaptchaSettings = recaptchaSettings;
                 model.Settings = settings;
                 model.ShowApplicationForm = settings.ShowApplicationForm && part.ShowApplicationForm;
+                model.UseReCaptcha = settings.UseReCaptcha && recaptchaSettings != null && recaptchaSettings.IsValid();
             }).Location("Detail", "Content:10");
         }
 
