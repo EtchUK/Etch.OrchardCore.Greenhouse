@@ -4,16 +4,20 @@ using Etch.OrchardCore.Greenhouse.Services;
 using Etch.OrchardCore.Greenhouse.Services.Dtos;
 using Etch.OrchardCore.Greenhouse.Workflows.Activities;
 using Etch.OrchardCore.Greenhouse.Workflows.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
 using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Metadata;
-using OrchardCore.ContentManagement.Routing;
 using OrchardCore.Entities;
+using OrchardCore.ReCaptcha.Configuration;
+using OrchardCore.ReCaptcha.Services;
+using OrchardCore.Settings;
 using OrchardCore.Workflows.Services;
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using static Etch.OrchardCore.Greenhouse.Constants;
 
@@ -25,8 +29,11 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
 
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IContentManager _contentManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IGreenhouseApplyService _greenhouseApplyService;
         private readonly ILogger<ApplyController> _logger;
+        private readonly ReCaptchaClient _reCaptchaClient;
+        private readonly ISiteService _siteService;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IWorkflowManager _workflowManager;
 
@@ -37,16 +44,22 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
         public ApplyController(
             IContentDefinitionManager contentDefinitionManager,
             IContentManager contentManager,
+            IHttpContextAccessor httpContextAccessor,
             IGreenhouseApplyService greenhouseApplyService,
             ILogger<ApplyController> logger,
+            ReCaptchaClient reCaptchaClient,
+            ISiteService siteService,
             IUrlHelperFactory urlHelperFactory,
             IWorkflowManager workflowManager
         )
         {
             _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
+            _httpContextAccessor = httpContextAccessor;
             _greenhouseApplyService = greenhouseApplyService;
             _logger = logger;
+            _reCaptchaClient = reCaptchaClient;
+            _siteService = siteService;
             _urlHelperFactory = urlHelperFactory;
             _workflowManager = workflowManager;
         }
@@ -91,6 +104,12 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
                 return new RedirectResult($"{returnUrl}");
             }
 
+            if (formPartSettings.UseReCaptcha && !await ValidateRecpatchaAsync())
+            {
+                TempData["ModelState"] = ModelState.Serialize();
+                return new RedirectResult($"{returnUrl}");
+            }
+
             GreenhouseApplicationResponse response;
 
             try
@@ -117,6 +136,21 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
             });
 
             return new RedirectResult($"{Request.PathBase}{formPartSettings.ApplicationSuccessUrl}?contentItemId={contentItem.ContentItemId}");
+        }
+
+        private async Task<bool> ValidateRecpatchaAsync()
+        {
+            var reCaptchaResponse = _httpContextAccessor.HttpContext?.Request.Headers["g-recaptcha-response"];
+
+            if (string.IsNullOrEmpty(reCaptchaResponse) && (_httpContextAccessor.HttpContext?.Request.HasFormContentType ?? false))
+            {
+                reCaptchaResponse = _httpContextAccessor.HttpContext.Request.Form["g-recaptcha-response"].ToString();
+            }
+
+            var siteSettings = await _siteService.GetSiteSettingsAsync();
+            var recaptchaSettings = siteSettings.As<ReCaptchaSettings>();
+
+            return !string.IsNullOrEmpty(reCaptchaResponse) && await _reCaptchaClient.VerifyAsync(reCaptchaResponse, recaptchaSettings.SecretKey);
         }
 
         #region Helper Methods
