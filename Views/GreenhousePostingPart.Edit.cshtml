@@ -51,9 +51,9 @@
 </style>
 
 <div class="mb-3">
-    <div class="custom-control custom-checkbox">
-        <input asp-for="IgnoreSync" type="checkbox" class="custom-control-input content-preview-select" checked="@Model.IgnoreSync" />
-        <label class="custom-control-label" asp-for="IgnoreSync">
+    <div class="form-check">
+        <input asp-for="IgnoreSync" type="checkbox" class="form-check-input content-preview-select" checked="@Model.IgnoreSync" />
+        <label class="form-check-label" asp-for="IgnoreSync">
             @T["Ignore during sync"]
             <span class="hint dashed">@T["Use when changes have been made that should not be overwritten when syncing."]</span>
         </label>

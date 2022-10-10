@@ -1,9 +1,9 @@
 ﻿@model Etch.OrchardCore.Greenhouse.ViewModels.GreenhousePostingFormPartSettingsViewModel
 
 <div class="mb-3">
-    <div class="custom-control custom-checkbox">
-        <input asp-for="ShowApplicationForm" type="checkbox" class="custom-control-input content-preview-select" checked="@Model.ShowApplicationForm" />
-        <label class="custom-control-label" asp-for="ShowApplicationForm">
+    <div class="form-check">
+        <input asp-for="ShowApplicationForm" type="checkbox" class="form-check-input content-preview-select" checked="@Model.ShowApplicationForm" />
+        <label class="form-check-label" asp-for="ShowApplicationForm">
             @T["Show application form"]
             <span class="hint dashed">@T["When checked, users will be able to apply for job posting directly on this website."]</span>
         </label>
@@ -55,9 +55,9 @@
     <h4>Antispam</h4>
 
     <div class="mb-3">
-        <div class="custom-control custom-checkbox">
-            <input asp-for="UseReCaptcha" type="checkbox" class="custom-control-input content-preview-select" checked="@Model.UseReCaptcha" />
-            <label class="custom-control-label" asp-for="UseReCaptcha">
+        <div class="form-check form-check">
+            <input asp-for="UseReCaptcha" type="checkbox" class="form-check-input content-preview-select" checked="@Model.UseReCaptcha" />
+            <label class="form-check-label" asp-for="UseReCaptcha">
                 @T["Enable ReCaptcha"]
                 <span class="hint dashed">@T["Use ReCaptcha to prevent spam on application form."]</span>
             </label>
