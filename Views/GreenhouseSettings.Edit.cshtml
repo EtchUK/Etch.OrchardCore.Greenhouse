@@ -1,12 +1,12 @@
 ﻿@model Etch.OrchardCore.Greenhouse.ViewModels.GreenhouseSettingsViewModel
 
-<div class="form-group">
+<div class="mb-3">
     <label asp-for="BoardToken">@T["Board Token"]</label>
     <input asp-for="BoardToken" class="form-control" />
     <span class="hint">@T["Token for job board on Greenhouse. If board URL is 'boards.greenhouse.io/my-agency', then token would be 'my-agency'."]</span>
 </div>
 
-<div class="form-group">
+<div class="mb-3">
     <label asp-for="ApiKey">@T["API Key"]</label>
     <input asp-for="ApiKey" class="form-control" />
     <span class="hint">@T["API key used to authenticate with the Greenhouse API, <a href=\"https://support.greenhouse.io/hc/en-us/articles/360003470371-Generate-Greenhouse-Onboarding-API-key\">find out how to generate one</a>."]</span>

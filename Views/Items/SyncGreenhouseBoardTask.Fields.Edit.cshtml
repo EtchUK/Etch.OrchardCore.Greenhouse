@@ -1,18 +1,18 @@
 ﻿@model Etch.OrchardCore.Greenhouse.Workflows.ViewModels.SyncGreenhouseBoardTaskViewModel
 
-<div class="form-group">
+<div class="mb-3">
     <label asp-for="UrlPrefix">@T["URL Prefix"]</label>
     <input asp-for="UrlPrefix" class="form-control" />
     <span class="hint">@T["URL that should be prefixed to the job posting URL (which will be /posting-title/posting-id)"]</span>
 </div>
 
-<div class="form-group">
+<div class="mb-3">
     <label asp-for="Author">@T["Author"]</label>
     <input asp-for="Author" class="form-control" />
     <span class="hint">@T["Author associated to content items created/updated via sync."]</span>
 </div>
 
-<div class="form-group">
+<div class="mb-3">
     <label asp-for="ContentType">@T["Content Type"]</label>
     <input asp-for="ContentType" class="form-control" />
     <span class="hint">@T["Content type of content items created/updated via sync."]</span>

@@ -50,7 +50,7 @@
     }
 </style>
 
-<div class="form-group">
+<div class="mb-3">
     <div class="custom-control custom-checkbox">
         <input asp-for="IgnoreSync" type="checkbox" class="custom-control-input content-preview-select" checked="@Model.IgnoreSync" />
         <label class="custom-control-label" asp-for="IgnoreSync">
@@ -60,13 +60,13 @@
     </div>
 </div>
 
-<div class="form-group">
+<div class="mb-3">
     <label asp-for="PostingData">Posting Data</label>
     <pre id="@postingId">@Model.PostingData</pre>
     <input asp-for="PostingData" type="hidden" class="editor-@postingId" />
 </div>
 
-<div class="form-group">
+<div class="mb-3">
     <label asp-for="JobData">Job Data</label>
     <pre id="@jobId">@Model.JobData</pre>
     <input asp-for="JobData" type="hidden" class="editor-@jobId" />

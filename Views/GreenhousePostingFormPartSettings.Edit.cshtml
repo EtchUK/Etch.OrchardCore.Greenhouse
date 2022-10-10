@@ -1,6 +1,6 @@
 ﻿@model Etch.OrchardCore.Greenhouse.ViewModels.GreenhousePostingFormPartSettingsViewModel
 
-<div class="form-group">
+<div class="mb-3">
     <div class="custom-control custom-checkbox">
         <input asp-for="ShowApplicationForm" type="checkbox" class="custom-control-input content-preview-select" checked="@Model.ShowApplicationForm" />
         <label class="custom-control-label" asp-for="ShowApplicationForm">
@@ -10,7 +10,7 @@
     </div>
 </div>
 
-<div class="form-group">
+<div class="mb-3">
     <label asp-for="ApplicationSuccessUrl">@T["Application Success URL"]</label>
     <input asp-for="ApplicationSuccessUrl" class="form-control" />
     <span class="hint">@T["URL applicant is redirected to after successfully applying for a posting."]</span>
@@ -18,19 +18,19 @@
 
 <h4>Form UI</h4>
 
-<div class="form-group">
+<div class="mb-3">
     <label asp-for="ValidationErrorsMessage">@T["Validation Errors Message"]</label>
     <input asp-for="ValidationErrorsMessage" class="form-control" />
     <span class="hint">@T["Feedback displayed to user when there are validation errors to resolve."]</span>
 </div>
 
-<div class="form-group">
+<div class="mb-3">
     <label asp-for="ApplicationErrorMessage">@T["Application Error Message"]</label>
     <input asp-for="ApplicationErrorMessage" class="form-control" />
     <span class="hint">@T["Feedback displayed to user when there is a technical error when submitting their application."]</span>
 </div>
 
-<div class="form-group">
+<div class="mb-3">
     <label asp-for="SubmitButtonLabel">@T["Submit Button Label"]</label>
     <input asp-for="SubmitButtonLabel" class="form-control" />
     <span class="hint">@T["Label for button used to submit an application."]</span>
@@ -38,13 +38,13 @@
 
 <h4>Attachments</h4>
 
-<div class="form-group">
+<div class="mb-3">
     <label asp-for="AllowedFileExtensions">@T["Allowed File Extensions"]</label>
     <input asp-for="AllowedFileExtensions" class="form-control" />
     <span class="hint">@T["Comma separated list of file extensions that are accepted with job application (e.g. .doc, .docx, .pdf)."]</span>
 </div>
 
-<div class="form-group">
+<div class="mb-3">
     <label asp-for="MaxFileSize">@T["Max File Size"]</label>
     <input asp-for="MaxFileSize" class="form-control" />
     <span class="hint">@T["Maximum file size (in bytes) for files that are attached to job application."]</span>
@@ -54,7 +54,7 @@
 {
     <h4>Antispam</h4>
 
-    <div class="form-group">
+    <div class="mb-3">
         <div class="custom-control custom-checkbox">
             <input asp-for="UseReCaptcha" type="checkbox" class="custom-control-input content-preview-select" checked="@Model.UseReCaptcha" />
             <label class="custom-control-label" asp-for="UseReCaptcha">
