@@ -2,9 +2,9 @@
 
 
 <div class="mb-3">
-    <div class="custom-control custom-checkbox">
-        <input asp-for="ShowApplicationForm" type="checkbox" class="custom-control-input content-preview-select" checked="@Model.ShowApplicationForm" />
-        <label class="custom-control-label" asp-for="ShowApplicationForm">
+    <div class="form-check">
+        <input asp-for="ShowApplicationForm" type="checkbox" class="form-check-input content-preview-select" checked="@Model.ShowApplicationForm" />
+        <label class="form-check-label" asp-for="ShowApplicationForm">
             @T["Show application form"]
             <span class="hint dashed">@T["When checked, users will be able to apply for job posting directly on this website."]</span>
         </label>
