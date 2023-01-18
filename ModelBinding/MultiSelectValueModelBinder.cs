@@ -1,4 +1,4 @@
-﻿using Etch.OrchardCore.Greenhouse.Services.Dtos;
+using Etch.OrchardCore.Greenhouse.Services.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
@@ -16,6 +16,11 @@ namespace Etch.OrchardCore.Greenhouse.ModelBinding
             }
 
             var field = question.Fields.FirstOrDefault();
+
+            if (field == null)
+            {
+                return null;
+            }
 
             modelState.SetModelValue(field.Name, request.Form[field.Name], request.Form[field.Name]);
 
