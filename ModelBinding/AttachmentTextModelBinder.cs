@@ -1,7 +1,6 @@
-﻿using Etch.OrchardCore.Greenhouse.Services.Dtos;
+using Etch.OrchardCore.Greenhouse.Services.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System;
 using System.Linq;
 
 namespace Etch.OrchardCore.Greenhouse.ModelBinding
@@ -17,6 +16,11 @@ namespace Etch.OrchardCore.Greenhouse.ModelBinding
 
             var fileField = question.Fields.FirstOrDefault(x => x.Type == Constants.GreenhouseFieldTypes.Attachment);
             var textField = question.Fields.FirstOrDefault(x => x.Type == Constants.GreenhouseFieldTypes.LongText);
+
+            if (fileField == null || textField == null)
+            {
+                return null;
+            }
 
             if (question.Required.HasValue && question.Required.Value && !request.Form.Files.Any(x => x.Name == fileField.Name) && string.IsNullOrWhiteSpace(request.Form[textField.Name]))
             {
