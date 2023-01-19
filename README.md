@@ -89,6 +89,10 @@ Returns an array of distinct locations. This filter needs the results from an Or
 {% locations | greenhouse_unique_locations %}
 ```
 
+### Tracking
+
+This module provides JS components that will interrogate HTML derived from the templates to send tracking events to Google Analytics. Events sent to Google Analytics makes use of the [ecommerce reporting](https://developers.google.com/analytics/devguides/collection/ga4/ecommerce?client_type=gtag) which will track when users are shown, click, view, begin applying and successfully complete an application.
+
 ## Packaging
 
 When the theme is compiled (using `dotnet build`) it's configured to generate a `.nupkg` file (this can be found in `\bin\Debug\` or `\bin\Release`).
