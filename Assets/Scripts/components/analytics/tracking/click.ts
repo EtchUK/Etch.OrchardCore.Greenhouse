@@ -31,7 +31,7 @@ export default ($el: Element) => {
         ga4Event.ecommerce.items[0].item_list_name = getListName($el);
 
         window.dataLayer.push(ga4Event);
-
+        
         return false;
     });
 };

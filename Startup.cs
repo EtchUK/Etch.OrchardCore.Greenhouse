@@ -1,8 +1,9 @@
-﻿using Etch.OrchardCore.Greenhouse.Display;
+using Etch.OrchardCore.Greenhouse.Display;
 using Etch.OrchardCore.Greenhouse.Drivers;
 using Etch.OrchardCore.Greenhouse.Filters;
 using Etch.OrchardCore.Greenhouse.Indexes;
 using Etch.OrchardCore.Greenhouse.Models;
+using Etch.OrchardCore.Greenhouse.Resources;
 using Etch.OrchardCore.Greenhouse.Services;
 using Etch.OrchardCore.Greenhouse.Services.Dtos;
 using Etch.OrchardCore.Greenhouse.ViewModels;
@@ -11,6 +12,7 @@ using Etch.OrchardCore.Greenhouse.Workflows.Drivers;
 using Fluid;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Display.ContentDisplay;
 using OrchardCore.ContentTypes.Editors;
@@ -20,6 +22,7 @@ using OrchardCore.Indexing;
 using OrchardCore.Liquid;
 using OrchardCore.Modules;
 using OrchardCore.Navigation;
+using OrchardCore.ResourceManagement;
 using OrchardCore.Settings;
 using OrchardCore.Workflows.Helpers;
 using YesSql.Indexes;
@@ -64,6 +67,8 @@ namespace Etch.OrchardCore.Greenhouse
 
             services.AddSingleton<IIndexProvider, GreenhousePostingPartIndexProvider>();
             services.AddScoped<IContentPartIndexHandler, GreenhousePostingPartIndexHandler>();
+
+            services.AddTransient<IConfigureOptions<ResourceManagementOptions>, ResourceManagementOptionsConfiguration>();
 
             services.Configure<TemplateOptions>(o =>
             {

@@ -1,4 +1,4 @@
-﻿@model Etch.OrchardCore.Greenhouse.ViewModels.GreenhousePostingFormPartViewModel
+@model Etch.OrchardCore.Greenhouse.ViewModels.GreenhousePostingFormPartViewModel
 
 @using Etch.OrchardCore.Greenhouse
 
@@ -31,6 +31,12 @@
                 method="post" 
                 action="@Context.Request.PathBase/greenhouse/apply/@Model.ContentItem.ContentItemId" 
                 enctype="multipart/form-data"
+                class="js-analytics-track"
+                data-item-id="@Model.Posting.Id"
+                data-name="@Model.Posting.Title"
+                data-brand="@Model.PostingPart.Location"
+                data-category="@Model.PostingPart.Department"
+                data-events="addToCart"
                 onsubmit="@(Model.UseReCaptcha ? "window.onGreenhouseApplySubmit()" : string.Empty)">
 
                 @if (TempData.ContainsKey(Constants.TempDataKeys.ApplicationError))
@@ -61,7 +67,7 @@
                 <button 
                     class="btn btn--primary g-recaptcha"
                     type="submit"
-                    data-sitekey="6Le40u4gAAAAAKiNH5ejY2iGO7X1wYaf7B3WB03p" 
+                    data-sitekey="@Model.ReCaptchaSettings.SiteKey"
                     data-callback="onWorkableApplySubmit">@Model.Settings.SubmitButtonLabel</button>
             </form>
         </div>

@@ -1,4 +1,4 @@
-﻿<section class="section section--spaced-after-none">
+<section class="section section--spaced-after-none">
 	<div class="section__content constrain">
 		{{ Model.Posting.Content | raw }}
 
@@ -8,7 +8,13 @@
 		</p>
 		{% else %}
 		<p>
-			<a href="{{ Site.Properties.GreenhouseSettings.BoardUrl }}/jobs/{{ Model.Posting.Id }}#app" class="btn btn--primary">{{ "Apply now" | t }}</a>
+			<a  href="https://boards.greenhouse.io/{{ Site.Properties.GreenhouseSettings.BoardToken }}/jobs/{{ Model.Posting.Id }}#app"
+                class="btn btn--primary js-analytics-track"
+                data-item-id="{{ posting.PostingId }}" 
+			    data-name="{{ Model.ContentItem | display_text }}" 
+				data-brand="{{ posting.Location }}" 
+				data-category="{{ posting.Department }}" 
+				data-events="purchaseClick">{{ "Apply now" | t }}</a>
 		</p>
 		{% endif %}
 	</div>
