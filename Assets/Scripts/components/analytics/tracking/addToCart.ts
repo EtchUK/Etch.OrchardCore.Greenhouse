@@ -20,7 +20,7 @@ export default ($el: Element) => {
 
         // GA4
         window.dataLayer.push({
-            event: "add_to_cart",
+            event: 'add_to_cart',
             ecommerce: {
                 items: [getTrackingData($el)],
             },

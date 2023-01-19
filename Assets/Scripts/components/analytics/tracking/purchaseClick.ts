@@ -12,22 +12,22 @@ export default ($el: Element) => {
 
         // GA4
         window.dataLayer.push({
-            event: "purchase",
+            event: 'purchase',
             ecommerce: {
                 transaction_id: uuidv4(),
                 affiliation: window.location.hostname,
                 value: 0,
                 tax: 0,
                 shipping: 0,
-                currency: "USD",
-                coupon: "",
+                currency: 'USD',
+                coupon: '',
                 items: [getTrackingData($el)],
             },
             eventCallback: () => {
-                const href = $el.getAttribute("href");
+                const href = $el.getAttribute('href');
 
                 if (href) {
-                    window.open(href, "_blank");
+                    window.open(href, '_blank');
                 }
             },
             eventTimeout: 1500,
