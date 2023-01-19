@@ -28,7 +28,7 @@ const getEvents = ($el: Element) => {
 };
 
 const instance = ($el: Element) => {
-    (getEvents($el) || []).map((event) => {
+    (getEvents($el) || []).forEach((event) => {
         switch (event) {
             case 'addtocart':
                 addToCart($el);
@@ -55,7 +55,7 @@ const instance = ($el: Element) => {
 };
 
 const instanceClickOrImpression = ($el: Element) => {
-    (getEvents($el) || []).map((event) => {
+    (getEvents($el) || []).forEach((event) => {
         switch (event) {
             case 'click':
                 click($el);
