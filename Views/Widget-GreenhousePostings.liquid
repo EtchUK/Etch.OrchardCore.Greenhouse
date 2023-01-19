@@ -147,17 +147,53 @@
     {% if paging %}
         <ul class="content-feed__pager pager margin--bottom-large js-filterable-jobs-pager">
             {% assign prevPage = page | minus: 1 %}
-            <li {% if prevPage == 0 %}class="display--none"{% endif %}>
-                <a href="{{ pageUrl | append: "page=" | append: prevPage | append: "#postings" }}" class="js-filterable-jobs-pager-prev-btn">
-                    {{ previousPageLabel }}
-                </a>
+            <li class="pager__older">
+                {% if prevPage > 0 %}
+                    <span class="script-display script-display--no-js">
+                        <a href="{{ pageUrl | append: "page=" | append: prevPage | append: "#postings" }}" class="pager__button btn btn--secondary">
+                            {% if previousPageLabel != blank %}
+                                {{ previousPageLabel }}
+                            {% else %}
+                                {{ "Previous postings" | t}}
+                            {% endif %}
+                        </a>
+                    </span>
+                {% endif %}
+
+                <span class="script-display script-display--js">
+                    <button class="pager__button btn btn--secondary js-filterable-jobs-pager-prev-btn {% if prevPage == 0 %}display--none{% endif %}">
+                        {% if previousPageLabel != blank %}
+                            {{ previousPageLabel }}
+                        {% else %}
+                            {{ "Previous postings" | t}}
+                        {% endif %}
+                    </button>
+                </span>
             </li>
 
             {% assign nextPage = page | plus: 1 %}
-            <li {% if items.size <= pageSize %}class="display--none"{% endif %}>
-                <a href="{{ pageUrl | append: "page=" | append: nextPage | append: "#postings" }}" class="js-filterable-jobs-pager-next-btn">
-                    {{ nextPageLabel }}
-                </a>
+            <li class="pager__newer">
+                {% if items.size > pageSize %}
+                    <span class="script-display script-display--no-js">
+                        <a href="{{ pageUrl | append: "page=" | append: nextPage | append: "#postings" }}" class="pager__button btn btn--secondary">
+                        {% if nextPageLabel != blank %}
+                            {{ nextPageLabel }}
+                        {% else %}
+                            {{ "Next postings" | t}}
+                        {% endif %}
+                        </a>
+                    </span>
+                {% endif %}
+
+                <span class="script-display script-display--js">
+                    <button class="pager__button btn btn--secondary js-filterable-jobs-pager-next-btn {% if items.size <= pageSize %}display--none{% endif %}">
+                        {% if nextPageLabel != blank %}
+                            {{ nextPageLabel }}
+                        {% else %}
+                            {{ "Next postings" | t}}
+                        {% endif %}
+                    </button>
+                </span>
             </li>
         </ul>
     {% endif %}
