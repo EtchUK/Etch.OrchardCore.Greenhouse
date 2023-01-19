@@ -11,7 +11,7 @@ const track = ($el: Element) => {
 
     // GA4
     const ga4Event = {
-        event: "view_item_list",
+        event: 'view_item_list',
         ecommerce: {
             items: [getTrackingData($el)],
         },

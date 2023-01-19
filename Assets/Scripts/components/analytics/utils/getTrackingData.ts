@@ -5,7 +5,7 @@ interface ITrackingData {
     item_list_name: string | null;
     item_name: string | null;
     price: number;
-    quantity: number
+    quantity: number;
 }
 
 export default ($el: Element): ITrackingData => {

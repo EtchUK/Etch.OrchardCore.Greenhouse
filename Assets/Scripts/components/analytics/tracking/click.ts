@@ -14,12 +14,12 @@ export default ($el: Element) => {
 
         // GA4
         const ga4Event = {
-            event: "select_item",
+            event: 'select_item',
             ecommerce: {
                 items: [getTrackingData($el)],
             },
             eventCallback: () => {
-                const href = $el.getAttribute("href");
+                const href = $el.getAttribute('href');
 
                 if (href) {
                     document.location.href = href;
@@ -31,7 +31,7 @@ export default ($el: Element) => {
         ga4Event.ecommerce.items[0].item_list_name = getListName($el);
 
         window.dataLayer.push(ga4Event);
-        
+
         return false;
     });
 };

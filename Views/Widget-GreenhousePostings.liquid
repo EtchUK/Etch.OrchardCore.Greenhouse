@@ -1,4 +1,6 @@
-﻿{% assign greenhousePostings = Model.ContentItem.Content.GreenhousePostings %}
+{% assign greenhousePostings = Model.ContentItem.Content.GreenhousePostings %}
+
+{% script name:"greenhouse", at:"Head" %}
 
 {% assign pageSize = "12" %}
 {% assign originalPageSize = "12" %}

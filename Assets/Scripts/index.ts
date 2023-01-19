@@ -1,4 +1,5 @@
-﻿import analytics from "./components/analytics";
+﻿import analytics from './components/analytics';
+import filterableJobs from './components/filterableJobs';
 
 /**
  * Called once the page is loaded and handles initialising
@@ -6,11 +7,12 @@
  */
 const init = () => {
     analytics();
+    filterableJobs();
 };
 
 const canInit = () => {
-    const regReady = (window as any).attachEvent ? /d$|^c/ : /d$|^c|^i/; // eslint-disable-line @typescript-eslint/no-explicit-any
-    return regReady.test(document.readyState || "");
+    const regReady = (window as any).attachEvent ? /d$|^c/ : /d$|^c|^i/;
+    return regReady.test(document.readyState || '');
 };
 
 let timer: NodeJS.Timeout;

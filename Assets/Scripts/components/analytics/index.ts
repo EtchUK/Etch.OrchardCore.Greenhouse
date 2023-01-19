@@ -11,8 +11,8 @@ import purchaseClick from './tracking/purchaseClick';
 
 declare global {
     interface Window {
-        dataLayer: any[]; // eslint-disable-line @typescript-eslint/no-explicit-any
-        google_tag_manager: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+        dataLayer: any[];
+        google_tag_manager: any;
         gtag: Gtag.Gtag;
     }
 }
