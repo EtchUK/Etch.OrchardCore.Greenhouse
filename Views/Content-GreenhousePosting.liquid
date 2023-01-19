@@ -1,2 +1,13 @@
-﻿{{ Model.Header | shape_render }}
-{{ Model.Content | shape_render }}
+{% assign greenhousePosting = Model.ContentItem.Content.GreenhousePostingPart %}
+
+{% script name:"greenhouse", at:"Head" %}
+
+<article class="js-analytics-track" 
+	 data-item-id="{{ greenhousePosting.PostingId }}" 
+	 data-name="{{ Model.ContentItem | display_text }}" 
+	 data-brand="{{ greenhousePosting.Location }}"
+	 data-category="{{ greenhousePosting.Department }}"
+	 data-events="detail">
+    {{ Model.Header | shape_render }}
+    {{ Model.Content | shape_render }}
+</article>

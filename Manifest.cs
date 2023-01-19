@@ -14,5 +14,5 @@ using OrchardCore.Modules.Manifest;
     Name = "Greenhouse",
     Description = "Integrates Greenhouse with Orchard Core.",
     Category = "Content",
-    Dependencies = new string[] { "Etch.OrchardCore.Fields.Query", "OrchardCore.Workflows" }
+    Dependencies = new string[] { "Etch.OrchardCore.Fields.Query", "OrchardCore.ReCaptcha", "OrchardCore.Workflows" }
 )]

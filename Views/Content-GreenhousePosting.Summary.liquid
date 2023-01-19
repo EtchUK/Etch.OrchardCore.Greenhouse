@@ -1,1 +1,19 @@
-﻿<h3><a href="{{ Model.ContentItem | display_url }}">{{ Model.ContentItem | display_text }}</a></h3>
+{% assign greenhousePosting = Model.ContentItem.Content.GreenhousePostingPart %}
+
+{% script name:"greenhouse", at:"Head" %}
+
+<a href="{{ Model.ContentItem | display_url }}"
+   class="card card--equal-height card--job js-analytics-track"
+   data-item-id="{{ greenhousePosting.PostingId }}"
+   data-name="{{ Model.ContentItem | display_text }}"
+   data-brand="{{ greenhousePosting.Location }}"
+   data-category="{{ greenhousePosting.Department }}"
+   data-events="click, impression">
+    <div class="card__body">
+        <header class="card__header">
+            <h3 class="card__title">{{ Model.ContentItem | display_text }}</h3>
+        </header>
+
+        {{ Model.Content | shape_render }}
+    </div>
+</a>
