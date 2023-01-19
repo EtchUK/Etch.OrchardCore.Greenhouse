@@ -3,6 +3,7 @@
  */
 
 import urlParams from '../../utils/urlParams';
+import { analyticsRefreshEvent } from '../analytics/events';
 
 const defaults = {
     pageSize: 12,
@@ -38,7 +39,7 @@ const instance = ($el: Element) => {
             query: $el.getAttribute('data-query'),
             size: parseInt(
                 $el.getAttribute('data-page-size') ||
-                defaults.pageSize.toString(),
+                    defaults.pageSize.toString(),
                 10
             ),
         };
@@ -173,6 +174,8 @@ const instance = ($el: Element) => {
         }
 
         renderPager(data);
+
+        window.dispatchEvent(new Event(analyticsRefreshEvent));
     };
 
     const renderPager = (data: IFetchJobResponse) => {
@@ -214,7 +217,8 @@ const instance = ($el: Element) => {
 
         window
             .fetch(
-                `${$el.getAttribute('data-base-url') || ''
+                `${
+                    $el.getAttribute('data-base-url') || ''
                 }/api/greenhouse/jobs?${urlParams(params)}`
             )
             .then((response) => response.json())
@@ -267,7 +271,7 @@ const instance = ($el: Element) => {
             params.from === 0
                 ? 1
                 : Math.floor((params.from + dom.$pinned.length) / params.size) +
-                1;
+                  1;
 
         for (const property in params) {
             if (ignoredParams.indexOf(property) === -1 && params[property]) {

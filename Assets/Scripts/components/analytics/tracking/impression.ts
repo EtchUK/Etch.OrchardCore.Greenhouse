@@ -1,6 +1,8 @@
 import getTrackingData from '../utils/getTrackingData';
 import getListName from '../utils/getListName';
 
+const trackedItems: string[] = [];
+
 const track = ($el: Element) => {
     if (!window.google_tag_manager) {
         return;
@@ -18,6 +20,14 @@ const track = ($el: Element) => {
     };
 
     ga4Event.ecommerce.items[0].item_list_name = getListName($el);
+
+    if (ga4Event.ecommerce.items[0].item_id !== null) {
+        if (trackedItems.indexOf(ga4Event.ecommerce.items[0].item_id) > -1) {
+            return;
+        }
+
+        trackedItems.push(ga4Event.ecommerce.items[0].item_id);
+    }
 
     window.dataLayer.push(ga4Event);
 };
