@@ -2,6 +2,7 @@
  * Custom analytics tracking.
  */
 
+import { analyticsRefreshEvent } from './events';
 import addToCart from './tracking/addToCart';
 import click from './tracking/click';
 import detail from './tracking/detail';
@@ -16,6 +17,8 @@ declare global {
         gtag: Gtag.Gtag;
     }
 }
+
+const SELECTOR = '.js-analytics-track';
 
 const getEvents = ($el: Element) => {
     return $el
@@ -51,14 +54,35 @@ const instance = ($el: Element) => {
     });
 };
 
-const analytics = () => {
-    const SELECTOR = '.js-analytics-track';
+const instanceClickOrImpression = ($el: Element) => {
+    (getEvents($el) || []).map((event) => {
+        switch (event) {
+            case 'click':
+                click($el);
+                break;
+            case 'impression':
+                impression($el);
+                break;
+            default:
+                break;
+        }
+    });
+};
 
+const refresh = () => {
+    document.querySelectorAll(SELECTOR).forEach(($el: Element) => {
+        instanceClickOrImpression($el);
+    });
+};
+
+const analytics = () => {
     window.dataLayer = window.dataLayer || [];
 
     document.querySelectorAll(SELECTOR).forEach(($el: Element) => {
         instance($el);
     });
+
+    window.addEventListener(analyticsRefreshEvent, refresh);
 };
 
 export default analytics;
