@@ -4,10 +4,6 @@ import getListName from '../utils/getListName';
 const trackedItems: string[] = [];
 
 const track = ($el: Element) => {
-    if (!window.google_tag_manager) {
-        return;
-    }
-
     // Google's recommended clearance of ecommerce before sending new data
     window.dataLayer.push({ ecommerce: null });
 

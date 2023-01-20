@@ -2,10 +2,6 @@ import getTrackingData from '../utils/getTrackingData';
 import { v4 as uuidv4 } from 'uuid';
 
 export default ($el: Element) => {
-    if (!window.google_tag_manager) {
-        return true;
-    }
-
     const applicationId = uuidv4();
 
     // Google's recommended clearance of ecommerce before sending new data
