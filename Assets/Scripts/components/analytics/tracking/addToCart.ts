@@ -5,10 +5,6 @@ export default ($el: Element) => {
     let hasTracked = false;
 
     const track = () => {
-        if (!window.google_tag_manager) {
-            return true;
-        }
-
         if (hasTracked) {
             return;
         }
