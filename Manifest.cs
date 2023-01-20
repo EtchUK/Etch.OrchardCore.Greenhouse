@@ -5,7 +5,7 @@ using OrchardCore.Modules.Manifest;
     Category = "Content",
     Description = "Integrates Greenhouse with Orchard Core.",
     Name = "Greenhouse",
-    Version = "1.3.0",
+    Version = "1.3.1",
     Website = "https://etchuk.com"
 )]
 
