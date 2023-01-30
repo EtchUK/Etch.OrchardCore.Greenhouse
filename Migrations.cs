@@ -1,5 +1,8 @@
-﻿using Etch.OrchardCore.Greenhouse.Indexes;
+using Etch.OrchardCore.Greenhouse.Indexes;
+using OrchardCore.ContentManagement.Metadata;
+using OrchardCore.ContentManagement.Metadata.Settings;
 using OrchardCore.Data.Migration;
+using OrchardCore.Flows.Models;
 using OrchardCore.Recipes.Services;
 using System;
 using System.Threading.Tasks;
@@ -9,10 +12,12 @@ namespace Etch.OrchardCore.Greenhouse
 {
     public class Migrations : DataMigration
     {
+        private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IRecipeMigrator _recipeMigrator;
 
-        public Migrations(IRecipeMigrator recipeMigrator)
+        public Migrations(IContentDefinitionManager contentDefinitionManager, IRecipeMigrator recipeMigrator)
         {
+            _contentDefinitionManager = contentDefinitionManager;
             _recipeMigrator = recipeMigrator;
         }
 
@@ -73,6 +78,19 @@ namespace Etch.OrchardCore.Greenhouse
             await _recipeMigrator.ExecuteAsync("update6.recipe.json", this);
 
             return 7;
+        }
+
+        public int UpdateFrom7()
+        {
+            _contentDefinitionManager.AlterTypeDefinition("GreenhousePostings", builder => builder
+                .WithPart("EmptyContent", nameof(FlowPart), part => part
+                    .WithDisplayName("Empty Content")
+                    .WithDescription("Content displayed when there are no postings.")
+                    .WithPosition("5")
+                )
+            );
+
+            return 8;
         }
     }
 }
