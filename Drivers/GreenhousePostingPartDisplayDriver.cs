@@ -1,4 +1,4 @@
-﻿using Etch.OrchardCore.Greenhouse.Display;
+using Etch.OrchardCore.Greenhouse.Display;
 using Etch.OrchardCore.Greenhouse.Models;
 using Etch.OrchardCore.Greenhouse.Services.Dtos;
 using Etch.OrchardCore.Greenhouse.ViewModels;
@@ -6,14 +6,31 @@ using Newtonsoft.Json;
 using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Display.ContentDisplay;
 using OrchardCore.ContentManagement.Display.Models;
+using OrchardCore.ContentManagement.Metadata;
 using OrchardCore.DisplayManagement.ModelBinding;
 using OrchardCore.DisplayManagement.Views;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Etch.OrchardCore.Greenhouse.Drivers
 {
     public class GreenhousePostingPartDisplayDriver : ContentPartDisplayDriver<GreenhousePostingPart>
     {
+        #region Dependencies
+
+        private readonly IContentDefinitionManager _contentDefinitionManager;
+
+        #endregion
+
+        #region Constructor
+
+        public GreenhousePostingPartDisplayDriver(IContentDefinitionManager contentDefinitionManager)
+        {
+            _contentDefinitionManager = contentDefinitionManager;
+        }
+
+        #endregion
+
         #region Overrides
 
         public override IDisplayResult Display(GreenhousePostingPart part, BuildPartDisplayContext context)
@@ -23,6 +40,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
                 return null;
             }
 
+            var formPartSettings = GetFormPartSettings(part.ContentItem.ContentType);
             var posting = JsonConvert.DeserializeObject<GreenhouseJobPosting>(part.PostingData);
             var postingFormPart = part.ContentItem.As<GreenhousePostingFormPart>();
 
@@ -37,7 +55,7 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
 
                 model.Part = part;
                 model.Posting = posting;
-                model.ShowApplicationForm = postingFormPart?.ShowApplicationForm ?? false;
+                model.ShowApplicationForm = (formPartSettings?.ShowApplicationForm ?? false) && (postingFormPart?.ShowApplicationForm ?? false);
             }).Location("Detail", "Content:5");
         }
 
@@ -104,6 +122,23 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
             part.PostingData = model.PostingData;
 
             return Edit(part);
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private GreenhousePostingFormPartSettings GetFormPartSettings(string contentType)
+        {
+            var typeDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
+            var partDefinition = typeDefinition.Parts.FirstOrDefault(x => x.Name == nameof(GreenhousePostingFormPart));
+
+            if (partDefinition == null)
+            {
+                return null;
+            }
+
+            return partDefinition.GetSettings<GreenhousePostingFormPartSettings>();
         }
 
         #endregion
