@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
+using J2N.Collections.Generic;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace Etch.OrchardCore.Greenhouse.Services.Dtos
 {
@@ -22,6 +24,9 @@ namespace Etch.OrchardCore.Greenhouse.Services.Dtos
 
         [JsonProperty("is_template")]
         public bool IsTemplate { get; set; }
+
+        [JsonProperty("metadata")]
+        public IList<GreenhouseMetadata> Metadata { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }

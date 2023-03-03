@@ -1,7 +1,9 @@
-﻿using Etch.OrchardCore.Greenhouse.Services.Dtos;
+using Etch.OrchardCore.Greenhouse.Services.Dtos;
+using Lucene.Net.Documents;
 using Newtonsoft.Json;
 using OrchardCore.ContentManagement;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Etch.OrchardCore.Greenhouse.Models
@@ -70,9 +72,30 @@ namespace Etch.OrchardCore.Greenhouse.Models
             }
         }
 
+        public IList<GreenhouseMetadata> Metadata
+        {
+            get
+            {
+                ParsePostingData();
+                return _postingData?.Metadata;
+            }
+        }
+
         #endregion
 
         #region Helper Methods
+
+        public string GetMetadataValue(string propertyName)
+        {
+            var metadataField = Metadata.FirstOrDefault(x => x.Name.Equals(propertyName, StringComparison.OrdinalIgnoreCase));
+
+            if (metadataField == null || metadataField.Value == null)
+            {
+                return string.Empty;
+            }
+
+            return string.Join(",", metadataField.Value);
+        }
 
         public GreenhouseJobPosting GetJobPostingData()
         {

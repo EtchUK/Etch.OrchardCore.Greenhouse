@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -41,6 +41,9 @@ namespace Etch.OrchardCore.Greenhouse.Services.Dtos
 
         [JsonProperty("location")]
         public GreenhouseLocation Location { get; set; }
+
+        [JsonProperty("metadata")]
+        public IList<GreenhouseMetadata> Metadata { get; set; }
 
         [JsonProperty("questions")]
         public IList<GreenhouseQuestion> Questions { get; set; }
