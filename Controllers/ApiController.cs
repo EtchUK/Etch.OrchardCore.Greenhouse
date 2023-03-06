@@ -1,5 +1,6 @@
-﻿using Etch.OrchardCore.Greenhouse.ViewModels;
+using Etch.OrchardCore.Greenhouse.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Display;
 using OrchardCore.DisplayManagement;
@@ -63,6 +64,17 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
                 { "excludedIds", parameters.ExcludedIds },
                 { "location", parameters.Location }
             };
+
+            if (parameters.MetaFields != null)
+            {
+                foreach (var metaField in parameters.MetaFields)
+                {
+                    if (Request.Query.ContainsKey(metaField))
+                    {
+                        queryParameters.Add(metaField, Request.Query[metaField].ToString());
+                    }
+                }
+            }
 
             var model = new GreenhouseQueryResultViewModel
             {
