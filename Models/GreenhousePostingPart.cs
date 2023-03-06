@@ -72,22 +72,19 @@ namespace Etch.OrchardCore.Greenhouse.Models
             }
         }
 
-        public IList<GreenhouseMetadata> Metadata
-        {
-            get
-            {
-                ParsePostingData();
-                return _postingData?.Metadata;
-            }
-        }
-
         #endregion
 
         #region Helper Methods
 
+        public IList<GreenhouseMetadata> GetMetadata()
+        {
+            ParsePostingData();
+            return _postingData?.Metadata;
+        }
+
         public string GetMetadataValue(string propertyName)
         {
-            var metadataField = Metadata.FirstOrDefault(x => x.Name.Equals(propertyName, StringComparison.OrdinalIgnoreCase));
+            var metadataField = GetMetadata().FirstOrDefault(x => x.Name.Equals(propertyName, StringComparison.OrdinalIgnoreCase));
 
             if (metadataField == null || metadataField.Value == null)
             {

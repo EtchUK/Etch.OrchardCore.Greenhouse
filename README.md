@@ -71,6 +71,17 @@ Returns a collection of `<option>` elements that represent a distinct list of th
 {{ allPostings | greenhouse_location_options | raw }}
 ```
 
+#### greenhouse_metadata_options
+
+Returns a collection of `<option>` elements that represent a distinct list of the different metadata fields associated to greenhouse postings within site. This filter needs the results from an Orchard Core query ("AllGreenhousePostings" is created when enabling this module) that contains all the Greenhouse postings in order to access the metadata. If a `metadata` query string is present and has a matching value then the `<option>` element will have a `selected` attribute. This filter also requires the name of the property being accesed in the metadata.
+
+Below is an example of how to use the filter.
+
+```
+{% assign allPostings = Queries.AllGreenhousePostings | query %}
+{{ allPostings | greenhouse_metadata_options: property: "Project", selectedItem: project | raw }}
+```
+
 #### greenhouse_unique_departments
 
 Returns an array of distinct departments. This filter needs the results from an Orchard Core query ("AllGreenhousePostings" is created when enabling this module) that contains all the Greenhouse postings in order to access the departments.
@@ -87,6 +98,14 @@ Returns an array of distinct locations. This filter needs the results from an Or
 ```
 {% assign allPostings = Queries.AllGreenhousePostings | query %}
 {% locations | greenhouse_unique_locations %}
+```
+
+#### greenhouse_display_meta
+
+Returns the value of a meta data field. This filter requires a content item with a `GreenhousePostingsPart` and a property name of a metadata field. 
+
+```
+{% assign project = Model.ContentItem | greenhouse_display_meta: property: "Project" %}
 ```
 
 ### Tracking

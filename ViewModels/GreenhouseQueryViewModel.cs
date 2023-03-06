@@ -1,4 +1,4 @@
-﻿namespace Etch.OrchardCore.Greenhouse.ViewModels
+namespace Etch.OrchardCore.Greenhouse.ViewModels
 {
     public class GreenhouseQueryViewModel
     {
@@ -8,6 +8,7 @@
         public string[] ExcludedIds { get; set; }
         public int From { set; get; }
         public string Location { get; set; }
+        public string[] MetaFields { get; set; }
         public int Size { get; set; }
     }
 }
