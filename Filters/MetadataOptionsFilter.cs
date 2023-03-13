@@ -21,9 +21,11 @@ namespace Etch.OrchardCore.Greenhouse.Filters
 
             foreach (var value in input.Enumerate(context))
             {
-                if (!string.IsNullOrEmpty((await value.GetValueAsync($"{nameof(GreenhousePostingPart)}.Metadata.{propertyName}", context)).ToStringValue()))
+                var propertyValue = (await value.GetValueAsync($"{nameof(GreenhousePostingPart)}.Metadata.{propertyName}", context)).ToStringValue();
+
+                if (!string.IsNullOrEmpty(propertyValue) && propertyValue != "NULL")
                 {
-                    metadataField.Add((await value.GetValueAsync($"{nameof(GreenhousePostingPart)}.Metadata.{propertyName}", context)).ToStringValue());
+                    metadataField.Add(propertyValue);
                 }
             }
 
