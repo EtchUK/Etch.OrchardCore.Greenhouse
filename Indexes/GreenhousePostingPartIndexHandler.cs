@@ -1,7 +1,5 @@
-using AngleSharp.Css;
 using Etch.OrchardCore.Greenhouse.Models;
 using OrchardCore.Indexing;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,10 +17,11 @@ namespace Etch.OrchardCore.Greenhouse.Indexes
             {
                 if (metadataField.Value?.Any() ?? false)
                 {
-                    foreach (var value in metadataField.Value)
-                    {
-                        context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.Metadata.{metadataField.Name}", value, DocumentIndexOptions.Store);
-                    }
+                    context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.Metadata.{metadataField.Name}", metadataField.Value.First(), DocumentIndexOptions.Store);
+                }
+                else
+                {
+                    context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.Metadata.{metadataField.Name}", "NULL", DocumentIndexOptions.Store);
                 }
             }
 
