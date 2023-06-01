@@ -4,7 +4,7 @@ Integrates Greenhouse with Orchard Core
 
 ## Build Status
 
-[![Build Status](https://secure.travis-ci.org/etchuk/Etch.OrchardCore.Greenhouse.png?branch=main)](http://travis-ci.org/etchuk/Etch.OrchardCore.Greenhouse) [![NuGet](https://img.shields.io/nuget/v/Etch.OrchardCore.Greenhouse.svg)](https://www.nuget.org/packages/Etch.OrchardCore.Greenhouse)
+[![NuGet](https://img.shields.io/nuget/v/Etch.OrchardCore.Greenhouse.svg)](https://www.nuget.org/packages/Etch.OrchardCore.Greenhouse)
 
 ## Orchard Core Reference
 
