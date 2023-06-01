@@ -1,12 +1,11 @@
 using Etch.OrchardCore.Greenhouse.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Display;
 using OrchardCore.DisplayManagement;
 using OrchardCore.DisplayManagement.ModelBinding;
-using OrchardCore.Lucene;
 using OrchardCore.Queries;
+using OrchardCore.Search.Lucene;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
