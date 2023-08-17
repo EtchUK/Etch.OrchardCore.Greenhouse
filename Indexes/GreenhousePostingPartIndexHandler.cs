@@ -9,19 +9,21 @@ namespace Etch.OrchardCore.Greenhouse.Indexes
     {
         public override Task BuildIndexAsync(GreenhousePostingPart part, BuildPartIndexContext context)
         {
-            context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.{nameof(GreenhousePostingPart.Department)}", part.Department, DocumentIndexOptions.Store);
-            context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.{nameof(GreenhousePostingPart.Location)}", part.Location, DocumentIndexOptions.Store);
-            context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.{nameof(GreenhousePostingPart.UpdatedAt)}", part.UpdatedAt, DocumentIndexOptions.Store);
+            var options = context.Settings.ToOptions();
+
+            context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.{nameof(GreenhousePostingPart.Department)}", part.Department, options);
+            context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.{nameof(GreenhousePostingPart.Location)}", part.Location, options);
+            context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.{nameof(GreenhousePostingPart.UpdatedAt)}", part.UpdatedAt, options);
 
             foreach (var metadataField in part.GetMetadata())
             {
                 if (metadataField.Value?.Any() ?? false)
                 {
-                    context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.Metadata.{metadataField.Name}", metadataField.Value.First(), DocumentIndexOptions.Store);
+                    context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.Metadata.{metadataField.Name}", metadataField.Value[0], options);
                 }
                 else
                 {
-                    context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.Metadata.{metadataField.Name}", "NULL", DocumentIndexOptions.Store);
+                    context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.Metadata.{metadataField.Name}", "NULL", options);
                 }
             }
 
