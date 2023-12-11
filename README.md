@@ -8,7 +8,7 @@ Integrates Greenhouse with Orchard Core
 
 ## Orchard Core Reference
 
-This module is referencing a stable build of Orchard Core ([`1.5.0`](https://www.nuget.org/packages/OrchardCore.Module.Targets/1.5.0)).
+This module is referencing a stable build of Orchard Core ([`1.7.2`](https://www.nuget.org/packages/OrchardCore.Module.Targets/1.7.2)).
 
 ## Installing
 
@@ -102,7 +102,7 @@ Returns an array of distinct locations. This filter needs the results from an Or
 
 #### greenhouse_display_meta
 
-Returns the value of a meta data field. This filter requires a content item with a `GreenhousePostingsPart` and a property name of a metadata field. 
+Returns the value of a meta data field. This filter requires a content item with a `GreenhousePostingsPart` and a property name of a metadata field.
 
 ```
 {% assign project = Model.ContentItem | greenhouse_display_meta: property: "Project" %}

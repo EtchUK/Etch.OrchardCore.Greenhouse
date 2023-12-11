@@ -14,19 +14,19 @@
 
   <ItemGroup>
     <PackageReference Include="Flurl.Http" Version="3.2.4" />
-    <PackageReference Include="OrchardCore.Autoroute" Version="1.5.0" />
-    <PackageReference Include="OrchardCore.ContentManagement" Version="1.5.0" />
-    <PackageReference Include="OrchardCore.ContentManagement.Display" Version="1.5.0" />
-    <PackageReference Include="OrchardCore.DisplayManagement" Version="1.5.0" />
-    <PackageReference Include="OrchardCore.Flows" Version="1.5.0" />
-    <PackageReference Include="OrchardCore.Infrastructure" Version="1.5.0" />
-    <PackageReference Include="OrchardCore.Navigation.Core" Version="1.5.0" />
-    <PackageReference Include="OrchardCore.ReCaptcha" Version="1.5.0" />
-    <PackageReference Include="OrchardCore.ResourceManagement" Version="1.5.0" />
-    <PackageReference Include="OrchardCore.Module.Targets" Version="1.5.0" />
-    <PackageReference Include="OrchardCore.Search.Lucene" Version="1.5.0" />
-    <PackageReference Include="OrchardCore.Title" Version="1.5.0" />
-    <PackageReference Include="OrchardCore.Workflows" Version="1.5.0" />
+    <PackageReference Include="OrchardCore.Autoroute" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.ContentManagement" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.ContentManagement.Display" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.DisplayManagement" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.Flows" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.Infrastructure" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.Navigation.Core" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.ReCaptcha" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.ResourceManagement" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.Module.Targets" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.Search.Lucene" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.Title" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.Workflows" Version="1.7.2" />
   </ItemGroup>
 
   <ItemGroup>
