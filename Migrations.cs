@@ -28,22 +28,22 @@ namespace Etch.OrchardCore.Greenhouse
             return 1;
         }
 
-        public int UpdateFrom1()
+        public async Task<int> UpdateFrom1Async()
         {
-            SchemaBuilder.CreateMapIndexTable<GreenhousePostingPartIndex>(table => table
+            await SchemaBuilder.CreateMapIndexTableAsync<GreenhousePostingPartIndex>(table => table
                 .Column<long>("GreenhouseId")
             );
 
-            SchemaBuilder.AlterTable(nameof(GreenhousePostingPartIndex), table => table
+            await SchemaBuilder.AlterTableAsync(nameof(GreenhousePostingPartIndex), table => table
                 .CreateIndex("IDX_GreenhousePostingPartIndex_GreenhouseId", "GreenhouseId")
             );
 
             return 2;
         }
 
-        public int UpdateFrom2()
+        public async Task<int> UpdateFrom2Async()
         {
-            SchemaBuilder.AlterTable(nameof(GreenhousePostingPartIndex), table => table
+            await SchemaBuilder.AlterTableAsync(nameof(GreenhousePostingPartIndex), table => table
                 .AddColumn<DateTime>("UpdatedAt")
             );
 
@@ -57,9 +57,9 @@ namespace Etch.OrchardCore.Greenhouse
             return 4;
         }
 
-        public int UpdateFrom4()
+        public async Task<int> UpdateFrom4Async()
         {
-            SchemaBuilder.AlterTable(nameof(GreenhousePostingPartIndex), table => table
+            await SchemaBuilder.AlterTableAsync(nameof(GreenhousePostingPartIndex), table => table
                 .AddColumn<long>("JobId")
             );
 
@@ -80,9 +80,9 @@ namespace Etch.OrchardCore.Greenhouse
             return 7;
         }
 
-        public int UpdateFrom7()
+        public async Task<int> UpdateFrom7Async()
         {
-            _contentDefinitionManager.AlterTypeDefinition("GreenhousePostings", builder => builder
+            await _contentDefinitionManager.AlterTypeDefinitionAsync("GreenhousePostings", builder => builder
                 .WithPart("EmptyContent", nameof(FlowPart), part => part
                     .WithDisplayName("Empty Content")
                     .WithDescription("Content displayed when there are no postings.")

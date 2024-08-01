@@ -33,14 +33,14 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
 
         #region Overrides
 
-        public override IDisplayResult Display(GreenhousePostingPart part, BuildPartDisplayContext context)
+        public override async Task<IDisplayResult> DisplayAsync(GreenhousePostingPart part, BuildPartDisplayContext context)
         {
             if (string.IsNullOrEmpty(part.PostingData))
             {
                 return null;
             }
 
-            var formPartSettings = GetFormPartSettings(part.ContentItem.ContentType);
+            var formPartSettings = await GetFormPartSettingsAsync(part.ContentItem.ContentType);
             var posting = JsonConvert.DeserializeObject<GreenhouseJobPosting>(part.PostingData);
             var postingFormPart = part.ContentItem.As<GreenhousePostingFormPart>();
 
@@ -128,9 +128,9 @@ namespace Etch.OrchardCore.Greenhouse.Drivers
 
         #region Helper Methods
 
-        private GreenhousePostingFormPartSettings GetFormPartSettings(string contentType)
+        private async Task<GreenhousePostingFormPartSettings> GetFormPartSettingsAsync(string contentType)
         {
-            var typeDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
+            var typeDefinition = await _contentDefinitionManager.GetTypeDefinitionAsync(contentType);
             var partDefinition = typeDefinition.Parts.FirstOrDefault(x => x.Name == nameof(GreenhousePostingFormPart));
 
             if (partDefinition == null)
