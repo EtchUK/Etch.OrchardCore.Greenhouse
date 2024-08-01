@@ -32,7 +32,7 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IGreenhouseApplyService _greenhouseApplyService;
         private readonly ILogger<ApplyController> _logger;
-        private readonly ReCaptchaClient _reCaptchaClient;
+        private readonly ReCaptchaService _reCaptchaService;
         private readonly ISiteService _siteService;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IWorkflowManager _workflowManager;
@@ -47,7 +47,7 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
             IHttpContextAccessor httpContextAccessor,
             IGreenhouseApplyService greenhouseApplyService,
             ILogger<ApplyController> logger,
-            ReCaptchaClient reCaptchaClient,
+            ReCaptchaService reCaptchaService,
             ISiteService siteService,
             IUrlHelperFactory urlHelperFactory,
             IWorkflowManager workflowManager
@@ -58,7 +58,7 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
             _httpContextAccessor = httpContextAccessor;
             _greenhouseApplyService = greenhouseApplyService;
             _logger = logger;
-            _reCaptchaClient = reCaptchaClient;
+            _reCaptchaService = reCaptchaService;
             _siteService = siteService;
             _urlHelperFactory = urlHelperFactory;
             _workflowManager = workflowManager;
@@ -150,7 +150,7 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
             var siteSettings = await _siteService.GetSiteSettingsAsync();
             var recaptchaSettings = siteSettings.As<ReCaptchaSettings>();
 
-            return !string.IsNullOrEmpty(reCaptchaResponse) && await _reCaptchaClient.VerifyAsync(reCaptchaResponse, recaptchaSettings.SecretKey);
+            return !string.IsNullOrEmpty(reCaptchaResponse) && await _reCaptchaService.VerifyCaptchaResponseAsync(reCaptchaResponse);
         }
 
         #region Helper Methods
