@@ -83,7 +83,7 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
             }
 
             var jobPosting = contentItem.As<GreenhousePostingPart>().GetJobPostingData();
-            var formPartSettings = GetFormPartSettings(contentItem);
+            var formPartSettings = await GetFormPartSettingsAsync(contentItem);
             var returnUrl = await GetContentItemUrlAsync(contentItem);
 
             GreenhouseApplication application;
@@ -174,9 +174,9 @@ namespace Etch.OrchardCore.Greenhouse.Controllers
             return $"{_urlHelperFactory.GetUrlHelper(ControllerContext).RouteUrl(routeValues)}#{Constants.AnchorUrl}";
         }
 
-        private GreenhousePostingFormPartSettings GetFormPartSettings(ContentItem contentItem)
+        private async Task<GreenhousePostingFormPartSettings> GetFormPartSettingsAsync(ContentItem contentItem)
         {
-            var typeDefinition = _contentDefinitionManager.GetTypeDefinition(contentItem.ContentType);
+            var typeDefinition = await _contentDefinitionManager.GetTypeDefinitionAsync(contentItem.ContentType);
             var partDefinition = typeDefinition.Parts.FirstOrDefault(x => x.Name == nameof(GreenhousePostingFormPart));
 
             if (partDefinition == null)

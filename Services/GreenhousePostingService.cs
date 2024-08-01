@@ -124,7 +124,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
             greenhousePostingPart.PostingData = JsonConvert.SerializeObject(posting);
             contentItem.Apply(nameof(GreenhousePostingPart), greenhousePostingPart);
 
-            var formPartSettings = GetFormPartSettings(contentItem);
+            var formPartSettings = await GetFormPartSettingsAsync(contentItem);
 
             if (formPartSettings != null)
             {
@@ -167,9 +167,9 @@ namespace Etch.OrchardCore.Greenhouse.Services
                 .CountAsync() > 0;
         }
 
-        private GreenhousePostingFormPartSettings GetFormPartSettings(ContentItem contentItem)
+        private async Task<GreenhousePostingFormPartSettings> GetFormPartSettingsAsync(ContentItem contentItem)
         {
-            var typeDefinition = _contentDefinitionManager.GetTypeDefinition(contentItem.ContentType);
+            var typeDefinition = await _contentDefinitionManager.GetTypeDefinitionAsync(contentItem.ContentType);
             var partDefinition = typeDefinition.Parts.FirstOrDefault(x => x.Name == nameof(GreenhousePostingFormPart));
 
             if (partDefinition == null)
@@ -231,7 +231,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
             greenhousePostingPart.PostingData = JsonConvert.SerializeObject(posting);
             contentItem.Apply(nameof(GreenhousePostingPart), greenhousePostingPart);
 
-            var formPartSettings = GetFormPartSettings(contentItem);
+            var formPartSettings = await GetFormPartSettingsAsync(contentItem);
 
             if (formPartSettings != null)
             {
