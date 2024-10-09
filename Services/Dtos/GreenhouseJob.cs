@@ -1,49 +1,48 @@
-using J2N.Collections.Generic;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Etch.OrchardCore.Greenhouse.Services.Dtos
 {
     public class GreenhouseJob
     {
-        [JsonProperty("confidential")]
+        [JsonPropertyName("confidential")]
         public bool Confidential { get; set; }
 
-        [JsonProperty("closed_at")]
+        [JsonPropertyName("closed_at")]
         public DateTime? ClosedAt { get; set; }
 
-        [JsonProperty("created_at")]
+        [JsonPropertyName("created_at")]
         public DateTime CreatedAt { get; set; }
 
-        [JsonProperty("departments")]
+        [JsonPropertyName("departments")]
         public GreenhouseDepartment[] Departments { get; set; }
 
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public long Id { get; set; }
 
-        [JsonProperty("is_template")]
+        [JsonPropertyName("is_template")]
         public bool IsTemplate { get; set; }
 
-        [JsonProperty("metadata")]
+        [JsonPropertyName("metadata")]
         public IList<GreenhouseMetadata> Metadata { get; set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [JsonProperty("notes")]
+        [JsonPropertyName("notes")]
         public string Notes { get; set; }
 
-        [JsonProperty("offices")]
+        [JsonPropertyName("offices")]
         public GreenhouseOffice[] Offices { get; set; }
 
-        [JsonProperty("opened_at")]
+        [JsonPropertyName("opened_at")]
         public DateTime OpenedAt { get; set; }
 
-        [JsonProperty("statud")]
+        [JsonPropertyName("statud")]
         public string Status { get; set; }
 
-        [JsonProperty("updated_at")]
+        [JsonPropertyName("updated_at")]
         public DateTime UpdatedAt { get; set; }
     }
 }

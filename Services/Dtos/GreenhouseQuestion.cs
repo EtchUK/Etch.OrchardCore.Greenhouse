@@ -1,19 +1,19 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Etch.OrchardCore.Greenhouse.Services.Dtos
 {
     public class GreenhouseQuestion
     {
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; set; }
 
-        [JsonProperty("fields")]
+        [JsonPropertyName("fields")]
         public GreenhouseField[] Fields { get; set; }
 
-        [JsonProperty("label")]
+        [JsonPropertyName("label")]
         public string Label { get; set; }
 
-        [JsonProperty("required")]
+        [JsonPropertyName("required")]
         public bool? Required { get; set; }
     }
 }
