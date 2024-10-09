@@ -1,4 +1,4 @@
-﻿using Etch.OrchardCore.Greenhouse.Models;
+using Etch.OrchardCore.Greenhouse.Models;
 using Etch.OrchardCore.Greenhouse.Services.Dtos;
 using Flurl.Http;
 using Microsoft.Extensions.Logging;
@@ -62,7 +62,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
             foreach (var job in board.Jobs)
             {
-                var posting = await GetJobPostingAsync(settings.BoardToken, job.PostingId);
+                var posting = await GetJobPostingAsync(settings.BoardToken, job.Id);
 
                 // assume posting is active as it appears on job board
                 posting.Active = posting.Live = true;
