@@ -1,27 +1,27 @@
-﻿using Newtonsoft.Json;
 using System;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace Etch.OrchardCore.Greenhouse.Services.Dtos
 {
     public class GreenhouseJobBoardJob
     {
-        [JsonProperty("absolute_url")]
+        [JsonPropertyName("absolute_url")]
         public string AbsoluteUrl { get; set; }
 
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public long Id { get; set; }
 
-        [JsonProperty("internal_job_id")]
+        [JsonPropertyName("internal_job_id")]
         public long InternalJobId { get; set; }
 
-        [JsonProperty("location")]
+        [JsonPropertyName("location")]
         public GreenhouseLocation Location { get; set; }
 
-        [JsonProperty("title")]
+        [JsonPropertyName("title")]
         public string Title { get; set; }
 
-        [JsonProperty("updated_at")]
+        [JsonPropertyName("updated_at")]
         public DateTime UpdatedAt { get; set; }
 
         public long PostingId
