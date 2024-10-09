@@ -1,57 +1,57 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Etch.OrchardCore.Greenhouse.Services.Dtos
 {
     public class GreenhouseJobPosting
     {
-        [JsonProperty("active")]
+        [JsonPropertyName("active")]
         public bool Active { get; set; }
 
-        [JsonProperty("created_at")]
+        [JsonPropertyName("created_at")]
         public DateTime CreatedAt { get; set; }
 
-        [JsonProperty("content")]
+        [JsonPropertyName("content")]
         public string Content { get; set; }
 
-        [JsonProperty("departments")]
+        [JsonPropertyName("departments")]
         public GreenhouseDepartment[] Departments { get; set; }
 
-        [JsonProperty("external")]
+        [JsonPropertyName("external")]
         public bool External { get; set; }
 
-        [JsonProperty("first_published_at")]
+        [JsonPropertyName("first_published_at")]
         public DateTime? FirstPublishedAt { get; set; }
 
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public long Id { get; set; }
 
-        [JsonProperty("internal")]
+        [JsonPropertyName("internal")]
         public bool Internal { get; set; }
 
-        [JsonProperty("internal_content")]
+        [JsonPropertyName("internal_content")]
         public string InternalContent { get; set; }
 
-        [JsonProperty("job_id")]
+        [JsonPropertyName("job_id")]
         public long JobId { get; set; }
 
-        [JsonProperty("live")]
+        [JsonPropertyName("live")]
         public bool Live { get; set; }
 
-        [JsonProperty("location")]
+        [JsonPropertyName("location")]
         public GreenhouseLocation Location { get; set; }
 
-        [JsonProperty("metadata")]
+        [JsonPropertyName("metadata")]
         public IList<GreenhouseMetadata> Metadata { get; set; }
 
-        [JsonProperty("questions")]
+        [JsonPropertyName("questions")]
         public IList<GreenhouseQuestion> Questions { get; set; }
 
-        [JsonProperty("title")]
+        [JsonPropertyName("title")]
         public string Title { get; set; }
 
-        [JsonProperty("updated_at")]
+        [JsonPropertyName("updated_at")]
         public DateTime UpdatedAt { get; set; }
     }
 }

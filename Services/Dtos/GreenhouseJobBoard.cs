@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Etch.OrchardCore.Greenhouse.Services.Dtos
 {
     public class GreenhouseJobBoard
     {
-        [JsonProperty("jobs")]
+        [JsonPropertyName("jobs")]
         public IList<GreenhouseJobBoardJob> Jobs { get; set; }
     }
 }

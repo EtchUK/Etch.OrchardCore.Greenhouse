@@ -1,19 +1,19 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Etch.OrchardCore.Greenhouse.Services.Dtos
 {
     public class GreenhouseMetadata
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public long Id { get; set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [JsonProperty("value")]
+        [JsonPropertyName("value")]
         public string[] Value { get; set; }
 
-        [JsonProperty("value_type")]
+        [JsonPropertyName("value_type")]
         public string ValueType { get; set; }
     }
 }
