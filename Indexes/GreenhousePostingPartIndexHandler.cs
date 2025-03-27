@@ -19,15 +19,17 @@ namespace Etch.OrchardCore.Greenhouse.Indexes
             {
                 if (metadataField.Value?.Any() ?? false)
                 {
-                    context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.Metadata.{metadataField.Name}", metadataField.Value[0], options);
+                    context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.Metadata.{FormatMetadataName(metadataField.Name)}", metadataField.Value[0], options);
                 }
                 else
                 {
-                    context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.Metadata.{metadataField.Name}", "NULL", options);
+                    context.DocumentIndex.Set($"{nameof(GreenhousePostingPart)}.Metadata.{FormatMetadataName(metadataField.Name)}", "NULL", options);
                 }
             }
 
             return Task.CompletedTask;
         }
+
+        private static string FormatMetadataName(string name) => name.Replace(" ", "").Replace("-", "");
     }
 }

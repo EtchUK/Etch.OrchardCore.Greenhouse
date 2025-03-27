@@ -1,3 +1,4 @@
+using Etch.OrchardCore.Greenhouse.Converters;
 using System.Text.Json.Serialization;
 
 namespace Etch.OrchardCore.Greenhouse.Services.Dtos
@@ -11,6 +12,7 @@ namespace Etch.OrchardCore.Greenhouse.Services.Dtos
         public string Name { get; set; }
 
         [JsonPropertyName("value")]
+        [JsonConverter(typeof(StringOrArrayConverter))]
         public string[] Value { get; set; }
 
         [JsonPropertyName("value_type")]
