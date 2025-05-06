@@ -82,7 +82,7 @@ namespace Etch.OrchardCore.Greenhouse.Services
 
             foreach (var job in board.Jobs)
             {
-                var posting = await GetJobPostingAsync(token, job.PostingId);
+                var posting = await GetJobPostingAsync(token, job.Id);
 
                 // assume posting is active as it appears on job board
                 posting.Active = posting.Live = true;
