@@ -7,7 +7,8 @@ trigger:
       - "*"
   branches:
     include:
-      - main, fix
+      - main
+      - fix
 
 variables:
   buildConfiguration: "Release"
