@@ -33,9 +33,8 @@ stages:
               projectName: "Etch.OrchardCore.Greenhouse"
 
           - task: UseNode@1
-            displayName: "Use Node.js 14.x"
             inputs:
-            version: '14.x'
+              version: '14.x'
 
           - task: tmarkovski.projectversionasvariable.versionintovariable.projectversionasvariable@1
             displayName: "Get Project Version as variables from Etch.OrchardCore.Greenhouse.csproj"
