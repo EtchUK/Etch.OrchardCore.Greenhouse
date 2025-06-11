@@ -30,7 +30,7 @@ namespace Etch.OrchardCore.Greenhouse.Services.Dtos
         [JsonProperty("internal_content")]
         public string InternalContent { get; set; }
 
-        [JsonProperty("job_id")]
+        [JsonProperty("internal_job_id")]
         public long JobId { get; set; }
 
         [JsonProperty("live")]
